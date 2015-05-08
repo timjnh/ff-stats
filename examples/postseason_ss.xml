@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ss>
+  <gms w="22" y="2014" t="POST" gd="1" bf="0" bph="12">
+    <g eid="2015010301" gsis="56492" d="Sat" t="8:15" q="F" htn="Pittsburgh Steelers" hnn="steelers" h="PIT" hs="17" vtn="Baltimore Ravens" vnn="ravens" v="BAL" vs="30" n="NBC" rz="0" ga="" o="1" gt="WC"/>
+    <g eid="2015010400" gsis="56493" d="Sun" t="1:05" q="F" htn="Indianapolis Colts" hnn="colts" h="IND" hs="26" vtn="Cincinnati Bengals" vnn="bengals" v="CIN" vs="10" n="CBS" rz="0" ga="" o="2" gt="WC"/>
+    <g eid="2015011000" gsis="56495" d="Sat" t="4:35" q="F" htn="New England Patriots" hnn="patriots" h="NE" hs="35" vtn="Baltimore Ravens" vnn="ravens" v="BAL" vs="31" n="NBC" rz="0" ga="" o="3" gt="DIV"/>
+    <g eid="2015011101" gsis="56498" d="Sun" t="4:40" q="F" htn="Denver Broncos" hnn="broncos" h="DEN" hs="13" vtn="Indianapolis Colts" vnn="colts" v="IND" vs="24" n="CBS" rz="0" ga="" o="4" gt="DIV"/>
+    <g eid="2015011801" gsis="56500" d="Sun" t="6:50" q="F" htn="New England Patriots" hnn="patriots" h="NE" hs="45" vtn="Indianapolis Colts" vnn="colts" v="IND" vs="7" n="CBS" rz="0" ga="" o="5" gt="CON"/>
+    <g eid="2015011800" gsis="56499" d="Sun" t="3:05" q="FO" htn="Seattle Seahawks" hnn="seahawks" h="SEA" hs="28" vtn="Green Bay Packers" vnn="packers" v="GB" vs="22" n="FOX" rz="0" ga="" o="6" gt="CON"/>
+    <g eid="2015011100" gsis="56497" d="Sun" t="1:05" q="F" htn="Green Bay Packers" hnn="packers" h="GB" hs="26" vtn="Dallas Cowboys" vnn="cowboys" v="DAL" vs="21" n="FOX" rz="0" ga="" o="7" gt="DIV"/>
+    <g eid="2015011001" gsis="56496" d="Sat" t="8:15" q="F" htn="Seattle Seahawks" hnn="seahawks" h="SEA" hs="31" vtn="Carolina Panthers" vnn="panthers" v="CAR" vs="17" n="FOX" rz="0" ga="" o="8" gt="DIV"/>
+    <g eid="2015010401" gsis="56494" d="Sun" t="4:40" q="F" htn="Dallas Cowboys" hnn="cowboys" h="DAL" hs="24" vtn="Detroit Lions" vnn="lions" v="DET" vs="20" n="FOX" rz="0" ga="" o="9" gt="WC"/>
+    <g eid="2015010300" gsis="56491" d="Sat" t="4:35" q="F" htn="Carolina Panthers" hnn="panthers" h="CAR" hs="27" vtn="Arizona Cardinals" vnn="cardinals" v="ARI" vs="16" n="ESPN" rz="0" ga="" o="10" gt="WC"/>
+    <g eid="2015012500" gsis="56501" d="Sun" t="8:00" q="F" htn="Team Cris Carter" hnn="team carter" h="CRT" hs="28" vtn="Team Michael Irvin" vnn="team irvin" v="IRV" vs="32" n="ESPN" rz="0" ga="" o="11" gt="PRO"/>
+    <g eid="2015020100" gsis="56502" d="Sun" t="6:30" q="F" htn="Seattle Seahawks" hnn="seahawks" h="SEA" hs="24" vtn="New England Patriots" vnn="patriots" v="NE" vs="28" n="NBC" rz="0" ga="" o="12" gt="SB"/>
+  </gms>
+  <gds>
+    <gd eid="2015010301" gsis="56492" h1q="3" h2q="6" h3q="0" h4q="8" hot="0" v1q="0" v2q="10" v3q="10" v4q="10" vot="0" htol="0" vtol="1"/>
+    <gd eid="2015010400" gsis="56493" h1q="7" h2q="6" h3q="10" h4q="3" hot="0" v1q="7" v2q="3" v3q="0" v4q="0" vot="0" htol="2" vtol="0"/>
+    <gd eid="2015011000" gsis="56495" h1q="7" h2q="7" h3q="14" h4q="7" hot="0" v1q="14" v2q="7" v3q="7" v4q="3" vot="0" htol="1" vtol="0"/>
+    <gd eid="2015011101" gsis="56498" h1q="7" h2q="3" h3q="0" h4q="3" hot="0" v1q="0" v2q="14" v3q="7" v4q="3" vot="0" htol="0" vtol="2"/>
+    <gd eid="2015011801" gsis="56500" h1q="14" h2q="3" h3q="21" h4q="7" hot="0" v1q="0" v2q="7" v3q="0" v4q="0" vot="0" htol="3" vtol="3"/>
+    <gd eid="2015011800" gsis="56499" h1q="0" h2q="0" h3q="7" h4q="15" hot="6" v1q="13" v2q="3" v3q="0" v4q="6" vot="0" htol="3" vtol="3" dad="1st &amp;amp; 10"/>
+    <gd eid="2015011100" gsis="56497" h1q="7" h2q="3" h3q="10" h4q="6" hot="0" v1q="7" v2q="7" v3q="7" v4q="0" vot="0" htol="1" vtol="0"/>
+    <gd eid="2015011001" gsis="56496" h1q="7" h2q="7" h3q="0" h4q="17" hot="0" v1q="0" v2q="10" v3q="0" v4q="7" vot="0" htol="2" vtol="0"/>
+    <gd eid="2015010401" gsis="56494" h1q="0" h2q="7" h3q="7" h4q="10" hot="0" v1q="14" v2q="3" v3q="3" v4q="0" vot="0" htol="1" vtol="1"/>
+    <gd eid="2015010300" gsis="56491" h1q="10" h2q="3" h3q="14" h4q="0" hot="0" v1q="0" v2q="14" v3q="0" v4q="2" vot="0" htol="0" vtol="0"/>
+    <gd eid="2015012500" gsis="56501" h1q="13" h2q="7" h3q="8" h4q="0" hot="0" v1q="9" v2q="10" v3q="6" v4q="7" vot="0" htol="1" vtol="0"/>
+    <gd eid="2015020100" gsis="56502" h1q="0" h2q="14" h3q="10" h4q="0" hot="0" v1q="0" v2q="14" v3q="0" v4q="14" vot="0" htol="0" vtol="1"/>
+  </gds>
+</ss>
