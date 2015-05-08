@@ -1,0 +1,11 @@
+{
+  "name": "stats",
+  "version": "1.0.0",
+  "description": "Tracks NFL stats",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "",
+  "license": "MIT"
+}
