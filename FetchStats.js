@@ -20,8 +20,7 @@ function retrieveStatsForGame(game) {
 }
 
 function saveStatsWithGame(game, stats) {
-    var gameWithStats = Game.create(_.extend(_.clone(game), { stats: stats }));
-    return gameRepository.save(gameWithStats);
+    return gameRepository.save(game.add({ stats: stats }));
 }
 
 bootstrap.start()

@@ -2,7 +2,8 @@
 
 var _ = require('underscore'),
     assert = require('assert'),
-    Joi = require('joi');
+    Joi = require('joi'),
+    Player = require('./Player');
 
 var MIN_YEAR = 1900;
 
@@ -16,7 +17,8 @@ var schema = {
     away: Joi.string().required(),
     homeScore: Joi.number().allow(null),
     awayScore: Joi.number().allow(null),
-    stats: Joi.object().optional()
+    stats: Joi.object().optional(),
+    players: Joi.array().items(Joi.object(Player.schema))
 };
 
 function Game(attributes) {
@@ -31,6 +33,10 @@ function Game(attributes) {
 
 Game.create = function create(attributes) {
     return new Game(attributes);
+};
+
+Game.prototype.add = function add(attributes) {
+    return Game.create(_.extend(_.clone(this), attributes));
 };
 
 Game.prototype.hasBeenPlayed = function hasBeenPlayed() {

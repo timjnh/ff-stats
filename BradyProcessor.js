@@ -5,12 +5,14 @@ var _ = require('underscore'),
     gameRepository = require('./port/game/GameRepository'),
     fantasyPointService = require('./domain/FantasyPointService'),
     gameEventService = require('./domain/GameEventService'),
-    PlayerStats = require('./domain/PlayerStats');
+    PlayerStats = require('./domain/PlayerStats'),
+    Player = require('./domain/Player');
 
 var PATRIOTS = 'patriots';
 
-function calculateBradyStats(game) {
-    var playerStats = new PlayerStats(),
+function addPlayersToGame(game) {
+    var player,
+        playerStats = new PlayerStats(),
         points;
 
     _.values(game.stats.drives).forEach(function(drive) {
@@ -21,6 +23,7 @@ function calculateBradyStats(game) {
                 for(var k in play.players[j]) {
                     event = play.players[j][k];
 
+                    // for now we're only dealing with brady
                     if(event.playerName == 'T Brady') {
                         playerStats.add(gameEventService.buildPlayerStatsFromEvent(event));
                     }
@@ -30,7 +33,14 @@ function calculateBradyStats(game) {
     });
 
     points = fantasyPointService.calculatePointsForPlayerStats(playerStats);
-    return parseFloat(points.toFixed(1));
+
+    player = Player.create({
+        name: 'T Brady',
+        points: parseFloat(points.toFixed(1)),
+        stats: playerStats
+    });
+
+    return game.add({ players: [player] });
 }
 
 bootstrap.start()
@@ -40,10 +50,10 @@ bootstrap.start()
     .then(function skipGamesWithoutStats(games) {
         return _.filter(games, function(game) { return game.hasOwnProperty('stats'); });
     })
-    .then(function calculateFantasyPoints(games) {
-        var fantasyPoints = games.map(calculateBradyStats);
+    .then(function buildPlayers(games) {
+        return games.map(addPlayersToGame);
     })
-    .then(function() {
+    .then(function(games) {
         console.log('All done!');
     })
     .finally(bootstrap.stop.bind(bootstrap))
