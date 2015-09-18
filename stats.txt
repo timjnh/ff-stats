@@ -1,3 +1,4 @@
 http://www.nfl.com/liveupdate/scorestrip/ss.xml
 http://www.nfl.com/liveupdate/scorestrip/postseason/ss.xml
 nfl.com/liveupdate/game-center/2012080953/2012080953_gtd.json
+http://www.nfl.com/ajax/scorestrip?season=2012&week=2&seasonType=REG
