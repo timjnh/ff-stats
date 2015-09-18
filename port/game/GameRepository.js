@@ -9,7 +9,15 @@ function GameRepository() {}
 
 GameRepository.prototype.findGamesWithoutStats = function findGamesWithoutStats() {
     var criteria = { stats: { $exists: false } };
+    return this._findWithCriteria(criteria);
+};
 
+GameRepository.prototype.findGamesWithTeam = function findGamesWithTeam(team) {
+    var criteria = { $or: [{ home: team }, { away: team }]};
+    return this._findWithCriteria(criteria);
+};
+
+GameRepository.prototype._findWithCriteria = function _findWithCriteria(criteria) {
     return q.Promise(function(resolve, reject) {
         GameModel.find(criteria, function(err, games) {
             if(err) {

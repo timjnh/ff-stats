@@ -4,7 +4,9 @@
   "description": "Tracks NFL stats",
   "scripts": {
     "fetch-games": "node ./FetchGames.js",
-    "fetch-stats-tdd": "./node_modules/.bin/nodemon ./FetchStats.js"
+    "fetch-stats": "node ./FetchStats.js",
+    "fetch-stats-tdd": "./node_modules/.bin/nodemon ./FetchStats.js",
+    "brady-processor-tdd": "./node_modules/.bin/nodemon ./BradyProcessor.js"
   },
   "author": "",
   "license": "MIT",
