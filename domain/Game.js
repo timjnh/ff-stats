@@ -17,8 +17,7 @@ var schema = {
     away: Joi.string().required(),
     homeScore: Joi.number().allow(null),
     awayScore: Joi.number().allow(null),
-    stats: Joi.object().optional(),
-    players: Joi.array().items(Joi.object(Player.schema))
+    stats: Joi.object().optional()
 };
 
 function Game(attributes) {

@@ -3,6 +3,7 @@
 var _ = require('underscore'),
     assert = require('assert'),
     PlayerStats = require('./PlayerStats'),
+    PlayerGame = require('./PlayerGame'),
     Joi = require('joi');
 
 function Player(attributes) {
@@ -13,16 +14,30 @@ function Player(attributes) {
 
     _.extendOwn(this, validatedAttributes.value);
     Object.freeze(this);
+    Object.freeze(this.games);
 }
 
 Player.schema = {
+    _id: Joi.object(),
     name: Joi.string().min(1).required(),
-    points: Joi.number().required(),
-    stats: Joi.object(PlayerStats.schema).required()
+    games: Joi.array().items(PlayerGame.schema).required()
 };
 
 Player.create = function create(attributes) {
     return new Player(attributes);
+};
+
+Player.prototype.addGame = function addGame(playerGame) {
+    var games = _.clone(this.games),
+        existingGameIndex = _.findIndex(games, function(game) { return game.eid == playerGame.eid });
+
+    if(existingGameIndex != -1) {
+        games[existingGameIndex] = playerGame;
+    } else {
+        games.push(playerGame);
+    }
+
+    return Player.create(_.extend(_.clone(this), { games: games }));
 };
 
 module.exports = Player;

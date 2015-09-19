@@ -17,6 +17,7 @@
     "q": "^1.4.1",
     "sprintf-js": "^1.0.2",
     "superagent": "^1.2.0",
+    "synaptic": "^1.0.2",
     "underscore": "^1.8.3",
     "xml2js": "^0.4.8"
   },
