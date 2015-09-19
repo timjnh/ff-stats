@@ -12,6 +12,8 @@ var GameSchema = new Schema({
         passingYards: Number,
         passingTDs: Number,
 
+        conversions: Number,
+
         rushingYards: Number,
         rushingTDs: Number,
 
@@ -21,8 +23,11 @@ var GameSchema = new Schema({
 }, { strict: 'throw', id: false });
 
 var PlayerSchema = new Schema({
-    name: { type: String, unique: true },
+    name: { type: String },
+    team: { type: String },
     games: [GameSchema]
 }, { strict: 'throw'});
+
+PlayerSchema.index({ name: 1, team: 1 }, { unique: true });
 
 module.exports = mongoose.model('players', PlayerSchema);

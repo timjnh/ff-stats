@@ -12,12 +12,12 @@ PlayerRepository.prototype.findAll = function findAll() {
     return this._findWithCriteria({});
 };
 
-PlayerRepository.prototype.findOneByName = function findByName(name) {
-    return this._findWithCriteria({ name: name })
+PlayerRepository.prototype.findOneByNameAndTeam = function findByNameAndTeam(name, team) {
+    return this._findWithCriteria({ name: name, team: team })
         .then(function buildIfNotFound(players) {
-            assert(players.length <= 1, 'Found multiple players with name "' + name + '"');
+            assert(players.length <= 1, 'Found multiple players with name "' + name + '" and team "' + team + '"');
             if(players.length == 0) {
-                return new Player({ name: name, games: [] });
+                return new Player({ name: name, team: team, games: [] });
             } else {
                 return players[0];
             }

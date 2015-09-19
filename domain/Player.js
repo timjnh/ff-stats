@@ -20,7 +20,9 @@ function Player(attributes) {
 Player.schema = {
     _id: Joi.object(),
     name: Joi.string().min(1).required(),
-    games: Joi.array().items(PlayerGame.schema).required()
+    team: Joi.string().min(1).required(),
+    games: Joi.array().items(PlayerGame.schema).required(),
+    network: Joi.object()
 };
 
 Player.create = function create(attributes) {
@@ -38,6 +40,35 @@ Player.prototype.addGame = function addGame(playerGame) {
     }
 
     return Player.create(_.extend(_.clone(this), { games: games }));
+};
+
+Player.prototype.setNetwork = function setNetwork(network) {
+    return Player.create(_.extend(_.clone(this), { network: network }));
+};
+
+Player.prototype.findPrecedingGames = function findPrecedingGames(game, count) {
+    var orderedGames = this.getOrderedGames(),
+        gameIndex = _.findIndex(orderedGames, function gameMatches(otherGame) {
+            return game.eid == otherGame.eid;
+        });
+
+    return orderedGames.slice(Math.max(0, gameIndex - count), gameIndex);
+};
+
+Player.prototype.getOrderedGames = function getOrderedGames() {
+    var gamesCopy = _.clone(this.games);
+
+    gamesCopy.sort(function compareGames(a, b) {
+        if(a.year < b.year || (a.year == b.year && a.week < b.week)) {
+            return -1;
+        } else if(a.year == b.year && a.week == b.week) {
+            return 0;
+        } else {
+            return 1;
+        }
+    });
+
+    return gamesCopy;
 };
 
 module.exports = Player;

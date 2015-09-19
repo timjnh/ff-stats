@@ -42,4 +42,8 @@ Game.prototype.hasBeenPlayed = function hasBeenPlayed() {
     return this.date < new Date();
 };
 
+Game.prototype.isHomeTeam = function isHomeTeam(team) {
+    return team == this.home;
+};
+
 module.exports = Game;

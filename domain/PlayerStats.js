@@ -6,6 +6,8 @@ function PlayerStats(attributes) {
     this.passingYards = 0;
     this.passingTDs = 0;
 
+    this.conversions = 0;
+
     this.rushingYards = 0;
     this.rushingTDs = 0;
 
@@ -28,6 +30,19 @@ PlayerStats.prototype.add = function add(playerStats) {
             this[k] += playerStats[k];
         }
     }
+};
+
+PlayerStats.prototype.isEmpty = function isEmpty() {
+    if(this.passingYards == 0 &&
+        this.passingTDs == 0 &&
+        this.conversions == 0 &&
+        this.rushingYards == 0 &&
+        this.rushingTDs == 0 &&
+        this.fumblesLost == 0 &&
+        this.interceptionsLost == 0) {
+        return true;
+    }
+    return false;
 };
 
 module.exports = PlayerStats;

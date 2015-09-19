@@ -9,6 +9,8 @@ function FantasyPointService() {
     this.pointsPerPassingYard = 0.04;
     this.pointsPerPassingTD = 4;
 
+    this.pointsPerConversion = 2;
+
     this.pointsPerFumbleLost = -2;
     this.pointsPerInterceptionLost = -2;
 };
@@ -16,6 +18,7 @@ function FantasyPointService() {
 FantasyPointService.prototype.calculatePointsForPlayerStats = function calculatePointsForPlayerStats(playerStats) {
     return (playerStats.passingYards * this.pointsPerPassingYard) +
         (playerStats.passingTDs * this.pointsPerPassingTD) +
+        (playerStats.conversions * this.pointsPerConversion) +
         (playerStats.rushingYards * this.pointsPerRushingYard) +
         (playerStats.rushingTDs * this.pointsPerRushingTD) +
         (playerStats.fumblesLost * this.pointsPerFumbleLost) +

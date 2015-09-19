@@ -9,6 +9,8 @@ GameEventService.prototype.buildPlayerStatsFromEvent = function buildPlayerStats
     switch(event.statId) {
         case 10: // rushing yards
             return PlayerStats.create({ rushingYards: event.yards });
+        case 11: // rushing td
+            return PlayerStats.create({ rushingTDs: 1 });
         case 15: // passing yards including distance covered by receiver.  we want just passing yards (see 111)
             return PlayerStats.create({ passingYards: event.yards });
         case 16: // passing yards with td
@@ -20,6 +22,8 @@ GameEventService.prototype.buildPlayerStatsFromEvent = function buildPlayerStats
             return PlayerStats.create({ passingYards: event.yards });
         case 55: // yardage after fumble recovery
             return PlayerStats.create({ rushingYards: event.yards }); // treating this the same as rushing yards?
+        case 77: // 2 point conversion good
+            return PlayerStats.create({ conversions: 1 });
         case 106: // lost fumble
             return PlayerStats.create({ fumblesLost: 1 });
         case 111: // passing length minus receiver yardage
