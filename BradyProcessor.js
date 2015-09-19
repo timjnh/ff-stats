@@ -11,16 +11,15 @@ var _ = require('underscore'),
     Player = require('./domain/Player'),
     PlayerGame = require('./domain/PlayerGame'),
     playerRepository = require('./port/player/PlayerRepository'),
-    trainingService = require('./domain/TrainingService');
+    trainingService = require('./domain/TrainingService'),
+    Team = require('./domain/Team');
 
-var PATRIOTS = 'patriots',
-    BRADY = 'T Brady',
-    PACKERS = 'packers',
+var BRADY = 'T Brady',
     RODGERS = 'A Rodgers';
 
 function addGameToPlayer(playerName, game, playerStats) {
     var points = fantasyPointService.calculatePointsForPlayerStats(playerStats),
-        playerTeam = playerName == BRADY ? PATRIOTS : PACKERS;
+        playerTeam = playerName == BRADY ? Team.PATRIOTS : Team.PACKERS;
 
     return playerRepository.findOneByNameAndTeam(playerName, playerTeam)
         .then(function addGameToPlayer(player) {
@@ -39,7 +38,7 @@ function addGameToPlayer(playerName, game, playerStats) {
 
 function extractPlayersFromGame(game) {
     var playerStats = {};
-    //playerStats[BRADY] = PlayerStats.create({});
+    playerStats[BRADY] = PlayerStats.create({});
     playerStats[RODGERS] = PlayerStats.create({});
 
     _.values(game.stats.drives).forEach(function(drive) {
@@ -85,9 +84,13 @@ function buildNetworkForPlayer(player) {
 
 bootstrap.start()
     .then(function findGames() {
-        return q.all([/*gameRepository.findGamesWithTeam(PATRIOTS), */gameRepository.findGamesWithTeam(PACKERS)])
+        return q.all([gameRepository.findGamesWithTeam(Team.PATRIOTS), gameRepository.findGamesWithTeam(Team.PACKERS)])
             .then(function mergeGames(games) {
-                return _.flatten(games);
+                return _.uniq(
+                    _.flatten(games),
+                    false,
+                    function extractEid(game) { return game.eid; }
+                );
             });
     })
     .then(function skipGamesWithoutStats(games) {
@@ -104,17 +107,41 @@ bootstrap.start()
     .then(function findAllPlayers() {
         return playerRepository.findAll();
     })
+    /*.then(function debugPlayers(players) {
+        players.forEach(function(player) {
+            console.log('');console.log('');
+            console.log(player.name);
+
+            var orderedGames = player.getOrderedGames();
+            for(var i in orderedGames) {
+                console.log(orderedGames[i].year + ', week ' + orderedGames[i].week + ': ' + orderedGames[i].points);
+            }
+        });
+        return players;
+    })*/
     .then(function buildNetworks(players) {
         var playersWithNetworks = players.map(buildNetworkForPlayer);
         return q.all(playersWithNetworks);
     })
     .then(function tryNetwork(playersWithNetworks) {
+        var stats = {};
+        stats[BRADY] = [
+            0,
+            17.7 / 100,
+            19.38 / 100,
+            27.62 / 100,
+            Team.getId(Team.BILLS) / Team.TEAMS.length
+        ];
+        stats[RODGERS] = [
+            1,
+            27.88 / 100,
+            24.92 / 100,
+            23.06 / 100,
+            Team.getId(Team.SEAHAWKS) / Team.TEAMS.length
+        ];
+
         playersWithNetworks.forEach(function tryIt(player) {
-            if(player.name == BRADY) {
-                console.log(player.name + ': ' + (player.network.activate([0, 17.7 / 100, 19.38 / 100, 27.62 / 100]) * 100));
-            } else if(player.name == RODGERS) {
-                console.log(player.name + ': ' + (player.network.activate([1, 27.88 / 100, 24.92 / 100, 23.06 / 100]) * 100));
-            }
+            console.log(player.name + ': ' + (player.network.activate(stats[player.name]) * 40));
         });
     })
     .then(function() {

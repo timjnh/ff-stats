@@ -11,10 +11,10 @@ GameEventService.prototype.buildPlayerStatsFromEvent = function buildPlayerStats
             return PlayerStats.create({ rushingYards: event.yards });
         case 11: // rushing td
             return PlayerStats.create({ rushingTDs: 1 });
-        case 15: // passing yards including distance covered by receiver.  we want just passing yards (see 111)
+        case 15: // passing yards including distance covered by receiver (see also 111)
             return PlayerStats.create({ passingYards: event.yards });
         case 16: // passing yards with td
-            return PlayerStats.create({ passingTDs: 1 });
+            return PlayerStats.create({ passingYards: event.yards, passingTDs: 1 });
         case 19: // pass attempt resulted in interception
             return PlayerStats.create({ interceptionsLost: 1 });
         case 20: // yards lost due to sack
@@ -26,8 +26,7 @@ GameEventService.prototype.buildPlayerStatsFromEvent = function buildPlayerStats
             return PlayerStats.create({ conversions: 1 });
         case 106: // lost fumble
             return PlayerStats.create({ fumblesLost: 1 });
-        case 111: // passing length minus receiver yardage
-            //return PlayerStats.create({ passingYards: event.yards });
+        case 111: // passing length minus receiver yardage.  not sure if this is what i want but it doesn't seem to be included consistently (see 15)
         case 14: // pass, no completion
         case 52: // forced fumble. zero because we only lose points if it's not recovered (see 106)
         case 53: // unforced fumble. zero because we only lose points if it's not recovered (see 106)

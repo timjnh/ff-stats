@@ -3,10 +3,11 @@
 var _ = require('underscore'),
     q = require('q'),
     HomeVsAway = require('./HomeVsAway'),
-    RecentGames = require('./RecentGames');
+    RecentGames = require('./RecentGames'),
+    Opponent = require('./Opponent');
 
 function InputsService() {
-    this.inputTypes = [new HomeVsAway(), new RecentGames(3)];
+    this.inputTypes = [new HomeVsAway(), new RecentGames(3), new Opponent()];
 }
 
 InputsService.prototype.getInputsForPlayerAndGame = function getInputsForPlayerAndGame(player, game) {
