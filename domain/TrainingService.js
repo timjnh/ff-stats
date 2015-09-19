@@ -13,7 +13,7 @@ TrainingService.prototype.getTrainingSetsForPlayer = function getTrainingSetsFor
 TrainingService.prototype.buildTrainingSetForPlayerAndGame = function buildTrainingSetForPlayerAndGame(player, game) {
     return inputsService.getInputsForPlayerAndGame(player, game)
         .then(function buildTrainingSet(inputs) {
-            return TrainingSet.create({ input: inputs, output: [game.points / 40] });
+            return TrainingSet.create({ input: inputs, output: [game.points / 100] });
         });
 };
 

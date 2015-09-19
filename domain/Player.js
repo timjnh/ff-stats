@@ -55,6 +55,10 @@ Player.prototype.findPrecedingGames = function findPrecedingGames(game, count) {
     return orderedGames.slice(Math.max(0, gameIndex - count), gameIndex);
 };
 
+Player.prototype.findGamesAgainst = function findGamesAgainst(team) {
+    return _.filter(this.games, function containsOpponent(game) { return team == game.opponent; });
+};
+
 Player.prototype.getOrderedGames = function getOrderedGames() {
     var gamesCopy = _.clone(this.games);
 

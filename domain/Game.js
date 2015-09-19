@@ -46,4 +46,8 @@ Game.prototype.isHomeTeam = function isHomeTeam(team) {
     return team == this.home;
 };
 
+Game.prototype.getOpposingTeam = function getOpposingTeam(team) {
+    return this.isHomeTeam(team) ? this.away : this.home;
+};
+
 module.exports = Game;

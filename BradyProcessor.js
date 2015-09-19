@@ -19,7 +19,8 @@ var BRADY = 'T Brady',
 
 function addGameToPlayer(playerName, game, playerStats) {
     var points = fantasyPointService.calculatePointsForPlayerStats(playerStats),
-        playerTeam = playerName == BRADY ? Team.PATRIOTS : Team.PACKERS;
+        playerTeam = playerName == BRADY ? Team.PATRIOTS : Team.PACKERS,
+        opponent = game.getOpposingTeam(playerTeam);
 
     return playerRepository.findOneByNameAndTeam(playerName, playerTeam)
         .then(function addGameToPlayer(player) {
@@ -27,6 +28,7 @@ function addGameToPlayer(playerName, game, playerStats) {
                 eid: game.eid,
                 week: game.week,
                 year: game.year,
+                opponent: opponent,
                 points: parseFloat(points.toFixed(1)),
                 stats: playerStats
             }));
@@ -130,18 +132,20 @@ bootstrap.start()
             17.7 / 100,
             19.38 / 100,
             27.62 / 100,
-            Team.getId(Team.BILLS) / Team.TEAMS.length
+            Team.getId(Team.BILLS) / Team.TEAMS.length,
+            30.1 / 100
         ];
         stats[RODGERS] = [
             1,
             27.88 / 100,
             24.92 / 100,
             23.06 / 100,
-            Team.getId(Team.SEAHAWKS) / Team.TEAMS.length
+            Team.getId(Team.SEAHAWKS) / Team.TEAMS.length,
+            9 / 100
         ];
 
         playersWithNetworks.forEach(function tryIt(player) {
-            console.log(player.name + ': ' + (player.network.activate(stats[player.name]) * 40));
+            console.log(player.name + ': ' + (player.network.activate(stats[player.name]) * 100));
         });
     })
     .then(function() {
