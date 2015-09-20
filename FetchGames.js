@@ -5,12 +5,10 @@ var q = require('q'),
     scheduleRepository = require('./port/schedule/ScheduleRepository'),
     gameRepository = require('./port/game/GameRepository');
 
-var START_YEAR = 2014,
+var START_YEAR = 2001,
     GAMES_PER_SEASON = 16,
     END_YEAR = 2016,
     END_WEEK = 1;
-
-var currentYear = (new Date()).getFullYear();
 
 function findAndSaveGamesByYearAndWeekNumber(year, weekNumber) {
     var promise,
@@ -20,15 +18,29 @@ function findAndSaveGamesByYearAndWeekNumber(year, weekNumber) {
 
     promise = scheduleRepository.findGamesByYearAndWeekNumber(year, weekNumber)
         .then(function saveGames(games) {
-            var saveGamePromises = [];
+            var currentPromise,
+                conditionalSavePromises = [];
 
             games.forEach(function(game) {
                 game.week = weekNumber;
                 game.year = year;
-                saveGamePromises.push(gameRepository.save(game));
+
+                currentPromise = gameRepository.findOneByEid(game.eid)
+                    .then(function saveGame(game) {
+                        console.log('Game with eid "' + game.eid + '" already exists.  Skipping');
+                    }.bind(game))
+                    .catch(function(err) {
+                        if(err.message.indexOf('Could not find a Game matching') == -1) {
+                            return q.reject(err);
+                        } else {
+                            return gameRepository.save(game);
+                        }
+                    });
+
+                conditionalSavePromises.push(currentPromise);
             });
 
-            return q.all(saveGamePromises);
+            return q.all(conditionalSavePromises);
         });
 
     findAndSaveGamePromises.push(promise);
