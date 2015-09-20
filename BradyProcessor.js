@@ -133,7 +133,10 @@ bootstrap.start()
             19.38 / 100,
             27.62 / 100,
             Team.getId(Team.BILLS) / Team.TEAMS.length,
-            30.1 / 100
+            30.1 / 100,
+            32 / 100,
+            14.8 / 100,
+            32.4 / 100
         ];
         stats[RODGERS] = [
             1,
@@ -141,7 +144,10 @@ bootstrap.start()
             24.92 / 100,
             23.06 / 100,
             Team.getId(Team.SEAHAWKS) / Team.TEAMS.length,
-            9 / 100
+            9 / 100,
+            1.9 / 100,
+            28.9 / 100,
+            36.6 / 100
         ];
 
         playersWithNetworks.forEach(function tryIt(player) {

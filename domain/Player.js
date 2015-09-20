@@ -46,13 +46,28 @@ Player.prototype.setNetwork = function setNetwork(network) {
     return Player.create(_.extend(_.clone(this), { network: network }));
 };
 
-Player.prototype.findPrecedingGames = function findPrecedingGames(game, count) {
+Player.prototype.findAllPrecedingGames = function findAllPrecedingGames(game) {
     var orderedGames = this.getOrderedGames(),
         gameIndex = _.findIndex(orderedGames, function gameMatches(otherGame) {
             return game.eid == otherGame.eid;
         });
 
-    return orderedGames.slice(Math.max(0, gameIndex - count), gameIndex);
+    return orderedGames.slice(0, gameIndex);
+};
+
+Player.prototype.findPrecedingGames = function findPrecedingGames(game, count) {
+    var precedingGames = this.findAllPrecedingGames(game);
+    return precedingGames.slice(Math.max(0, precedingGames.length - count), precedingGames.length);
+};
+
+Player.prototype.findPrecedingGamesAgainstOpponent = function findPrecedingGamesAgainstOpponent(game, count) {
+    var opponent = game.opponent,
+        precedingGames = this.findAllPrecedingGames(game),
+        precedingGamesAgainstOpponent = _.filter(precedingGames, function gameMatchesOpponent(game) {
+            return game.opponent == opponent;
+        });
+
+    return precedingGamesAgainstOpponent.slice(Math.max(0, precedingGamesAgainstOpponent.length - count), precedingGamesAgainstOpponent.length);
 };
 
 Player.prototype.findGamesAgainst = function findGamesAgainst(team) {
