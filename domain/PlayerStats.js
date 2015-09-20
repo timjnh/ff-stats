@@ -11,6 +11,9 @@ function PlayerStats(attributes) {
     this.rushingYards = 0;
     this.rushingTDs = 0;
 
+    this.receivingYards = 0;
+    this.receivingTDs = 0;
+
     this.fumblesLost = 0;
     this.interceptionsLost = 0;
 
@@ -38,6 +41,8 @@ PlayerStats.prototype.isEmpty = function isEmpty() {
         this.conversions == 0 &&
         this.rushingYards == 0 &&
         this.rushingTDs == 0 &&
+        this.receivingYards == 0 &&
+        this.receivingTDs == 0 &&
         this.fumblesLost == 0 &&
         this.interceptionsLost == 0) {
         return true;

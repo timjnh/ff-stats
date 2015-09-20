@@ -29,6 +29,13 @@ Team.STEELERS = 'steelers';
 Team.CHIEFS = 'chiefs';
 Team.PANTHERS = 'panthers';
 Team.FALCONS = 'falcons';
+Team.BUCCANEERS = 'buccaneers';
+Team.RAVENS = 'ravens';
+Team.CARDINALS = 'cardinals';
+Team.COWBOYS = 'cowboys';
+Team.REDSKINS = 'redskins';
+Team.FORTY_NINERS = '49ers';
+Team.TEXANS = 'texans';
 
 Team.TEAMS = [
     Team.PATRIOTS,
@@ -55,7 +62,14 @@ Team.TEAMS = [
     Team.STEELERS,
     Team.CHIEFS,
     Team.PANTHERS,
-    Team.FALCONS
+    Team.FALCONS,
+    Team.BUCCANEERS,
+    Team.RAVENS,
+    Team.CARDINALS,
+    Team.COWBOYS,
+    Team.REDSKINS,
+    Team.FORTY_NINERS,
+    Team.TEXANS
 ];
 
 Team.getId = function getId(teamName) {

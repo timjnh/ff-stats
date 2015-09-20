@@ -3,11 +3,14 @@
 var assert = require('assert');
 
 function FantasyPointService() {
+    this.pointsPerPassingYard = 0.04;
+    this.pointsPerPassingTD = 4;
+
     this.pointsPerRushingYard = 0.1;
     this.pointsPerRushingTD = 6;
 
-    this.pointsPerPassingYard = 0.04;
-    this.pointsPerPassingTD = 4;
+    this.pointsPerReceivingYard = 0.1;
+    this.pointsPerReceivingTouchdown = 6;
 
     this.pointsPerConversion = 2;
 
@@ -21,6 +24,8 @@ FantasyPointService.prototype.calculatePointsForPlayerStats = function calculate
         (playerStats.conversions * this.pointsPerConversion) +
         (playerStats.rushingYards * this.pointsPerRushingYard) +
         (playerStats.rushingTDs * this.pointsPerRushingTD) +
+        (playerStats.receivingYards * this.pointsPerReceivingYard) +
+        (playerStats.receivingTDs * this.pointsPerReceivingTouchdown) +
         (playerStats.fumblesLost * this.pointsPerFumbleLost) +
         (playerStats.interceptionsLost * this.pointsPerInterceptionLost);
 };
