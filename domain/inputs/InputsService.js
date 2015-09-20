@@ -6,7 +6,8 @@ var _ = require('underscore'),
     RecentGames = require('./RecentGames'),
     Opponent = require('./Opponent'),
     AveragePointsAgainstOpponent = require('./AveragePointsAgainstOpponent'),
-    RecentPointsAgainstOpponent = require('./RecentPointsAgainstOpponent');
+    RecentPointsAgainstOpponent = require('./RecentPointsAgainstOpponent'),
+    DaysOff = require('./DaysOff');
 
 function InputsService() {
     this.inputTypes = [
@@ -14,7 +15,8 @@ function InputsService() {
         new RecentGames(3),
         new Opponent(),
         new AveragePointsAgainstOpponent(),
-        new RecentPointsAgainstOpponent(3)
+        new RecentPointsAgainstOpponent(3),
+        new DaysOff()
     ];
 }
 
