@@ -1,6 +1,7 @@
 'use strict';
 
-var q = require('q'),
+var _ = require('underscore'),
+    q = require('q'),
     TrainingSet = require('./TrainingSet'),
     inputsService = require('./inputs/InputsService');
 
@@ -13,7 +14,7 @@ TrainingService.prototype.getTrainingSetsForPlayer = function getTrainingSetsFor
 TrainingService.prototype.buildTrainingSetForPlayerAndGame = function buildTrainingSetForPlayerAndGame(player, game) {
     return inputsService.getInputsForPlayerAndGame(player, game)
         .then(function buildTrainingSet(inputs) {
-            return TrainingSet.create({ input: inputs, output: [game.points / 100] });
+            return TrainingSet.create({ input: inputsService.flatten(inputs), output: [game.points / 100] });
         });
 };
 

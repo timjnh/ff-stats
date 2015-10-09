@@ -21,14 +21,29 @@ function InputsService() {
 }
 
 InputsService.prototype.getInputsForPlayerAndGame = function getInputsForPlayerAndGame(player, game) {
-    var inputPromises = this.inputTypes.map(function getInputForPlayerAndGame(input) {
-        return q.when(input.evaluate(player, game));
-    });
+    var _this = this,
+        inputPromises = this.inputTypes.map(function getInputForPlayerAndGame(input) {
+            return q.when(input.evaluate(player, game));
+        });
 
     return q.all(inputPromises)
-        .then(function flattenInputs(inputs) {
-            return _.flatten(inputs);
+        .then(function mapInputs(inputs) {
+            var mappedInput,
+                mappedInputs = [];
+
+            for(var i in _this.inputTypes) {
+                mappedInput = {};
+                mappedInput[_this.inputTypes[i].constructor.name] = inputs[i];
+                mappedInputs.push(mappedInput);
+            }
+            return mappedInputs;
         });
+};
+
+InputsService.prototype.flatten = function flatten(inputs) {
+    return  _.flatten(inputs.map(function flattenInput(input) {
+        return _.flatten(_.values(input));
+    }));
 };
 
 module.exports = new InputsService();

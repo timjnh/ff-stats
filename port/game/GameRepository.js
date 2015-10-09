@@ -22,6 +22,21 @@ GameRepository.prototype.findOneByEid = function findOneByEid(eid) {
     return this._findOneWithCriteria({ eid: eid });
 };
 
+GameRepository.prototype.findNextGameForTeam = function findNextGameForTeam(team) {
+    var criteria = { $or: [{ home: team }, { away: team }], stats: { $exists: false }};
+    return q.Promise(function(resolve, reject) {
+        GameModel.find(criteria)
+            .sort({ year: 1, week: 1 })
+            .exec(function(err, games) {
+                if(err) {
+                    reject(err);
+                } else {
+                    resolve(Game.create(games[0].toObject()));
+                }
+            });
+    });
+};
+
 GameRepository.prototype._findOneWithCriteria = function _findOneWithCriteria(criteria) {
     return this._findWithCriteria(criteria)
         .then(function reduceToOne(games) {

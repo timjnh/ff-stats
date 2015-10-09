@@ -12,6 +12,7 @@ var _ = require('underscore'),
     PlayerGame = require('./domain/PlayerGame'),
     playerRepository = require('./port/player/PlayerRepository'),
     trainingService = require('./domain/TrainingService'),
+    inputsService = require('./domain/inputs/InputsService'),
     Team = require('./domain/Team');
 
 var BRADY = 'T Brady',
@@ -38,33 +39,31 @@ bootstrap.start()
         return q.all(playersWithNetworks);
     })
     .then(function tryNetwork(playersWithNetworks) {
-        var stats = {};
-        stats[BRADY] = [
-            0,
-            17.7 / 100,
-            19.38 / 100,
-            27.62 / 100,
-            Team.getId(Team.BILLS) / Team.TEAMS.length,
-            30.1 / 100,
-            32 / 100,
-            14.8 / 100,
-            32.4 / 100
-        ];
-        stats[RODGERS] = [
-            1,
-            27.88 / 100,
-            24.92 / 100,
-            23.06 / 100,
-            Team.getId(Team.SEAHAWKS) / Team.TEAMS.length,
-            9 / 100,
-            1.9 / 100,
-            28.9 / 100,
-            36.6 / 100
-        ];
+        var tryNetworkPromises = [];
 
         playersWithNetworks.forEach(function tryIt(player) {
-            console.log(player.name + ': ' + (player.network.activate(stats[player.name]) * 100));
+            var promise = gameRepository.findNextGameForTeam(player.team)
+                .then(function buildInputs(nextGame) {
+                    var nextPlayerGame = PlayerGame.create({
+                        eid: nextGame.eid,
+                        week: nextGame.week,
+                        year: nextGame.year,
+                        opponent: nextGame.getOpposingTeam(player.team),
+                        points: 0,
+                        stats: {}
+                    });
+
+                    return inputsService.getInputsForPlayerAndGame(player, nextPlayerGame);
+                })
+                .then(function executeNetwork(inputs) {
+                    console.log(inputs);
+                    console.log(player.name + ': ' + (player.network.activate(inputsService.flatten(inputs)) * 100));
+                });
+
+            tryNetworkPromises.push(promise);
         });
+
+        return q.all(tryNetworkPromises);
     })
     .then(function() {
         console.log('All done!');
