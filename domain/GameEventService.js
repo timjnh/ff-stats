@@ -29,6 +29,7 @@ GameEventService.prototype.buildPlayerStatsFromEvent = function buildPlayerStats
         case 106: // lost fumble
             return PlayerStats.create({ fumblesLost: 1 });
         case 14: // pass, no completion
+        case 29: // punt
         case 52: // forced fumble. zero because we only lose points if it's not recovered (see 106)
         case 53: // unforced fumble. zero because we only lose points if it's not recovered (see 106)
         case 54: // fumble out of bounds.  no points against i don't think
