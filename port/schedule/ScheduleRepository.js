@@ -27,9 +27,15 @@ ScheduleRepository.prototype.findGamesByYearAndWeekNumber = function findGamesBy
                 }
             })
         })
-        .then(function parseScheduleIntoGames(response) {
-            return _this._parseScheduleIntoGames(response.text);
-        })
+        .then(
+            function parseScheduleIntoGames(response) {
+                return _this._parseScheduleIntoGames(response.text);
+            },
+            function handleScheduleLookupError(error) {
+                console.log(error);
+                throw error;
+            }
+        )
         .then(function formatGames(games) {
             return _this._formatGames(games, year, weekNumber);
         });

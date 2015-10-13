@@ -5,8 +5,8 @@ var q = require('q'),
     scheduleRepository = require('./port/schedule/ScheduleRepository'),
     gameRepository = require('./port/game/GameRepository');
 
-var START_YEAR = 2001,
-    GAMES_PER_SEASON = 16,
+var START_YEAR = 2007,
+    WEEKS_PER_SEASON = 17,
     END_YEAR = 2016,
     END_WEEK = 1;
 
@@ -53,7 +53,7 @@ bootstrap.start()
         var retrieveChain = q.when();
 
         for(var year = START_YEAR; year <= END_YEAR; ++year) {
-            for (var weekNumber = 1; (year != END_YEAR || weekNumber < END_WEEK) && weekNumber < GAMES_PER_SEASON; weekNumber++) {
+            for (var weekNumber = 1; (year != END_YEAR || weekNumber < END_WEEK) && weekNumber <= WEEKS_PER_SEASON; weekNumber++) {
                 console.log('Setting up retrieval for ' + year + ', week ' + weekNumber);
 
                 retrieveChain = retrieveChain.then(findAndSaveGamesByYearAndWeekNumber.bind(this, year, weekNumber))
