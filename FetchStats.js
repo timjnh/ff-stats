@@ -38,7 +38,7 @@ bootstrap.start()
                     console.log('Could save stats for game with eid "' + game.eid + '" due to "' + err.message + '"');
                 }.bind(this, game))
                 .then(function addDelay() {
-                    return q.delay(5000);
+                    return q.delay(1000);
                 });
         }
 
