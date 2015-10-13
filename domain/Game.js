@@ -10,7 +10,7 @@ var MIN_YEAR = 1900;
 var schema = {
     _id: Joi.object().required(),
     eid: Joi.string().min(1).required(),
-    week: Joi.number().min(1).max(16).required(),
+    week: Joi.number().min(1).max(17).required(),
     year: Joi.number().min(MIN_YEAR).max((new Date).getFullYear()).required(),
     date: Joi.date().min(new Date(MIN_YEAR)).required(),
     home: Joi.string().required(),
