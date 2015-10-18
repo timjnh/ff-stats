@@ -7,8 +7,9 @@ var _ = require('underscore'),
 
 function TrainingService() {}
 
-TrainingService.prototype.getTrainingSetsForPlayer = function getTrainingSetsForPlayer(player) {
-    return q.all(player.games.map(this.buildTrainingSetForPlayerAndGame.bind(this, player)));
+TrainingService.prototype.getTrainingSetsForPlayerUpToGame = function getTrainingSetsForPlayerUpToGame(player, game) {
+    var precedingGames = player.findAllPrecedingGames(game);
+    return q.all(precedingGames.map(this.buildTrainingSetForPlayerAndGame.bind(this, player)));
 };
 
 TrainingService.prototype.buildTrainingSetForPlayerAndGame = function buildTrainingSetForPlayerAndGame(player, game) {

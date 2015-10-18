@@ -46,4 +46,10 @@ InputsService.prototype.flatten = function flatten(inputs) {
     }));
 };
 
+InputsService.prototype.getInputsList = function getInputsList() {
+    var inputsList = _.pluck(_.pluck(this.inputTypes, 'constructor'), 'name');
+    inputsList.sort();
+    return inputsList;
+};
+
 module.exports = new InputsService();

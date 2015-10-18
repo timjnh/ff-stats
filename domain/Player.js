@@ -21,8 +21,7 @@ Player.schema = {
     _id: Joi.object(),
     name: Joi.string().min(1).required(),
     team: Joi.string().min(1).required(),
-    games: Joi.array().items(PlayerGame.schema).required(),
-    network: Joi.object()
+    games: Joi.array().items(PlayerGame.schema).required()
 };
 
 Player.create = function create(attributes) {
@@ -40,10 +39,6 @@ Player.prototype.addGame = function addGame(playerGame) {
     }
 
     return Player.create(_.extend(_.clone(this), { games: games }));
-};
-
-Player.prototype.setNetwork = function setNetwork(network) {
-    return Player.create(_.extend(_.clone(this), { network: network }));
 };
 
 Player.prototype.findAllPrecedingGames = function findAllPrecedingGames(game) {

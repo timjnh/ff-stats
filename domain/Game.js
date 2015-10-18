@@ -34,6 +34,10 @@ Game.create = function create(attributes) {
     return new Game(attributes);
 };
 
+Game.prototype.getId = function getId() {
+    return GameId.create({ eid: this.eid });
+};
+
 Game.prototype.add = function add(attributes) {
     return Game.create(_.extend(_.clone(this), attributes));
 };
