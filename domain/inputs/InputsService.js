@@ -12,11 +12,11 @@ var _ = require('underscore'),
 function InputsService() {
     this.inputTypes = [
         new HomeVsAway(),
-        new RecentGames(3),
+        /*new RecentGames(3),
         new Opponent(),
         new AveragePointsAgainstOpponent(),
         new RecentPointsAgainstOpponent(3),
-        new DaysOff()
+        new DaysOff()*/
     ];
 }
 
@@ -47,9 +47,7 @@ InputsService.prototype.flatten = function flatten(inputs) {
 };
 
 InputsService.prototype.getInputsList = function getInputsList() {
-    var inputsList = _.pluck(_.pluck(this.inputTypes, 'constructor'), 'name');
-    inputsList.sort();
-    return inputsList;
+    return _.pluck(_.pluck(this.inputTypes, 'constructor'), 'name');
 };
 
 module.exports = new InputsService();
