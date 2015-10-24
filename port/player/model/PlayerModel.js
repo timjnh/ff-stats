@@ -23,8 +23,9 @@ var GameSchema = new Schema({
 
         fumblesLost: Number,
         interceptionsLost: Number
-    }
-}, { strict: 'throw', id: false });
+    },
+    inputs: Schema.Types.Mixed
+}, { strict: 'throw', id: false, minimize: false });
 
 var PlayerSchema = new Schema({
     name: { type: String },

@@ -2,8 +2,7 @@
 
 var _ = require('underscore'),
     assert = require('assert'),
-    Joi = require('joi'),
-    Player = require('./Player');
+    Joi = require('joi');
 
 var MIN_YEAR = 1900;
 

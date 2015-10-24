@@ -21,13 +21,12 @@ var BRADY = 'T Brady',
     RODGERS = 'A Rodgers';
 
 function buildPlayerNetworkUpToGame(player, game) {
-    var startTime = new Date();
-
     console.log('Building network for player "' + player.name + '" for ' + game.year + ', week ' + game.week);
     return trainingService.getTrainingSetsForPlayerUpToGame(player, game)
         .then(function buildNetworkFromTrainingSets(trainingSets) {
             var network,
-                trainer;
+                trainer,
+                startTime = new Date();
 
             if(!trainingSets.length) {
                 console.log('Could not build any training sets for player "' + player.name + '" in ' + game.year + ', week ' + game.week);
@@ -85,9 +84,36 @@ function buildAndSaveNetworkForPlayer(player) {
     return buildNetworkPromiseChain;
 }
 
+function buildAndSaveInputsForPlayer(player) {
+    var inputsPromiseChain = q.when(player);
+    player.games.forEach(function(playerGame) {
+        inputsPromiseChain = inputsPromiseChain.then(function getInputsForPlayerAndGame(updatedPlayer) {
+            if(updatedPlayer.hasInputsForGame(playerGame)) {
+                console.log('Player "' + updatedPlayer.name + '" has required inputs for week ' + playerGame.week + ', ' + playerGame.year + '.  Skipping...');
+                return updatedPlayer;
+            } else {
+                console.log('Building inputs for "' + updatedPlayer.name + '" for week ' + playerGame.week + ', ' + playerGame.year + '...');
+                return updatedPlayer.buildInputsForGame(playerGame);
+            }
+        });
+    });
+
+    return inputsPromiseChain
+        .then(function saveAndReturnUpdatedPlayer(updatedPlayer) {
+            return playerRepository.save(updatedPlayer)
+                .then(function returnUpdatedPlayer() {
+                    return updatedPlayer;
+                });
+        });
+}
+
 bootstrap.start()
     .then(function findAllPlayers() {
         return playerRepository.findAll();
+    })
+    .then(function buildAndSavePlayerInputs(players) {
+        var playerInputPromises = players.map(buildAndSaveInputsForPlayer.bind(this));
+        return q.all(playerInputPromises);
     })
     .then(function buildAndSaveNetworks(players) {
         var playerNetworkPromiseChain = q.when();

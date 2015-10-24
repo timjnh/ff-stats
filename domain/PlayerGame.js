@@ -20,11 +20,25 @@ PlayerGame.schema = {
     year: Joi.number().required(),
     opponent: Joi.string().min(1).required(),
     points: Joi.number().required(),
-    stats: Joi.object(PlayerStats.schema).required()
+    stats: Joi.object(PlayerStats.schema).required(),
+    inputs: Joi.object().required()
 };
 
 PlayerGame.create = function create(attributes) {
     return new PlayerGame(attributes);
+};
+
+PlayerGame.prototype.update = function update(attributes) {
+    return PlayerGame.create(_.extend(_.clone(this), attributes));
+};
+
+PlayerGame.prototype.hasAllInputs = function hasAllInputs(inputs) {
+    for(var k in inputs) {
+        if(!this.inputs || !this.inputs.hasOwnProperty(inputs[k])) {
+            return false;
+        }
+    }
+    return true;
 };
 
 module.exports = PlayerGame;

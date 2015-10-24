@@ -4,6 +4,7 @@ var _ = require('underscore'),
     assert = require('assert'),
     PlayerStats = require('./PlayerStats'),
     PlayerGame = require('./PlayerGame'),
+    inputsService = require('./inputs/InputsService'),
     Joi = require('joi');
 
 function Player(attributes) {
@@ -13,6 +14,13 @@ function Player(attributes) {
     }
 
     _.extendOwn(this, validatedAttributes.value);
+
+    for(var k in this.games) {
+        if(!(this.games[k] instanceof PlayerGame)) {
+            this.games[k] = PlayerGame.create(this.games[k]);
+        }
+    }
+
     Object.freeze(this);
     Object.freeze(this.games);
 }
@@ -39,6 +47,18 @@ Player.prototype.addGame = function addGame(playerGame) {
     }
 
     return Player.create(_.extend(_.clone(this), { games: games }));
+};
+
+Player.prototype.buildInputsForGame = function buildInputsForGame(game) {
+    var _this = this;
+    return inputsService.getInputsForPlayerAndGame(this, game)
+        .then(function addGameToPlayer(inputs) {
+            return _this.addGame(game.update({ inputs: inputs }));
+        });
+};
+
+Player.prototype.hasInputsForGame = function hasInputsForGame(game) {
+    return game.hasAllInputs(inputsService.getInputsList());
 };
 
 Player.prototype.findAllPrecedingGames = function findAllPrecedingGames(game) {

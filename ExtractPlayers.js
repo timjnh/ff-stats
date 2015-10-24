@@ -30,7 +30,8 @@ function addGameToPlayer(playerName, game, playerStats) {
                 year: game.year,
                 opponent: opponent,
                 points: parseFloat(points.toFixed(1)),
-                stats: playerStats
+                stats: playerStats,
+                inputs: {}
             }));
         })
         .then(function savePlayer(player) {

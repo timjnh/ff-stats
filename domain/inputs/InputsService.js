@@ -7,7 +7,8 @@ var _ = require('underscore'),
     Opponent = require('./Opponent'),
     AveragePointsAgainstOpponent = require('./AveragePointsAgainstOpponent'),
     RecentPointsAgainstOpponent = require('./RecentPointsAgainstOpponent'),
-    DaysOff = require('./DaysOff');
+    DaysOff = require('./DaysOff'),
+    Input = require('./Input');
 
 function InputsService() {
     this.inputTypes = [
@@ -28,26 +29,32 @@ InputsService.prototype.getInputsForPlayerAndGame = function getInputsForPlayerA
 
     return q.all(inputPromises)
         .then(function mapInputs(inputs) {
-            var mappedInput,
-                mappedInputs = [];
-
+            var mappedInputs = {};
             for(var i in _this.inputTypes) {
-                mappedInput = {};
-                mappedInput[_this.inputTypes[i].constructor.name] = inputs[i];
-                mappedInputs.push(mappedInput);
+                mappedInputs[_this.inputTypes[i].getName()] = inputs[i];
             }
             return mappedInputs;
         });
 };
 
-InputsService.prototype.flatten = function flatten(inputs) {
-    return  _.flatten(inputs.map(function flattenInput(input) {
-        return _.flatten(_.values(input));
-    }));
+// TODO - create an input set object and let this be its responsibility
+InputsService.prototype.sortInputSet = function sortInputSet(inputs) {
+    var _this = this,
+        sortedPairs;
+
+    sortedPairs = _.sortBy(_.pairs(inputs), function getIndexOfInput(inputPair) {
+        for(var i = 0; i < _this.inputTypes.length; ++i) {
+            if(inputPair[0] === _this.inputTypes[i].getName()) {
+                return i;
+            }
+        }
+    });
+
+    return sortedPairs.map(_.last);
 };
 
 InputsService.prototype.getInputsList = function getInputsList() {
-    return _.pluck(_.pluck(this.inputTypes, 'constructor'), 'name');
+    return this.inputTypes.map(function getName(input) { return input.getName(); });
 };
 
 module.exports = new InputsService();
