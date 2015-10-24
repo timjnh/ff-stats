@@ -5,9 +5,9 @@
   "scripts": {
     "fetch-games": "node ./src/FetchGames.js",
     "fetch-stats": "node ./src/FetchStats.js",
-    "fetch-stats-tdd": "./node_modules/.bin/nodemon ./src/FetchStats.js",
-    "extract-players-tdd": "./node_modules/.bin/nodemon ./src/ExtractPlayers.js",
-    "build-networks-tdd": "./node_modules/.bin/nodemon ./src/BuildNetworks.js",
+    "fetch-stats-nm": "./node_modules/.bin/nodemon ./src/FetchStats.js",
+    "extract-players-nm": "./node_modules/.bin/nodemon ./src/ExtractPlayers.js",
+    "build-networks-nm": "./node_modules/.bin/nodemon ./src/BuildNetworks.js",
 
     "postinstall": "bower install",
     "start-app": "http-server ./app -a localhost -p 8000 -c-1 -o"
