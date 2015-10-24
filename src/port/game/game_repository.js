@@ -3,8 +3,8 @@
 var assert = require('assert'),
     fs = require('fs'),
     q = require('q'),
-    Game = require('../../domain/Game'),
-    GameModel = require('./model/GameModel');
+    Game = require('../../domain/game'),
+    GameModel = require('./model/game_model');
 
 function GameRepository() {}
 

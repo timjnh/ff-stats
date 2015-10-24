@@ -1,21 +1,21 @@
 'use strict';
 
 var _ = require('underscore'),
-    Input = require('./Input');
+    Input = require('./input');
 
-function RecentPointsAgainstOpponent(gamesToConsider) {
+function RecentGames(gamesToConsider) {
     Input.call(this);
 
     this.gamesToConsider = gamesToConsider;
 }
-RecentPointsAgainstOpponent.prototype = _.create(Input.prototype, { constructor: RecentPointsAgainstOpponent });
+RecentGames.prototype = _.create(Input.prototype, { constructor: RecentGames });
 
-RecentPointsAgainstOpponent.prototype.getName = function getName() {
+RecentGames.prototype.getName = function getName() {
     return this.constructor.name + this.gamesToConsider;
 };
 
-RecentPointsAgainstOpponent.prototype.evaluate = function evaluate(player, game) {
-    var precedingGames = player.findPrecedingGamesAgainstOpponent(game, this.gamesToConsider),
+RecentGames.prototype.evaluate = function evaluate(player, game) {
+    var precedingGames = player.findPrecedingGames(game, this.gamesToConsider),
         precedingPoints = precedingGames.map(function getPoints(game) {
             return game.points / 100;
         });
@@ -29,4 +29,4 @@ RecentPointsAgainstOpponent.prototype.evaluate = function evaluate(player, game)
     return precedingPoints;
 };
 
-module.exports = RecentPointsAgainstOpponent;
+module.exports = RecentGames;

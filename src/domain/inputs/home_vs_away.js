@@ -1,8 +1,8 @@
 'use strict';
 
 var _ = require('underscore'),
-    Input = require('./Input'),
-    gameRepository = require('../../port/game/GameRepository');
+    Input = require('./input'),
+    gameRepository = require('../../port/game/game_repository');
 
 function HomeVsAway() {
     Input.call(this);

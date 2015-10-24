@@ -1,9 +1,9 @@
 'use strict';
 
 var _ = require('underscore'),
-    Input = require('./Input'),
-    gameRepository = require('../../port/game/GameRepository'),
-    Team = require('../Team');
+    Input = require('./input'),
+    gameRepository = require('../../port/game/game_repository'),
+    Team = require('../team');
 
 function Opponent() {
     Input.call(this);

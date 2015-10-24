@@ -2,8 +2,8 @@
 
 var _ = require('underscore'),
     q = require('q'),
-    Input = require('./Input'),
-    gameRepository = require('../../port/game/GameRepository');
+    Input = require('./input'),
+    gameRepository = require('../../port/game/game_repository');
 
 function DaysOff() {
     Input.call(this);

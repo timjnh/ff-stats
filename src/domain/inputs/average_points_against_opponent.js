@@ -2,7 +2,7 @@
 
 var _ = require('underscore'),
     Input = require('./Input'),
-    gameRepository = require('../../port/game/GameRepository');
+    gameRepository = require('../../port/game/game_repository');
 
 function AveragePointsAgainstOpponent() {
     Input.call(this);

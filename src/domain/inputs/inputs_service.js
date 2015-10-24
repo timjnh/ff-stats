@@ -2,14 +2,14 @@
 
 var _ = require('underscore'),
     q = require('q'),
-    HomeVsAway = require('./HomeVsAway'),
-    RecentGames = require('./RecentGames'),
-    Opponent = require('./Opponent'),
-    AveragePointsAgainstOpponent = require('./AveragePointsAgainstOpponent'),
-    RecentPointsAgainstOpponent = require('./RecentPointsAgainstOpponent'),
-    DaysOff = require('./DaysOff'),
-    Input = require('./Input'),
-    InputSet = require('../InputSet');
+    HomeVsAway = require('./home_vs_away'),
+    RecentGames = require('./recent_games'),
+    Opponent = require('./opponent'),
+    AveragePointsAgainstOpponent = require('./average_points_against_opponent'),
+    RecentPointsAgainstOpponent = require('./recent_points_against_opponent'),
+    DaysOff = require('./days_off'),
+    Input = require('./input'),
+    InputSet = require('../input_set');
 
 function InputsService() {
     this.inputTypes = [

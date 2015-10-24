@@ -1,7 +1,7 @@
 'use strict';
 
 var assert = require('assert'),
-    PlayerStats = require('./PlayerStats');
+    PlayerStats = require('./player_stats');
 
 function GameEventService() {}
 

@@ -6,7 +6,7 @@ var fs = require('fs'),
     superagent = require('superagent'),
     sprintf = require('sprintf-js').sprintf,
     jsonPath = require('JSONPath'),
-    Stats = require('../../domain/Stats');
+    Stats = require('../../domain/stats');
 
 function StatsRepository() {
     this.baseUrl = 'http://nfl.com/liveupdate/game-center/%(eid)s/%(eid)s_gtd.json';

@@ -1,9 +1,9 @@
 'use strict';
 
 var q = require('q'),
-    bootstrap = require('./Bootstrap'),
-    scheduleRepository = require('./port/schedule/ScheduleRepository'),
-    gameRepository = require('./port/game/GameRepository');
+    bootstrap = require('./bootstrap'),
+    scheduleRepository = require('./port/schedule/schedule_repository'),
+    gameRepository = require('./port/game/game_repository');
 
 var START_YEAR = 2007,
     WEEKS_PER_SEASON = 17,

@@ -3,16 +3,16 @@
 var _ = require('underscore'),
     q = require('q'),
     synaptic = require('synaptic'),
-    bootstrap = require('./Bootstrap'),
-    gameRepository = require('./port/game/GameRepository'),
-    fantasyPointService = require('./domain/FantasyPointService'),
-    gameEventService = require('./domain/GameEventService'),
-    PlayerStats = require('./domain/PlayerStats'),
-    Player = require('./domain/Player'),
-    PlayerGame = require('./domain/PlayerGame'),
-    playerRepository = require('./port/player/PlayerRepository'),
-    trainingService = require('./domain/TrainingService'),
-    Team = require('./domain/Team');
+    bootstrap = require('./bootstrap'),
+    gameRepository = require('./port/game/game_repository'),
+    fantasyPointService = require('./domain/fantasy_point_service'),
+    gameEventService = require('./domain/game_event_service'),
+    PlayerStats = require('./domain/player_stats'),
+    Player = require('./domain/player'),
+    PlayerGame = require('./domain/player_game'),
+    playerRepository = require('./port/player/player_repository'),
+    trainingService = require('./domain/training_service'),
+    Team = require('./domain/team');
 
 var BRADY = 'T Brady',
     RODGERS = 'A Rodgers';

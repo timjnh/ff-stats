@@ -2,9 +2,9 @@
 
 var _ = require('underscore'),
     assert = require('assert'),
-    PlayerStats = require('./PlayerStats'),
-    PlayerGame = require('./PlayerGame'),
-    inputsService = require('./inputs/InputsService'),
+    PlayerStats = require('./player_stats'),
+    PlayerGame = require('./player_game'),
+    inputsService = require('./inputs/inputs_service'),
     Joi = require('joi');
 
 function Player(attributes) {
