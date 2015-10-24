@@ -124,33 +124,29 @@ bootstrap.start()
 
         return playerNetworkPromiseChain;
     })
-    /*.then(function tryNetwork(playersWithNetworks) {
-        var tryNetworkPromises = [];
+    .then(function findTomBrady() {
+        return playerRepository.findOneByNameAndTeam(BRADY, 'patriots');
+    })
+    .then(function showProjectionsOverTime(brady) {
+        var projectionChain = q.when();
+        brady.getOrderedGames().forEach(function addToProjectionChain(game) {
+            projectionChain = projectionChain.then(function showProjectionForGame() {
+                return playerNetworkRepository.findByPlayerAndGameAndInputList(brady, game, inputsService.getInputsList())
+                    .then(function activateNetwork(playerNetwork) {
+                        if(!playerNetwork) {
+                            console.log('No network exists for ' + brady.name + ' in week ' + game.week + ', ' + game.year);
+                        } else {
+                            var network = synaptic.Network.fromJSON(playerNetwork.network),
+                                projection = network.activate(game.inputs.sortAndFlatten());
 
-        playersWithNetworks.forEach(function tryIt(player) {
-            var promise = gameRepository.findNextGameForTeam(player.team)
-                .then(function buildInputs(nextGame) {
-                    var nextPlayerGame = PlayerGame.create({
-                        eid: nextGame.eid,
-                        week: nextGame.week,
-                        year: nextGame.year,
-                        opponent: nextGame.getOpposingTeam(player.team),
-                        points: 0,
-                        stats: {}
+                            console.log('Week ' + game.week + ', ' + game.year + ': ' + (projection * 100) + ' projected, ' + game.points + ' actual');
+                        }
                     });
-
-                    return inputsService.getInputsForPlayerAndGame(player, nextPlayerGame);
-                })
-                .then(function executeNetwork(inputs) {
-                    console.log(inputs);
-                    console.log(player.name + ': ' + (player.network.activate(inputsService.flatten(inputs)) * 100));
-                });
-
-            tryNetworkPromises.push(promise);
+            });
         });
 
-        return q.all(tryNetworkPromises);
-    })*/
+        return projectionChain;
+    })
     .then(function() {
         console.log('All done!');
     })
