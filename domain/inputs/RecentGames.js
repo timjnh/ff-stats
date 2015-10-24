@@ -10,6 +10,10 @@ function RecentGames(gamesToConsider) {
 }
 RecentGames.prototype = _.create(Input.prototype, { constructor: RecentGames });
 
+RecentGames.prototype.getName = function getName() {
+    return this.constructor.name + this.gamesToConsider;
+};
+
 RecentGames.prototype.evaluate = function evaluate(player, game) {
     var precedingGames = player.findPrecedingGames(game, this.gamesToConsider),
         precedingPoints = precedingGames.map(function getPoints(game) {
