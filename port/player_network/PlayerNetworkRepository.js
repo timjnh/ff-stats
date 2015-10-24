@@ -9,7 +9,13 @@ var _ = require('underscore'),
 function PlayerNetworkRepository() {}
 
 PlayerNetworkRepository.prototype.findByPlayerAndGameAndInputList = function findByPlayerAndGameAndInputList(player, game, inputsList) {
-    var criteria = {
+    var criteria,
+        inputsListKey;
+
+    inputsList.sort();
+    inputsListKey = inputsList.join();
+
+    criteria = {
         player: {
             name: player.name,
             team: player.team
@@ -17,7 +23,7 @@ PlayerNetworkRepository.prototype.findByPlayerAndGameAndInputList = function fin
         game: {
             eid: game.eid
         },
-        inputsList: inputsList
+        inputsListKey: inputsListKey
     };
 
     return this._findOneWithCriteria(criteria);
