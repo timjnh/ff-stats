@@ -34,7 +34,7 @@ PlayerGame.prototype.update = function update(attributes) {
 
 PlayerGame.prototype.hasAllInputs = function hasAllInputs(inputs) {
     for(var k in inputs) {
-        if(!this.inputs || !this.inputs.hasOwnProperty(inputs[k])) {
+        if(!this.inputs.hasValueForInput(inputs[k])) {
             return false;
         }
     }

@@ -4,6 +4,9 @@ var _ = require('underscore'),
     q = require('q'),
     assert = require('assert'),
     Player = require('../../domain/Player'),
+    PlayerGame = require('../../domain/PlayerGame'),
+    InputSet = require('../../domain/InputSet'),
+    PlayerStats = require('../../domain/PlayerStats'),
     PlayerModel = require('./model/PlayerModel');
 
 function PlayerRepository() {}
@@ -25,17 +28,30 @@ PlayerRepository.prototype.findOneByNameAndTeam = function findByNameAndTeam(nam
 };
 
 PlayerRepository.prototype._findWithCriteria = function _findWithCriteria(criteria) {
+    var _this = this;
     return q.Promise(function(resolve, reject) {
         PlayerModel.find(criteria, function(err, players) {
             if(err) {
                 reject(err);
             } else {
                 resolve(players.map(function createPlayer(player) {
-                    return Player.create(player.toObject());
+                    return _this._buildPlayerFromModel(player);
                 }));
             }
         });
     });
+};
+
+PlayerRepository.prototype._buildPlayerFromModel = function _buildPlayerFromModel(playerModel) {
+    var player = playerModel.toObject();
+
+    player.games = player.games.map(function buildPlayerGame(game) {
+        game.inputs = InputSet.create(game.inputs);
+        game.stats = PlayerStats.create(game.stats);
+        return PlayerGame.create(game);
+    });
+
+    return Player.create(player);
 };
 
 PlayerRepository.prototype.save = function save(player) {

@@ -8,16 +8,17 @@ var _ = require('underscore'),
     AveragePointsAgainstOpponent = require('./AveragePointsAgainstOpponent'),
     RecentPointsAgainstOpponent = require('./RecentPointsAgainstOpponent'),
     DaysOff = require('./DaysOff'),
-    Input = require('./Input');
+    Input = require('./Input'),
+    InputSet = require('../InputSet');
 
 function InputsService() {
     this.inputTypes = [
         new HomeVsAway(),
-        /*new RecentGames(3),
+        new RecentGames(3),
         new Opponent(),
         new AveragePointsAgainstOpponent(),
         new RecentPointsAgainstOpponent(3),
-        new DaysOff()*/
+        new DaysOff()
     ];
 }
 
@@ -33,24 +34,8 @@ InputsService.prototype.getInputsForPlayerAndGame = function getInputsForPlayerA
             for(var i in _this.inputTypes) {
                 mappedInputs[_this.inputTypes[i].getName()] = inputs[i];
             }
-            return mappedInputs;
+            return InputSet.create(mappedInputs);
         });
-};
-
-// TODO - create an input set object and let this be its responsibility
-InputsService.prototype.sortInputSet = function sortInputSet(inputs) {
-    var _this = this,
-        sortedPairs;
-
-    sortedPairs = _.sortBy(_.pairs(inputs), function getIndexOfInput(inputPair) {
-        for(var i = 0; i < _this.inputTypes.length; ++i) {
-            if(inputPair[0] === _this.inputTypes[i].getName()) {
-                return i;
-            }
-        }
-    });
-
-    return sortedPairs.map(_.last);
 };
 
 InputsService.prototype.getInputsList = function getInputsList() {

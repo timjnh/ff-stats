@@ -14,7 +14,7 @@ TrainingService.prototype.getTrainingSetsForPlayerUpToGame = function getTrainin
 
 TrainingService.prototype.buildTrainingSetForPlayerAndGame = function buildTrainingSetForPlayerAndGame(player, game) {
     var trainingSet = TrainingSet.create({
-        input: inputsService.sortInputSet(game.inputs),
+        input: game.inputs.sortAndFlatten(),
         output: [game.points / 100]
     });
 

@@ -14,13 +14,6 @@ function Player(attributes) {
     }
 
     _.extendOwn(this, validatedAttributes.value);
-
-    for(var k in this.games) {
-        if(!(this.games[k] instanceof PlayerGame)) {
-            this.games[k] = PlayerGame.create(this.games[k]);
-        }
-    }
-
     Object.freeze(this);
     Object.freeze(this.games);
 }
