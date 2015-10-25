@@ -15,7 +15,8 @@ var _ = require('underscore'),
     inputsService = require('./application/domain/inputs/inputs_service'),
     Team = require('./application/domain/team'),
     PlayerNetwork = require('./application/domain/player_network'),
-    playerNetworkRepository = require('./port/player_network/player_network_repository');
+    playerNetworkRepository = require('./port/player_network/player_network_repository'),
+    projectionsService = require('./application/domain/projections_service');
 
 var BRADY = 'T Brady',
     RODGERS = 'A Rodgers';
@@ -128,24 +129,12 @@ bootstrap.start()
         return playerRepository.findOneByNameAndTeam(BRADY, 'patriots');
     })
     .then(function showProjectionsOverTime(brady) {
-        var projectionChain = q.when();
-        brady.getOrderedGames().forEach(function addToProjectionChain(game) {
-            projectionChain = projectionChain.then(function showProjectionForGame() {
-                return playerNetworkRepository.findByPlayerAndGameAndInputList(brady, game, inputsService.getInputsList())
-                    .then(function activateNetwork(playerNetwork) {
-                        if(!playerNetwork) {
-                            console.log('No network exists for ' + brady.name + ' in week ' + game.week + ', ' + game.year);
-                        } else {
-                            var network = synaptic.Network.fromJSON(playerNetwork.network),
-                                projection = network.activate(game.inputs.sortAndFlatten());
-
-                            console.log('Week ' + game.week + ', ' + game.year + ': ' + (projection * 100) + ' projected, ' + game.points + ' actual');
-                        }
-                    });
+        return projectionsService.buildProjectionsForAllGames(brady)
+            .then(function displayProjections(projections) {
+                projections.forEach(function displayProjection(projection) {
+                    console.log('Week ' + projection.game.week + ', ' + projection.game.year + ': ' + projection.projected + ' projected, ' + projection.actual + ' actual');
+                });
             });
-        });
-
-        return projectionChain;
     })
     .then(function() {
         console.log('All done!');
