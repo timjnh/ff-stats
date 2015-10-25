@@ -15,12 +15,14 @@ PlayerRepository.prototype.findAll = function findAll() {
     return this._findWithCriteria({});
 };
 
-PlayerRepository.prototype.findOneByNameAndTeam = function findByNameAndTeam(name, team) {
+PlayerRepository.prototype.findOneByNameAndTeam = function findByNameAndTeam(name, team, createIfNotFound) {
     return this._findWithCriteria({ name: name, team: team })
         .then(function buildIfNotFound(players) {
             assert(players.length <= 1, 'Found multiple players with name "' + name + '" and team "' + team + '"');
-            if(players.length == 0) {
-                return new Player({ name: name, team: team, games: [] });
+            if(players.length == 0 && createIfNotFound) {
+                return new Player({name: name, team: team, games: []});
+            } else if(players.length == 0) {
+                throw 'Player ' + name + ' of ' + team + ' not found';
             } else {
                 return players[0];
             }

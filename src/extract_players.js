@@ -22,7 +22,7 @@ function addGameToPlayer(playerName, game, playerStats) {
         playerTeam = playerName == BRADY ? Team.PATRIOTS : Team.PACKERS,
         opponent = game.getOpposingTeam(playerTeam);
 
-    return playerRepository.findOneByNameAndTeam(playerName, playerTeam)
+    return playerRepository.findOneByNameAndTeam(playerName, playerTeam, true)
         .then(function addGameToPlayer(player) {
             return player.addGame(PlayerGame.create({
                 eid: game.eid,
