@@ -1,26 +1,27 @@
 'use strict';
 
-var express = require('express');
+var Hapi = require('hapi');
 
-var app = express();
-//app.use(express.logger());
+var server = new Hapi.Server({ debug: { request: ['error'] } });
+server.connection({ port: 8000 });
 
-/*app.configure(function(){
-    app.set('views', __dirname);
-    app.use(express.bodyParser());
-    app.use(express.methodOverride());
-    app.use(express.static(__dirname + '/'));
-    app.use(app.router);
-    app.engine('html', require('ejs').renderFile);
-});*/
+server.register(require('inert'), function (err) {
+    if (err) {
+        throw err;
+    }
 
-app.use(express.static(__dirname + '/'));
+    server.route({
+        method: 'GET',
+        path: '/{param*}',
+        handler: {
+            directory: {
+                path: 'app/public',
+                index: ['index.html']
+            }
+        }
+    });
 
-app.get('/', function(request, response) {
-    response.render('index.html')
-});
-
-var port = process.env.PORT || 8000;
-app.listen(port, function() {
-    console.log("Listening on " + port);
+    server.start(function () {
+        console.log('Server running at:', server.info.uri);
+    });
 });
