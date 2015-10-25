@@ -1,3 +1,3 @@
 'use strict';
 
-angular.module('myApp', ['myApp.statsChart']);
+angular.module('myApp', ['myApp.projectionsChart']);

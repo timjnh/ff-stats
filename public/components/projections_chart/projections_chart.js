@@ -1,16 +1,16 @@
 (function() {
     'use strict';
 
-    angular.module('myApp.statsChart', ['chart.js'])
-        .directive('statsChart', [function() {
+    angular.module('myApp.projectionsChart', ['chart.js'])
+        .directive('projectionsChart', [function() {
             return {
                 restrict: 'A',
-                templateUrl: 'components/stats_chart/stats_chart.html',
-                controllerAs: 'statsChartController',
-                controller: 'StatsChartController'
+                templateUrl: 'components/projections_chart/projections_chart.html',
+                controllerAs: 'projectionsChartController',
+                controller: 'ProjectionsChartController'
             };
         }])
-        .controller('StatsChartController', ['$scope', function($scope) {
+        .controller('ProjectionsChartController', ['$scope', function($scope) {
             $scope.labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
             $scope.series = ['Series A', 'Series B'];
             $scope.data = [
