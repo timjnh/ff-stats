@@ -2,6 +2,7 @@
 
 var Hapi = require('hapi'),
     Boom = require('boom'),
+    bootstrap = require('./src/bootstrap'),
     projectionsRoutes = require('./src/application/api/http/projections/projections_routes');
 
 var server = new Hapi.Server({ debug: { request: ['error'] } });
@@ -28,6 +29,17 @@ server.register(require('inert'), function (err) {
     });
 
     server.start(function () {
-        console.log('Server running at:', server.info.uri);
+        bootstrap.start().then(function inform() {
+            console.log('Server running at:', server.info.uri);
+        });
+    });
+});
+
+process.once('SIGUSR2', function() {
+    bootstrap.stop().then(function stopServerAndKill() {
+        server.stop(function killProcess() {
+            console.log('Server stopped');
+            process.kill(process.pid, 'SIGUSR2');
+        });
     });
 });
