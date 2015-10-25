@@ -3,7 +3,7 @@
 var _ = require('underscore'),
     q = require('q'),
     Input = require('./input'),
-    gameRepository = require('../../port/game/game_repository');
+    gameRepository = require('../../../port/game/game_repository');
 
 function DaysOff() {
     Input.call(this);
