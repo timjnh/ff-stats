@@ -9,7 +9,7 @@
     "extract-players-nm": "./node_modules/.bin/nodemon ./src/extract_players.js",
     "build-networks-nm": "./node_modules/.bin/nodemon ./src/build_networks.js",
     "postinstall": "bower install",
-    "start-app": "node ./app/app.js"
+    "start-app": "node ./app.js"
   },
   "author": "",
   "license": "MIT",

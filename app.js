@@ -15,7 +15,7 @@ server.register(require('inert'), function (err) {
         path: '/{param*}',
         handler: {
             directory: {
-                path: 'app/public',
+                path: 'public',
                 index: ['index.html']
             }
         }
