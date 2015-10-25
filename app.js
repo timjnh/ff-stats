@@ -1,7 +1,6 @@
 'use strict';
 
 var Hapi = require('hapi'),
-    Boom = require('boom'),
     bootstrap = require('./src/bootstrap'),
     projectionsRoutes = require('./src/application/api/http/projections/projections_routes');
 

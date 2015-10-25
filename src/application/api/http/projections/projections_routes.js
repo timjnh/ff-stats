@@ -1,6 +1,7 @@
 'use strict';
 
-var projectionsResource = require('./projections_resource.js');
+var projectionsResource = require('./projections_resource.js'),
+    Boom = require('Boom');
 
 module.exports = [
     {
