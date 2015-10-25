@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    angular.module('myApp.projectionsChart', ['chart.js'])
+    angular.module('myApp.projectionsChart', ['chart.js', 'myApp.projectionsService'])
         .directive('projectionsChart', [function() {
             return {
                 restrict: 'A',
@@ -10,12 +10,20 @@
                 controller: 'ProjectionsChartController'
             };
         }])
-        .controller('ProjectionsChartController', ['$scope', function($scope) {
-            $scope.labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-            $scope.series = ['Series A', 'Series B'];
-            $scope.data = [
-                [65, 59, 80, 81, 56, 55, 40],
-                [28, 48, 40, 19, 86, 27, 90]
-            ];
-        }]);
+        .controller('ProjectionsChartController', function($scope, ProjectionsService) {
+            $scope.series = ['Projected', 'Actual'];
+            $scope.labels = [];
+            $scope.data = [[], []];
+
+            ProjectionsService.getProjectionsForAllGames('T Brady', 'patriots')
+                .then(function assembleChartData(projections) {
+                    projections.forEach(function addProjectionToChartData(projection) {
+                        if(projection.projected !== undefined) {
+                            $scope.labels.push('Week ' + projection.game.week + ', ' + projection.game.year);
+                            $scope.data[0].push(Math.round(projection.projected * 10) / 10);
+                            $scope.data[1].push(projection.actual);
+                        }
+                    });
+                });
+        });
 })();
