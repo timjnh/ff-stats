@@ -3,10 +3,10 @@
 var _ = require('underscore'),
     q = require('q'),
     assert = require('assert'),
-    Player = require('../../domain/player'),
-    PlayerGame = require('../../domain/player_game'),
-    InputSet = require('../../domain/input_set'),
-    PlayerStats = require('../../domain/player_stats'),
+    Player = require('../../application/domain/player'),
+    PlayerGame = require('../../application/domain/player_game'),
+    InputSet = require('../../application/domain/input_set'),
+    PlayerStats = require('../../application/domain/player_stats'),
     PlayerModel = require('./model/player_model');
 
 function PlayerRepository() {}

@@ -5,7 +5,7 @@ var _ = require('underscore'),
     bootstrap = require('./bootstrap'),
     gameRepository = require('./port/game/game_repository'),
     statsRepository = require('./port/stats/stats_repository'),
-    Game = require('./domain/game');
+    Game = require('./application/domain/game');
 
 function findGamesInNeedOfStats() {
     return gameRepository.findGamesWithoutStats()
