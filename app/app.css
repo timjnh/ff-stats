@@ -28,3 +28,9 @@
   content: "";
   padding: 0;
 }
+
+div[stats-chart] {
+  width: 800px;
+  height: 600px;
+  margin: 200px auto;
+}
