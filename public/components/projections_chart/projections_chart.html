@@ -1,6 +1,8 @@
 <div>
     <md-toolbar>
-        <h3>{{projectionsChartController.title}}</h3>
+        <div class="md-toolbar-tools">
+            <h3>{{projectionsChartController.title | ucfirst }}</h3>
+        </div>
     </md-toolbar>
 
     <canvas
