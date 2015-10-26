@@ -29,6 +29,10 @@ PlayerRepository.prototype.findOneByNameAndTeam = function findByNameAndTeam(nam
         });
 };
 
+PlayerRepository.prototype.findAll = function findAll() {
+    return this._findWithCriteria({});
+};
+
 PlayerRepository.prototype._findWithCriteria = function _findWithCriteria(criteria) {
     var _this = this;
     return q.Promise(function(resolve, reject) {
