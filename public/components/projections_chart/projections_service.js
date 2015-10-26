@@ -2,7 +2,7 @@
     'use strict';
 
     angular.module('myApp.projectionsService', [])
-        .factory('ProjectionsService', function($http) {
+        .factory('projectionsService', function($http) {
             var projectionsService = {};
 
             projectionsService.getProjectionsForAllGames = function getProjectionsForAllGames(player, team) {
