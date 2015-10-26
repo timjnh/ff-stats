@@ -1,9 +1,23 @@
-<canvas
-    id="line"
-    class="chart chart-line"
-    chart-data="projectionsChartController.data"
-    chart-labels="projectionsChartController.labels"
-    chart-legend="true"
-    chart-series="projectionsChartController.series"
->
-</canvas>
+<div>
+    <md-toolbar>
+        <h3>{{projectionsChartController.title}}</h3>
+    </md-toolbar>
+
+    <canvas
+        ng-if="!projectionsChartController.isLoading"
+        id="line"
+        class="chart chart-line"
+        chart-data="projectionsChartController.data"
+        chart-labels="projectionsChartController.labels"
+        chart-legend="true"
+        chart-series="projectionsChartController.series"
+    >
+    </canvas>
+
+    <div class="loading" layout="row" layout-align="center" ng-if="projectionsChartController.isLoading">
+        <div flex="85">
+            Calculating projections...
+            <md-progress-linear md-mode="indeterminate"></md-progress-linear>
+        </div>
+    </div>
+</div>

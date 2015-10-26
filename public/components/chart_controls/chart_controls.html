@@ -1,0 +1,9 @@
+<div>
+    <md-subheader>Player</md-subheader>
+    <md-divider></md-divider>
+    <md-radio-group ng-model="chartControlsController.chartControlsService.player" ng-change="chartControlsController.chartControlsService.onChange()">
+        <md-radio-button ng-repeat="player in chartControlsController.players" ng-value="player">
+            {{player.name}} - {{player.team}}
+        </md-radio-button>
+    </md-radio-group>
+</div>
