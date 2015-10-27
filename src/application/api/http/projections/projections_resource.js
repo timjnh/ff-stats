@@ -6,9 +6,11 @@ var q = require('q'),
 
 function ProjectionsResource() {}
 
-ProjectionsResource.prototype.get = function get(name, team) {
-    return playerRepository.findOneByNameAndTeam(name, team)
-        .then(projectionsService.buildProjectionsForAllGames.bind(projectionsService));
+ProjectionsResource.prototype.get = function get(player, inputs) {
+    return playerRepository.findOneByNameAndTeam(player.name, player.team)
+        .then(function buildProjectionsForPlayer(foundPlayer) {
+            return projectionsService.buildProjectionsForAllGames(foundPlayer, inputs);
+        });
 };
 
 module.exports = new ProjectionsResource();

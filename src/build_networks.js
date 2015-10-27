@@ -129,7 +129,7 @@ bootstrap.start()
         return playerRepository.findOneByNameAndTeam(BRADY, 'patriots');
     })
     .then(function showProjectionsOverTime(brady) {
-        return projectionsService.buildProjectionsForAllGames(brady)
+        return projectionsService.buildProjectionsForAllGames(brady, inputsService.getInputsList())
             .then(function displayProjections(projections) {
                 projections.forEach(function displayProjection(projection) {
                     console.log('Week ' + projection.game.week + ', ' + projection.game.year + ': ' + projection.projected + ' projected, ' + projection.actual + ' actual');

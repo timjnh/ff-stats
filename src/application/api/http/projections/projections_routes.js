@@ -8,7 +8,9 @@ module.exports = [
         method: 'GET',
         path: '/projections/{name}/{team}',
         handler: function (request, reply) {
-            projectionsResource.get(request.params.name, request.params.team)
+            var player = { name: request.params.name, team: request.params.team };
+
+            projectionsResource.get(player, request.query.inputs)
                 .then(function afterRead(response) {
                     reply(response);
                 })
