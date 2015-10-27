@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    angular.module('myApp.chartControls', ['myApp.chartControlsService', 'myApp.playersService'])
+    angular.module('myApp.chartControls', ['myApp.chartControlsService', 'myApp.playersService', 'myApp.inputsService'])
         .directive('chartControls', function() {
             return {
                 restrict: 'E',
@@ -10,7 +10,7 @@
                 controller: 'chartControlsController'
             };
         })
-        .controller('chartControlsController', function(chartControlsService, playersService) {
+        .controller('chartControlsController', function(chartControlsService, playersService, inputsService) {
             var _this = this;
 
             this.chartControlsService = chartControlsService;
@@ -18,5 +18,9 @@
             playersService.getAll().then(function(players) {
                 _this.players = players;
             });
+
+            inputsService.getAll().then(function(inputs) {
+                _this.inputs = inputs;
+            })
         });
 })();

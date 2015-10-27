@@ -3,8 +3,11 @@
 var _ = require('underscore'),
     Hapi = require('hapi'),
     bootstrap = require('./src/bootstrap'),
-    projectionsRoutes = require('./src/application/api/http/projections/projections_routes'),
-    playersRoutes = require('./src/application/api/http/players/players_routes');
+    routes = [
+        require('./src/application/api/http/projections/projections_routes'),
+        require('./src/application/api/http/players/players_routes'),
+        require('./src/application/api/http/inputs/inputs_routes')
+    ];
 
 var server = new Hapi.Server({ debug: { request: ['error'] } });
 server.connection({ port: 8000 });
@@ -13,8 +16,7 @@ server.register(require('inert'), function (err) {
     if (err) {
         throw err;
     }
-
-    _.flatten([projectionsRoutes, playersRoutes]).forEach(function addRouteToServer(route) {
+    _.flatten(routes).forEach(function addRouteToServer(route) {
         server.route(route);
     });
 
