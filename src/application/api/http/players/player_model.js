@@ -3,8 +3,8 @@
 var _ = require('underscore'),
     Joi = require('joi');
 
-function PlayerBO(attributes) {
-    var validatedAttributes = Joi.validate(attributes, PlayerBO.schema, { stripUnknown: true });
+function PlayerModel(attributes) {
+    var validatedAttributes = Joi.validate(attributes, PlayerModel.schema, { stripUnknown: true });
     if(validatedAttributes.error) {
         throw validatedAttributes.error;
     }
@@ -13,13 +13,13 @@ function PlayerBO(attributes) {
     Object.freeze(this);
 };
 
-PlayerBO.schema = {
+PlayerModel.schema = {
     name: Joi.string().min(1).required(),
     team: Joi.string().min(1).required()
 };
 
-PlayerBO.create = function create(attributes) {
-    return new PlayerBO(attributes);
+PlayerModel.create = function create(attributes) {
+    return new PlayerModel(attributes);
 };
 
-module.exports = PlayerBO;
+module.exports = PlayerModel;

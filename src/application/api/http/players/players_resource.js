@@ -2,14 +2,14 @@
 
 var q = require('q'),
     playerRepository = require('../../../../port/player/player_repository'),
-    PlayerBO = require('./player_bo');
+    PlayerModel = require('./player_model');
 
 function PlayersResource() {}
 
 PlayersResource.prototype.getAll = function getAll() {
     return playerRepository.findAll()
-        .then(function convertToPlayerBOs(players) {
-            return players.map(PlayerBO.create);
+        .then(function convertToPlayerModels(players) {
+            return players.map(PlayerModel.create);
         });
 };
 
