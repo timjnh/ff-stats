@@ -21,6 +21,10 @@
 
             inputsService.getAll().then(function(inputs) {
                 _this.inputs = inputs;
+
+                for(var k in inputs) {
+                    chartControlsService.setInputSelected(k, true);
+                }
             })
         });
 })();

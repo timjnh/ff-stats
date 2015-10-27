@@ -5,10 +5,14 @@
         .factory('projectionsService', function($http) {
             var projectionsService = {};
 
-            projectionsService.getProjectionsForAllGames = function getProjectionsForAllGames(player, team) {
-                return $http.get('/projections/' + player + '/' + team).then(function (response) {
-                    return response.data;
-                });
+            projectionsService.getProjectionsForAllGamesWithInputs = function getProjectionsForAllGamesWithInputs(player, inputs) {
+                return $http({
+                        method: 'GET',
+                        url: '/projections/' + player.name + '/' + player.team,
+                        params: { "inputs[]": inputs }
+                    }).then(function (response) {
+                        return response.data;
+                    });
             };
 
             return projectionsService;

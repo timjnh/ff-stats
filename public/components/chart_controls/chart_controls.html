@@ -11,7 +11,7 @@
     <md-divider></md-divider>
     <md-list>
         <md-list-item ng-repeat="input in chartControlsController.inputs">
-            <md-checkbox ng-model="chartControlsController.chartControlsService.inputs[input.name].selected" ng-change="chartControlsController.chartControlService.onChange()"></md-checkbox>
+            <md-checkbox ng-model="chartControlsController.chartControlsService.inputs[input.name].selected" ng-change="chartControlsController.chartControlsService.onChange()"></md-checkbox>
             <p>{{input.name}}</p>
         </md-list-item>
     </md-list>

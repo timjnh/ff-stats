@@ -21,13 +21,17 @@
             this.isLoading = false;
 
             chartControlsService.onChange(function updateChart() {
+                if(!chartControlsService.hasValidPlayer()) {
+                    return;
+                }
+
                 _this.title = chartControlsService.player.name + ' - ' + chartControlsService.player.team;
                 _this.isLoading = true;
 
                 _this.labels = [];
                 _this.data = [[], []];
 
-                projectionsService.getProjectionsForAllGames(chartControlsService.player.name, chartControlsService.player.team)
+                projectionsService.getProjectionsForAllGamesWithInputs(chartControlsService.player, chartControlsService.getSelectedInputs())
                     .then(function assembleChartData(projections) {
                         _this.isLoading = false;
 
