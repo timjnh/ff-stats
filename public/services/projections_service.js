@@ -5,7 +5,7 @@
         .factory('projectionsService', function($http) {
             var projectionsService = {};
 
-            projectionsService.getProjectionsForAllGamesWithInputs = function getProjectionsForAllGamesWithInputs(player, inputs) {
+            projectionsService.getProjectionsForAllGames = function getProjectionsForAllGames(player, inputs) {
                 return $http({
                         method: 'GET',
                         url: '/projections/' + player.name + '/' + player.team,

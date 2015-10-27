@@ -31,7 +31,7 @@
                 _this.labels = [];
                 _this.data = [[], []];
 
-                projectionsService.getProjectionsForAllGamesWithInputs(chartControlsService.player, chartControlsService.getSelectedInputs())
+                projectionsService.getProjectionsForAllGames(chartControlsService.player, chartControlsService.getSelectedInputs())
                     .then(function assembleChartData(projections) {
                         _this.isLoading = false;
 
