@@ -19,7 +19,8 @@ DaysOff.prototype.evaluate = function evaluate(player, game) {
 
     return q.all([gameRepository.findOneByEid(precedingGames[0].eid), gameRepository.findOneByEid(game.eid)])
         .spread(function calculateDaysOff(precedingGame, currentGame) {
-            return ((currentGame.date.getTime() - precedingGame.date.getTime()) / 86400000) / 365;
+            // maximum value corresponds to two weeks off
+            return Math.min(((currentGame.date.getTime() - precedingGame.date.getTime()) / 86400000) / 14, 1);
         });
 };
 

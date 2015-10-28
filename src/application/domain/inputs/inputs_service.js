@@ -3,22 +3,30 @@
 var _ = require('underscore'),
     q = require('q'),
     HomeVsAway = require('./home_vs_away'),
-    RecentGames = require('./recent_games'),
+    PointsInRecentGames = require('./points_in_recent_games'),
     Opponent = require('./opponent'),
     AveragePointsAgainstOpponent = require('./average_points_against_opponent'),
     RecentPointsAgainstOpponent = require('./recent_points_against_opponent'),
     DaysOff = require('./days_off'),
+    RecentPassingYards = require('./recent_passing_yards'),
+    RecentPassingTouchdowns = require('./recent_passing_touchdowns'),
+    RecentRushingYards = require('./recent_rushing_yards'),
+    RecentRushingTouchdowns = require('./recent_rushing_touchdowns'),
     Input = require('./input'),
     InputSet = require('../input_set');
 
 function InputsService() {
     this.inputTypes = [
         new HomeVsAway(),
-        new RecentGames(3),
+        new PointsInRecentGames(3),
         new Opponent(),
         new AveragePointsAgainstOpponent(),
         new RecentPointsAgainstOpponent(3),
-        new DaysOff()
+        new DaysOff(),
+        new RecentPassingYards(3),
+        new RecentPassingTouchdowns(3),
+        new RecentRushingYards(3),
+        new RecentRushingTouchdowns(3)
     ];
 }
 
