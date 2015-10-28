@@ -7,14 +7,18 @@ var _ = require('underscore'),
 
 function TrainingService() {}
 
-TrainingService.prototype.getTrainingSetsForPlayerUpToGame = function getTrainingSetsForPlayerUpToGame(player, game) {
-    var precedingGames = player.findAllPrecedingGames(game);
-    return q.all(precedingGames.map(this.buildTrainingSetForPlayerAndGame.bind(this, player)));
+TrainingService.prototype.getTrainingSetsForPlayerUpToGame = function getTrainingSetsForPlayerUpToGame(player, game, inputs) {
+    var _this = this,
+        precedingGames = player.findAllPrecedingGames(game);
+
+    return q.all(precedingGames.map(function buildTrainingSetForPlayerAndGame(precedingGame) {
+        return _this.buildTrainingSetForPlayerAndGame(player, precedingGame, inputs)
+    }));
 };
 
-TrainingService.prototype.buildTrainingSetForPlayerAndGame = function buildTrainingSetForPlayerAndGame(player, game) {
+TrainingService.prototype.buildTrainingSetForPlayerAndGame = function buildTrainingSetForPlayerAndGame(player, game, inputs) {
     var trainingSet = TrainingSet.create({
-        input: game.inputs.sortAndFlatten(),
+        input: game.inputs.getSubset(inputs).sortAndFlatten(),
         output: [game.points / 100]
     });
 
