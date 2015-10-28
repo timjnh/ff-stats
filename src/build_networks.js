@@ -14,7 +14,7 @@ function buildAndSaveInputsForPlayer(player) {
     var inputsPromiseChain = q.when(player);
     player.games.forEach(function(playerGame) {
         inputsPromiseChain = inputsPromiseChain.then(function getInputsForPlayerAndGame(updatedPlayer) {
-            if(updatedPlayer.hasInputsForGame(playerGame)) {
+            if(updatedPlayer.hasInputsForGame(playerGame) && process.env.FORCE_INPUT_CALC !== 'true') {
                 console.log('Player "' + updatedPlayer.name + '" has required inputs for week ' + playerGame.week + ', ' + playerGame.year + '.  Skipping...');
                 return updatedPlayer;
             } else {
