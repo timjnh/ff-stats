@@ -5,7 +5,7 @@ var q = require('q'),
     playerNetworkRepository = require('../../port/player_network/player_network_repository'),
     inputsService = require('./inputs/inputs_service'),
     InputSet = require('./input_set'),
-    playerNetworkService = require('./player_network_service'),
+    playerNetworkWorkerService = require('./player_network_worker_service'),
     Projection = require('./projection');
 
 function ProjectionsService() {}
@@ -18,9 +18,9 @@ function createNetworkIfNotExists(player, game, inputs, playerNetwork) {
             console.log('No network exists for ' + player.name + ' of the ' + player.team + ' in week ' + game.week + ', ' + game.year + ' and inputs have not been generated to build the network from scratch');
             return playerNetwork;
         } else {
-            return playerNetworkService.buildNetworkUpToGame(player, game, inputs)
+            return playerNetworkWorkerService.buildNetworkUpToGame(player, game, inputs)
                 .then(function saveNetwork(generatedPlayerNetwork) {
-                    // there no be no network if we couldn't generate training sets
+                    // there will not be network if we couldn't generate training sets
                     if(generatedPlayerNetwork) {
                         return playerNetworkRepository.save(generatedPlayerNetwork)
                             .then(function() { return generatedPlayerNetwork; });

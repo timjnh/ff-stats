@@ -50,13 +50,6 @@ PlayerRepository.prototype._findWithCriteria = function _findWithCriteria(criter
 
 PlayerRepository.prototype._buildPlayerFromModel = function _buildPlayerFromModel(playerModel) {
     var player = playerModel.toObject();
-
-    player.games = player.games.map(function buildPlayerGame(game) {
-        game.inputs = InputSet.create(game.inputs);
-        game.stats = PlayerStats.create(game.stats);
-        return PlayerGame.create(game);
-    });
-
     return Player.create(player);
 };
 

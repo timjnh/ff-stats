@@ -9,7 +9,8 @@
                 return $http({
                         method: 'GET',
                         url: '/projections/' + player.name + '/' + player.team,
-                        params: { "inputs[]": inputs }
+                        params: { "inputs[]": inputs },
+                        timeout: 5 * 60 * 1000 // 5 minutes
                     }).then(function (response) {
                         return response.data;
                     });

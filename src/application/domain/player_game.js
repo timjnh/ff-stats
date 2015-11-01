@@ -2,7 +2,8 @@
 
 var _ = require('underscore'),
     Joi = require('joi'),
-    PlayerStats = require('./player_stats');
+    PlayerStats = require('./player_stats'),
+    InputSet = require('./input_set');
 
 function PlayerGame(attributes) {
     var validatedAttributes = Joi.validate(attributes, PlayerGame.schema, { stripUnknown: true });
@@ -25,6 +26,13 @@ PlayerGame.schema = {
 };
 
 PlayerGame.create = function create(attributes) {
+    if(attributes.stats) {
+        attributes.stats = PlayerStats.create(attributes.stats);
+    }
+    if(attributes.inputs) {
+        attributes.inputs = InputSet.create(attributes.inputs);
+    }
+
     return new PlayerGame(attributes);
 };
 

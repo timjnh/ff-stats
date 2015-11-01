@@ -3,6 +3,7 @@
 var _ = require('underscore'),
     Hapi = require('hapi'),
     bootstrap = require('./src/bootstrap'),
+    playerNetworkWorkerService = require('./src/application/domain/player_network_worker_service'),
     routes = [
         require('./src/application/api/http/projections/projections_routes'),
         require('./src/application/api/http/players/players_routes'),
@@ -16,6 +17,7 @@ server.register(require('inert'), function (err) {
     if (err) {
         throw err;
     }
+
     _.flatten(routes).forEach(function addRouteToServer(route) {
         server.route(route);
     });
@@ -32,17 +34,22 @@ server.register(require('inert'), function (err) {
     });
 
     server.start(function () {
-        bootstrap.start().then(function inform() {
-            console.log('Server running at:', server.info.uri);
-        });
+        bootstrap.start()
+            .then(function startPlayerNetworkService() {
+                return playerNetworkWorkerService.start();
+            }).then(function inform() {
+                console.log('Server running at:', server.info.uri);
+            });
     });
 });
 
 process.once('SIGUSR2', function() {
-    bootstrap.stop().then(function stopServerAndKill() {
-        server.stop(function killProcess() {
-            console.log('Server stopped');
-            process.kill(process.pid, 'SIGUSR2');
+    playerNetworkWorkerService.stop()
+        .then(bootstrap.stop.bind(bootstrap))
+        .then(function stopServerAndKill() {
+            server.stop(function killProcess() {
+                console.log('Server stopped');
+                process.kill(process.pid, 'SIGUSR2');
+            });
         });
-    });
 });

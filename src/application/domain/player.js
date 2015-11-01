@@ -15,17 +15,22 @@ function Player(attributes) {
 
     _.extendOwn(this, validatedAttributes.value);
     Object.freeze(this);
-    Object.freeze(this.games);
 }
 
 Player.schema = {
-    _id: Joi.object(),
+    _id: [Joi.object(), Joi.string().length(24)],
     name: Joi.string().min(1).required(),
     team: Joi.string().min(1).required(),
     games: Joi.array().items(PlayerGame.schema).required()
 };
 
 Player.create = function create(attributes) {
+    if(attributes.games && attributes.games.length > 0) {
+        attributes.games = attributes.games.map(function createPlayerGame(game) {
+            return PlayerGame.create(game);
+        });
+    }
+
     return new Player(attributes);
 };
 

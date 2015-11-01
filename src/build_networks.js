@@ -5,7 +5,8 @@ var _ = require('underscore'),
     bootstrap = require('./bootstrap'),
     playerRepository = require('./port/player/player_repository'),
     inputsService = require('./application/domain/inputs/inputs_service'),
-    projectionsService = require('./application/domain/projections_service');
+    projectionsService = require('./application/domain/projections_service'),
+    playerNetworkWorkerService = require('./application/domain/player_network_worker_service');
 
 var BRADY = 'T Brady',
     RODGERS = 'A Rodgers';
@@ -32,15 +33,17 @@ function buildAndSaveInputsForPlayer(player) {
                 });
         });
 }
-
 bootstrap.start()
+    .then(function startPlayerNetworkWorkerService() {
+        return playerNetworkWorkerService.start();
+    })
     .then(function findAllPlayers() {
         return playerRepository.findAll();
-    })
-    .then(function buildAndSavePlayerInputs(players) {
+     })
+     .then(function buildAndSavePlayerInputs(players) {
         var playerInputPromises = players.map(buildAndSaveInputsForPlayer.bind(this));
         return q.all(playerInputPromises);
-    })
+     })
     .then(function findTomBrady() {
         return playerRepository.findOneByNameAndTeam(BRADY, 'patriots');
     })
@@ -55,5 +58,9 @@ bootstrap.start()
     .then(function() {
         console.log('All done!');
     })
-    .finally(bootstrap.stop.bind(bootstrap))
+    .finally(function stopEverything() {
+        return playerNetworkWorkerService.stop()
+            .then(bootstrap.stop.bind(bootstrap));
+    })
     .done();
+

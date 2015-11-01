@@ -7,6 +7,9 @@ module.exports = [
     {
         method: 'GET',
         path: '/projections/{name}/{team}',
+        config: {
+            timeout: { socket: false }
+        },
         handler: function (request, reply) {
             var player = { name: request.params.name, team: request.params.team };
 
