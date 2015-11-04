@@ -22,9 +22,26 @@ var GameSchema = new Schema({
         receivingTDs: Number,
 
         fumblesLost: Number,
-        interceptionsLost: Number
+        interceptionsLost: Number,
+
+        sacks: Number,
+        interceptions: Number,
+        fumbleRecoveries: Number,
+
+        rushingYardsAllowed: Number,
+        rushingTDsAllowed: Number,
+
+        passingYardsAllowed: Number,
+        passingTDsAllowed: Number,
+
+        fieldGoalsMissed: Number,
+        fieldGoalsMade50Plus: Number,
+        fieldGoalsMade40Plus: Number,
+        fieldGoalsMade0Plus: Number,
+        extraPointsMade: Number,
+        extraPointsMissed: Number
     },
-    inputs: Schema.Types.Mixed
+    inputs: { type: Schema.Types.Mixed, default: {} }
 }, { strict: 'throw', id: false, minimize: false });
 
 var PlayerSchema = new Schema({

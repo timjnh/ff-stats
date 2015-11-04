@@ -7,6 +7,7 @@ var _ = require('underscore'),
     gameRepository = require('./port/game/game_repository'),
     fantasyPointService = require('./application/domain/fantasy_point_service'),
     gameEventService = require('./application/domain/game_event_service'),
+    defensiveStatsService = require('./application/domain/defensive_stats_service'),
     PlayerStats = require('./application/domain/player_stats'),
     Player = require('./application/domain/player'),
     PlayerGame = require('./application/domain/player_game'),
@@ -14,15 +15,16 @@ var _ = require('underscore'),
     trainingService = require('./application/domain/training_service'),
     Team = require('./application/domain/team');
 
-var BRADY = 'T Brady',
+var HOME = 'home',
+    AWAY = 'away',
+    BRADY = 'T Brady',
     RODGERS = 'A Rodgers';
 
-function addGameToPlayer(playerName, game, playerStats) {
+function addGameToPlayer(playerName, teamName, game, playerStats) {
     var points = fantasyPointService.calculatePointsForPlayerStats(playerStats),
-        playerTeam = playerName == BRADY ? Team.PATRIOTS : Team.PACKERS,
-        opponent = game.getOpposingTeam(playerTeam);
+        opponent = game.getOpposingTeam(teamName);
 
-    return playerRepository.findOneByNameAndTeam(playerName, playerTeam, true)
+    return playerRepository.findOneByNameAndTeam(playerName, teamName, true)
         .then(function addGameToPlayer(player) {
             return player.addGame(PlayerGame.create({
                 eid: game.eid,
@@ -39,36 +41,79 @@ function addGameToPlayer(playerName, game, playerStats) {
         });
 }
 
-function extractPlayersFromGame(game) {
-    var playerStats = {};
-    playerStats[BRADY] = PlayerStats.create({});
-    playerStats[RODGERS] = PlayerStats.create({});
+function findNameForTeamByClubCode(teams, clubcode) {
+    for(var k in teams) {
+        if(teams[k].abbr == clubcode) {
+            return teams[k].name;
+        }
+    }
+
+    throw 'Could not find team matching clubcode "' + clubcode + '"';
+}
+
+function extractStatsFromDrives(game, playerStats) {
+    var teams = {};
+
+    teams[HOME] = { name: game.home, abbr: game.stats.home.abbr };
+    teams[AWAY] = { name: game.away, abbr: game.stats.away.abbr };
+
+    _.values(teams).forEach(function addTeamToPlayerStats(team) {
+        if(!playerStats.hasOwnProperty(team.name)) {
+            playerStats[team.name] = {};
+        }
+    });
 
     _.values(game.stats.drives).forEach(function(drive) {
         _.values(drive.plays).forEach(function(play) {
-            var event;
+            var event,
+                teamName;
 
             for(var j in play.players) {
                 for(var k in play.players[j]) {
                     event = play.players[j][k];
+                    teamName = findNameForTeamByClubCode(teams, event.clubcode);
 
-                    if(playerStats.hasOwnProperty(event.playerName)) {
-                        playerStats[event.playerName].add(gameEventService.buildPlayerStatsFromEvent(event));
+                    if(!playerStats[teamName].hasOwnProperty(event.playerName)) {
+                        playerStats[teamName][event.playerName] = PlayerStats.create({});
                     }
+                    playerStats[teamName][event.playerName].add(gameEventService.buildPlayerStatsFromEvent(event));
                 }
             }
         });
     });
+}
+
+function extractDefensiveStatsFromHomeAndAway(game, playerStats, side) {
+    var team = game[side],
+        opposingSide = side === HOME ? AWAY : HOME;
+
+    if(!playerStats.hasOwnProperty(team)) {
+        playerStats[team] = {};
+    }
+    if(!playerStats[team].hasOwnProperty(team)) {
+        playerStats[team][team] = PlayerStats.create({});
+    }
+
+    playerStats[team][team].add(defensiveStatsService.buildPlayerStatsForTeamFromHomeAndAway(game.stats[side].stats, game.stats[opposingSide].stats));
+}
+
+function extractPlayersFromGame(game) {
+    var playerStats = {};
+
+    extractStatsFromDrives(game, playerStats);
+
+    extractDefensiveStatsFromHomeAndAway(game, playerStats, HOME);
+    extractDefensiveStatsFromHomeAndAway(game, playerStats, AWAY);
 
     var playerPromises = [];
-    for(var k in playerStats) {
-        // TODO - hack to work around the fact that I create stats for a player even if their team
-        // didn't play in a particular game
-        if(playerStats[k].isEmpty()) {
-            continue;
-        }
+    for(var teamName in playerStats) {
+        for(var playerName in playerStats[teamName]) {
+            if(playerStats[teamName][playerName].isEmpty()) {
+                continue;
+            }
 
-        playerPromises.push(addGameToPlayer(k, game, playerStats[k]));
+            playerPromises.push(addGameToPlayer(playerName, teamName, game, playerStats[teamName][playerName]));
+        }
     }
     return q.all(playerPromises);
 }

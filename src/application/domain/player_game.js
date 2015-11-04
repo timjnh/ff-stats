@@ -26,14 +26,16 @@ PlayerGame.schema = {
 };
 
 PlayerGame.create = function create(attributes) {
-    if(attributes.stats) {
-        attributes.stats = PlayerStats.create(attributes.stats);
+    var attributesCopy = _.clone(attributes);
+
+    if(attributesCopy.stats) {
+        attributesCopy.stats = PlayerStats.create(attributesCopy.stats);
     }
-    if(attributes.inputs) {
-        attributes.inputs = InputSet.create(attributes.inputs);
+    if(attributesCopy.inputs) {
+        attributesCopy.inputs = InputSet.create(attributesCopy.inputs);
     }
 
-    return new PlayerGame(attributes);
+    return new PlayerGame(attributesCopy);
 };
 
 PlayerGame.prototype.update = function update(attributes) {

@@ -35,6 +35,7 @@ PlayerRepository.prototype.findAll = function findAll() {
 
 PlayerRepository.prototype._findWithCriteria = function _findWithCriteria(criteria) {
     var _this = this;
+
     return q.Promise(function(resolve, reject) {
         PlayerModel.find(criteria, function(err, players) {
             if(err) {

@@ -3,6 +3,8 @@
 var assert = require('assert');
 
 function PlayerStats(attributes) {
+
+    // offense
     this.passingYards = 0;
     this.passingTDs = 0;
 
@@ -16,6 +18,25 @@ function PlayerStats(attributes) {
 
     this.fumblesLost = 0;
     this.interceptionsLost = 0;
+
+    // defense
+    this.sacks = 0;
+    this.interceptions = 0;
+    this.fumbleRecoveries = 0;
+
+    this.rushingYardsAllowed = 0;
+    this.rushingTDsAllowed = 0;
+
+    this.passingYardsAllowed = 0;
+    this.passingTDsAllowed = 0;
+
+    // kicking
+    this.fieldGoalsMissed = 0;
+    this.fieldGoalsMade50Plus = 0;
+    this.fieldGoalsMade40Plus = 0;
+    this.fieldGoalsMade0Plus = 0;
+    this.extraPointsMade = 0;
+    this.extraPointsMissed = 0;
 
     if(attributes) {
         this.add(attributes);
@@ -44,7 +65,14 @@ PlayerStats.prototype.isEmpty = function isEmpty() {
         this.receivingYards == 0 &&
         this.receivingTDs == 0 &&
         this.fumblesLost == 0 &&
-        this.interceptionsLost == 0) {
+        this.interceptionsLost == 0 &&
+        this.sacks == 0 &&
+        this.interceptions == 0 &&
+        this.fumbleRecoveries == 0 &&
+        this.rushingYardsAllowed == 0 &&
+        this.rushingTDsAllowed == 0 &&
+        this.passingYardsAllowed == 0 &&
+        this.passingTDsAllowed == 0) {
         return true;
     }
     return false;
