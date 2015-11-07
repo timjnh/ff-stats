@@ -1,42 +1,48 @@
 'use strict';
 
-var assert = require('assert');
+var assert = require('assert'),
+    validAttributes = [
+        // offense
+        'passingYards',
+        'passingTDs',
+
+        'conversions',
+
+        'rushingYards',
+        'rushingTDs',
+
+        'receivingYards',
+        'receivingTDs',
+
+        'fumblesLost',
+        'interceptionsLost',
+
+        // defense
+        'sacks',
+        'interceptions',
+        'fumbleRecoveries',
+
+        'rushingYardsAllowed',
+        'rushingTDsAllowed',
+
+        'passingYardsAllowed',
+        'passingTDsAllowed',
+
+        // kicking
+        'fieldGoalsMissed',
+        'fieldGoalsMade50Plus',
+        'fieldGoalsMade40Plus',
+        'fieldGoalsMade0Plus',
+        'extraPointsMade',
+        'extraPointsMissed',
+    ];
 
 function PlayerStats(attributes) {
+    var _this = this;
 
-    // offense
-    this.passingYards = 0;
-    this.passingTDs = 0;
-
-    this.conversions = 0;
-
-    this.rushingYards = 0;
-    this.rushingTDs = 0;
-
-    this.receivingYards = 0;
-    this.receivingTDs = 0;
-
-    this.fumblesLost = 0;
-    this.interceptionsLost = 0;
-
-    // defense
-    this.sacks = 0;
-    this.interceptions = 0;
-    this.fumbleRecoveries = 0;
-
-    this.rushingYardsAllowed = 0;
-    this.rushingTDsAllowed = 0;
-
-    this.passingYardsAllowed = 0;
-    this.passingTDsAllowed = 0;
-
-    // kicking
-    this.fieldGoalsMissed = 0;
-    this.fieldGoalsMade50Plus = 0;
-    this.fieldGoalsMade40Plus = 0;
-    this.fieldGoalsMade0Plus = 0;
-    this.extraPointsMade = 0;
-    this.extraPointsMissed = 0;
+    validAttributes.forEach(function defaultAttributeToZero(attribute) {
+        _this[attribute] = 0;
+    });
 
     if(attributes) {
         this.add(attributes);
@@ -64,25 +70,10 @@ PlayerStats.prototype.getValue = function getValue(statName) {
 };
 
 PlayerStats.prototype.isEmpty = function isEmpty() {
-    if(this.passingYards == 0 &&
-        this.passingTDs == 0 &&
-        this.conversions == 0 &&
-        this.rushingYards == 0 &&
-        this.rushingTDs == 0 &&
-        this.receivingYards == 0 &&
-        this.receivingTDs == 0 &&
-        this.fumblesLost == 0 &&
-        this.interceptionsLost == 0 &&
-        this.sacks == 0 &&
-        this.interceptions == 0 &&
-        this.fumbleRecoveries == 0 &&
-        this.rushingYardsAllowed == 0 &&
-        this.rushingTDsAllowed == 0 &&
-        this.passingYardsAllowed == 0 &&
-        this.passingTDsAllowed == 0) {
-        return true;
-    }
-    return false;
+    var _this = this;
+    return validAttributes.reduce(function updateIsEmpty(isEmpty, attribute) {
+        return isEmpty && _this[attribute] == 0;
+    }, true);
 };
 
 module.exports = PlayerStats;
