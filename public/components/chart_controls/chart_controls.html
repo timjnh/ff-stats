@@ -1,18 +1,34 @@
-<div>
-    <md-subheader>Player</md-subheader>
-    <md-divider></md-divider>
-    <md-radio-group ng-model="chartControlsController.chartControlsService.player" ng-change="chartControlsController.chartControlsService.onChange()">
-        <md-radio-button ng-repeat="player in chartControlsController.players" ng-value="player">
-            {{player.name | ucfirst }} - {{player.team | ucfirst }}
-        </md-radio-button>
-    </md-radio-group>
+<div layout="column" class="chart-controls" layout-margin>
+    <div flex="none" class="chart-controls_header">
+        <md-subheader>Player</md-subheader>
+        <md-divider></md-divider>
+    </div>
+    <div flex>
+        <md-autocomplete md-selected-item="chartControlsController.chartControlsService.player"
+                         md-search-text="chartControlsController.playerSearchText"
+                         md-items="player in chartControlsController.getMatchedPlayers(chartControlsController.playerSearchText)"
+                         md-item-text="chartControlsController.getFullPlayerName(player)"
+                         placeholder="Select a player..."
+                         md-selected-item-change="chartControlsController.chartControlsService.onChange()">
+            <md-item-template>
+                <span md-highlight-text="chartControlsController.playerSearchText" md-highlight-flags="gi">{{player.name | ucfirst}}, {{player.team | ucfirst}}</span>
+            </md-item-template>
+            <md-not-found>
+                No matches found.
+            </md-not-found>
+        </md-autocomplete>
+    </div>
 
-    <md-subheader>Inputs</md-subheader>
-    <md-divider></md-divider>
-    <md-list>
-        <md-list-item ng-repeat="input in chartControlsController.inputs">
-            <md-checkbox ng-model="chartControlsController.chartControlsService.inputs[input.name].selected" ng-change="chartControlsController.chartControlsService.onChange()"></md-checkbox>
-            <p>{{input.name}}</p>
-        </md-list-item>
-    </md-list>
+    <div flex="none" class="chart-controls_header">
+        <md-subheader>Inputs</md-subheader>
+        <md-divider></md-divider>
+    </div>
+    <md-content flex>
+        <md-list>
+            <md-list-item ng-repeat="input in chartControlsController.inputs">
+                <md-checkbox ng-model="chartControlsController.chartControlsService.inputs[input.name].selected" ng-change="chartControlsController.chartControlsService.onChange()"></md-checkbox>
+                <p>{{input.name}}</p>
+            </md-list-item>
+        </md-list>
+    </md-content>
 </div>

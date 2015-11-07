@@ -15,15 +15,13 @@
   <link rel="stylesheet" href="bower_components/angular-chart.js/dist/angular-chart.css">
   <link rel="stylesheet" href="/bower_components/angular-material/angular-material.css">
 </head>
-<body>
+<body layout="column" layout-fill>
   <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
   <![endif]-->
 
-  <div layout="column" layout class="contentWrapper">
-    <div flex="15"></div>
-    <div flex ng-include="'content.html'"></div>
-    <div flex="15"></div>
+  <div layout="column" layout-fill layout-align="center">
+    <div flex="70" ng-include="'content.html'"></div>
   </div>
 
   <!-- In production use:
@@ -37,6 +35,9 @@
   <script src="bower_components/Chart.js/Chart.js"></script>
   <script src="bower_components/angular-chart.js/dist/angular-chart.js"></script>
   <script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
+  <script src="bower_components/angular-filter/dist/angular-filter.min.js"></script>
+  <script src="bower_components/underscore/underscore.js"></script>
+  <script src="bower_components/angular-underscore-module/angular-underscore-module.js"></script>
   <script src="bower_components/angular-filter/dist/angular-filter.min.js"></script>
   <script src="index.js"></script>
 

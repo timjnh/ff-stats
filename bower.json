@@ -14,6 +14,8 @@
     "angular-chart.js": "~0.8.5",
     "Chart.js": "~1.0.2",
     "angular-material": "~0.11.4",
-    "angular-filter": "~0.5.7"
+    "angular-filter": "~0.5.7",
+    "underscore": "~1.8.3",
+    "angular-underscore-module": "~1.0.3"
   }
 }

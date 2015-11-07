@@ -5,7 +5,7 @@
         .factory('chartControlsService' , function() {
             var chartControlsService = {
                 onChangeCallbacks: [],
-                player: {},
+                player: null,
                 inputs: {}
             };
 
