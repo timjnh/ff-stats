@@ -1,6 +1,7 @@
 'use strict';
 
-var _ = require('underscore'),
+var argv,
+    _ = require('underscore'),
     q = require('q'),
     synaptic = require('synaptic'),
     bootstrap = require('./bootstrap'),
@@ -8,17 +9,25 @@ var _ = require('underscore'),
     fantasyPointService = require('./application/domain/fantasy_point_service'),
     gameEventService = require('./application/domain/game_event_service'),
     defensiveStatsService = require('./application/domain/defensive_stats_service'),
+    playerPositionService = require('./application/domain/player_position_service'),
     PlayerStats = require('./application/domain/player_stats'),
     Player = require('./application/domain/player'),
     PlayerGame = require('./application/domain/player_game'),
-    playerRepository = require('./port/player/player_repository'),
-    trainingService = require('./application/domain/training_service'),
-    Team = require('./application/domain/team');
+    playerRepository = require('./port/player/player_repository');
 
 var HOME = 'home',
-    AWAY = 'away',
-    BRADY = 'T Brady',
-    RODGERS = 'A Rodgers';
+    AWAY = 'away';
+
+argv = require('yargs')
+    .usage('Usage: npm run extract-players[-nm] -- [options]')
+    .strict()
+    .help('h')
+    .alias('h', 'help')
+    .describe('t', 'Name of team that should be extracted')
+    .alias('t', 'team')
+    .boolean('debug')
+    .describe('debug', 'If true, the list of players and each of their games will be printed after extraction')
+    .argv;
 
 function addGameToPlayer(playerName, teamName, game, playerStats) {
     var points = fantasyPointService.calculatePointsForPlayerStats(playerStats),
@@ -35,6 +44,10 @@ function addGameToPlayer(playerName, teamName, game, playerStats) {
                 stats: playerStats,
                 inputs: {}
             }));
+        })
+        .then(function guessPlayerPosition(player) {
+            var position = playerPositionService.calculatePlayerPosition(player);
+            return player.setPosition(position);
         })
         .then(function savePlayer(player) {
             return playerRepository.save(player);
@@ -100,6 +113,8 @@ function extractDefensiveStatsFromHomeAndAway(game, playerStats, side) {
 function extractPlayersFromGame(game) {
     var playerStats = {};
 
+    console.log('Extracting players from game between ' + game.home + ' and ' + game.away + ' for week ' + game.week + ', ' + game.year);
+
     extractStatsFromDrives(game, playerStats);
 
     extractDefensiveStatsFromHomeAndAway(game, playerStats, HOME);
@@ -118,9 +133,25 @@ function extractPlayersFromGame(game) {
     return q.all(playerPromises);
 }
 
+function getGames() {
+    if(argv.team) {
+        return gameRepository.findGamesWithTeam(argv.team);
+    } else {
+        return gameRepository.findAll();
+    }
+}
+
+function getPlayers() {
+    if(argv.team) {
+        return playerRepository.findAllByTeam(argv.team);
+    } else {
+        return playerRepository.findAll();
+    }
+}
+
 bootstrap.start()
     .then(function findGames() {
-        return q.all([gameRepository.findGamesWithTeam(Team.PATRIOTS), gameRepository.findGamesWithTeam(Team.PACKERS)])
+        return getGames()
             .then(function mergeGames(games) {
                 return _.uniq(
                     _.flatten(games),
@@ -140,21 +171,25 @@ bootstrap.start()
         });
         return extractPlayersChain;
     })
-    /*.then(function findAllPlayers() {
-        return playerRepository.findAll();
-    })
-    .then(function debugPlayers(players) {
-        players.forEach(function(player) {
-            console.log('');console.log('');
-            console.log(player.name);
+    .then(function debugPlayers() {
+        if(!argv.debug) {
+            return;
+        }
 
-            var orderedGames = player.getOrderedGames();
-            for(var i in orderedGames) {
-                console.log(orderedGames[i].year + ', week ' + orderedGames[i].week + ': ' + orderedGames[i].points);
-            }
-        });
-        return players;
-    })*/
+        return getPlayers()
+            .then(function debugPlayers(players) {
+                players.forEach(function(player) {
+                    console.log('');console.log('');
+                    console.log(player.name + ', ' + player.team);
+
+                    var orderedGames = player.getOrderedGames();
+                    for(var i in orderedGames) {
+                        console.log('Week ' + orderedGames[i].week + ', ' + orderedGames[i].year + ': ' + orderedGames[i].points);
+                    }
+                });
+                return players;
+            })
+    })
     .then(function allDone() {
         console.log('All done!');
     })

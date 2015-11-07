@@ -42,6 +42,10 @@ PlayerGame.prototype.update = function update(attributes) {
     return PlayerGame.create(_.extend(_.clone(this), attributes));
 };
 
+PlayerGame.prototype.getStat = function getStat(statName) {
+    return this.stats.getValue(statName);
+};
+
 PlayerGame.prototype.hasAllInputs = function hasAllInputs(inputs) {
     for(var k in inputs) {
         if(!this.inputs.hasValueForInput(inputs[k])) {

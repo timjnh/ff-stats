@@ -4,6 +4,7 @@ var _ = require('underscore'),
     assert = require('assert'),
     PlayerStats = require('./player_stats'),
     PlayerGame = require('./player_game'),
+    PlayerPosition = require('./player_position'),
     Joi = require('joi');
 
 function Player(attributes) {
@@ -20,6 +21,7 @@ Player.schema = {
     _id: [Joi.object(), Joi.string().length(24)],
     name: Joi.string().min(1).required(),
     team: Joi.string().min(1).required(),
+    position: Joi.string().valid(_.values(PlayerPosition)).optional(),
     games: Joi.array().items(PlayerGame.schema).required()
 };
 
@@ -44,6 +46,16 @@ Player.prototype.addGame = function addGame(playerGame) {
     }
 
     return Player.create(_.extend(_.clone(this), { games: games }));
+};
+
+Player.prototype.setPosition = function setPosition(position) {
+    return Player.create(_.extend(_.clone(this), { position: position }));
+};
+
+Player.prototype.getStatsTotal = function getStatsTotal(statName) {
+    return this.games.reduce(function addStatsFromGameToTotal(total, game) {
+        return total + game.getStat(statName);
+    }, 0);
 };
 
 Player.prototype.findAllPrecedingGames = function findAllPrecedingGames(game) {

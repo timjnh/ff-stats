@@ -47,6 +47,7 @@ var GameSchema = new Schema({
 var PlayerSchema = new Schema({
     name: { type: String },
     team: { type: String },
+    position: { type: String },
     games: [GameSchema]
 }, { strict: 'throw'});
 

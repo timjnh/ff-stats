@@ -56,6 +56,13 @@ PlayerStats.prototype.add = function add(playerStats) {
     }
 };
 
+PlayerStats.prototype.getValue = function getValue(statName) {
+    if(!this.hasOwnProperty(statName)) {
+        throw 'Attempted to retrieve unknown stat "' + statName + '"';
+    }
+    return this[statName];
+};
+
 PlayerStats.prototype.isEmpty = function isEmpty() {
     if(this.passingYards == 0 &&
         this.passingTDs == 0 &&

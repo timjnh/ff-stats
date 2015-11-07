@@ -31,6 +31,10 @@ GameRepository.prototype._findOneWithCriteria = function _findOneWithCriteria(cr
         });
 };
 
+GameRepository.prototype.findAll = function findAll() {
+    return this._findWithCriteria({});
+};
+
 GameRepository.prototype._findWithCriteria = function _findWithCriteria(criteria) {
     return q.Promise(function(resolve, reject) {
         GameModel.find(criteria, function(err, games) {
