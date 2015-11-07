@@ -151,8 +151,10 @@ function getPlayers() {
 
 bootstrap.start()
     .then(function findGames() {
+        console.log('Retrieving games...');
         return getGames()
             .then(function mergeGames(games) {
+                console.log('Found games...');
                 return _.uniq(
                     _.flatten(games),
                     false,
@@ -164,6 +166,7 @@ bootstrap.start()
         return _.filter(games, function(game) { return game.hasOwnProperty('stats'); });
     })
     .then(function extractPlayers(games) {
+        console.log('Building extract player promise chain...');
         // this needs to be done sequentially so we're not fighting over player objects
         var extractPlayersChain = q.when();
         games.map(function buildExtractPlayersPromiseChain(game) {
