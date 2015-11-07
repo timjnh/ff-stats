@@ -5,6 +5,7 @@ var _ = require('underscore'),
     bootstrap = require('./bootstrap'),
     playerRepository = require('./port/player/player_repository'),
     inputsService = require('./application/domain/inputs/inputs_service'),
+    playerInputsService = require('./application/domain/inputs/player_inputs_service'),
     projectionsService = require('./application/domain/projections_service'),
     playerNetworkWorkerService = require('./application/domain/player_network_worker_service');
 
@@ -15,12 +16,12 @@ function buildAndSaveInputsForPlayer(player) {
     var inputsPromiseChain = q.when(player);
     player.games.forEach(function(playerGame) {
         inputsPromiseChain = inputsPromiseChain.then(function getInputsForPlayerAndGame(updatedPlayer) {
-            if(updatedPlayer.hasInputsForGame(playerGame) && process.env.FORCE_INPUT_CALC !== 'true') {
+            if(playerGame.hasAllInputs(inputsService.getInputsList()) && process.env.FORCE_INPUT_CALC !== 'true') {
                 console.log('Player "' + updatedPlayer.name + '" has required inputs for week ' + playerGame.week + ', ' + playerGame.year + '.  Skipping...');
                 return updatedPlayer;
             } else {
                 console.log('Building inputs for "' + updatedPlayer.name + '" for week ' + playerGame.week + ', ' + playerGame.year + '...');
-                return updatedPlayer.buildInputsForGame(playerGame);
+                return playerInputsService.updateInputsForPlayerAndGame(updatedPlayer, playerGame);
             }
         });
     });
