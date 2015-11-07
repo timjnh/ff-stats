@@ -12,6 +12,12 @@ var _ = require('underscore'),
     RecentPassingTouchdowns = require('./recent_passing_touchdowns'),
     RecentRushingYards = require('./recent_rushing_yards'),
     RecentRushingTouchdowns = require('./recent_rushing_touchdowns'),
+    RecentPassingYardsAllowedByOpponent = require('./recent_passing_yards_allowed_by_opponent'),
+    RecentRushingYardsAllowedByOpponent = require('./recent_rushing_yards_allowed_by_opponent'),
+    RecentPassingTouchdownsAllowedByOpponent = require('./recent_passing_touchdowns_allowed_by_opponent'),
+    RecentRushingTouchdownsAllowedByOpponent = require('./recent_rushing_touchdowns_allowed_by_opponent'),
+    RecentSacksByOpponent = require('./recent_sacks_by_opponent'),
+    RecentInterceptionsByOpponent = require('./recent_interceptions_by_opponent'),
     Input = require('./input'),
     InputSet = require('../input_set');
 
@@ -26,7 +32,13 @@ function InputsService() {
         new RecentPassingYards(3),
         new RecentPassingTouchdowns(3),
         new RecentRushingYards(3),
-        new RecentRushingTouchdowns(3)
+        new RecentRushingTouchdowns(3),
+        new RecentPassingYardsAllowedByOpponent(3),
+        new RecentRushingYardsAllowedByOpponent(3),
+        new RecentPassingTouchdownsAllowedByOpponent(3),
+        new RecentRushingTouchdownsAllowedByOpponent(3),
+        new RecentSacksByOpponent(3),
+        new RecentInterceptionsByOpponent(3)
     ];
 }
 
