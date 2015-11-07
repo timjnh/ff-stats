@@ -8,6 +8,7 @@
     "fetch-stats-nm": "./node_modules/.bin/nodemon ./src/fetch_stats.js",
     "extract-players-nm": "./node_modules/.bin/nodemon ./src/extract_players.js",
     "build-networks-nm": "./node_modules/.bin/nodemon ./src/build_networks.js",
+    "build-networks": "node ./src/build_networks.js",
     "postinstall": "bower install",
     "start-app-nm": "./node_modules/.bin/nodemon ./app.js"
   },
@@ -25,7 +26,8 @@
     "superagent": "^1.2.0",
     "synaptic": "^1.0.2",
     "underscore": "^1.8.3",
-    "xml2js": "^0.4.8"
+    "xml2js": "^0.4.8",
+    "yargs": "^3.29.0"
   },
   "devDependencies": {
     "nodemon": "^1.5.1",
