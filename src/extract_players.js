@@ -112,7 +112,8 @@ function extractDefensiveStatsFromHomeAndAway(game, playerStats, side) {
 }
 
 function extractPlayersFromGame(game) {
-    var playerStats = {};
+    var startTime,
+        playerStats = {};
 
     console.log('Extracting players from game between ' + game.home + ' and ' + game.away + ' for week ' + game.week + ', ' + game.year);
 
@@ -131,7 +132,13 @@ function extractPlayersFromGame(game) {
             playerPromises.push(addGameToPlayer(playerName, teamName, game, playerStats[teamName][playerName]));
         }
     }
-    return q.all(playerPromises);
+
+    startTime = new Date();
+    console.log('Saving stats data for ' + playerPromises.length + ' players...');
+    return q.all(playerPromises)
+        .then(function() {
+            console.log('Done saving stats data in ' + ((new Date()).getTime() - startTime.getTime()) + ' ms...');
+        });
 }
 
 function getGames() {
