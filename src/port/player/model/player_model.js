@@ -10,6 +10,7 @@ var GameSchema = new Schema({
     opponent: String,
     points: Number,
     stats: {
+        // offense
         passingYards: Number,
         passingTDs: Number,
 
@@ -24,9 +25,22 @@ var GameSchema = new Schema({
         fumblesLost: Number,
         interceptionsLost: Number,
 
+        // defense
         sacks: Number,
         interceptions: Number,
         fumbleRecoveries: Number,
+
+        tdsFromTurnovers: Number,
+        extraPointsBlocked: Number,
+
+        pointsAllowed0: Number,
+        pointsAllowedLessThan7: Number,
+        pointsAllowedLessThan14: Number,
+        pointsAllowedLessThan18: Number,
+        pointsAllowedLessThan28: Number,
+        pointsAllowedLessThan35: Number,
+        pointsAllowedLessThan46: Number,
+        pointsAllowed46OrMore: Number,
 
         rushingYardsAllowed: Number,
         rushingTDsAllowed: Number,
@@ -34,6 +48,7 @@ var GameSchema = new Schema({
         passingYardsAllowed: Number,
         passingTDsAllowed: Number,
 
+        // kicking
         fieldGoalsMissed: Number,
         fieldGoalsMade50Plus: Number,
         fieldGoalsMade40Plus: Number,

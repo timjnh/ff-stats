@@ -16,7 +16,9 @@ var argv,
     playerRepository = require('./port/player/player_repository');
 
 var HOME = 'home',
-    AWAY = 'away';
+    AWAY = 'away',
+    HOMESCORE = 'homeScore',
+    AWAYSCORE = 'awayScore';
 
 argv = require('yargs')
     .usage('Usage: npm run extract-players[-nm] -- [options]')
@@ -99,7 +101,8 @@ function extractStatsFromDrives(game, playerStats) {
 
 function extractDefensiveStatsFromHomeAndAway(game, playerStats, side) {
     var team = game[side],
-        opposingSide = side === HOME ? AWAY : HOME;
+        opposingSide = side === HOME ? AWAY : HOME,
+        opposingScore = side === HOME ? AWAYSCORE : HOMESCORE;
 
     if(!playerStats.hasOwnProperty(team)) {
         playerStats[team] = {};
@@ -109,6 +112,7 @@ function extractDefensiveStatsFromHomeAndAway(game, playerStats, side) {
     }
 
     playerStats[team][team].add(defensiveStatsService.buildPlayerStatsForTeamFromHomeAndAway(game.stats[side].stats, game.stats[opposingSide].stats));
+    playerStats[team][team].add(defensiveStatsService.buildPlayerStatsFromOpponentScore(game[opposingScore]));
 }
 
 function extractPlayersFromGame(game) {

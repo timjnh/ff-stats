@@ -24,10 +24,15 @@ GameEventService.prototype.buildPlayerStatsFromEvent = function buildPlayerStats
             return PlayerStats.create({ receivingYards: event.yards });
         case 22: // pass reception yards with touchdown
             return PlayerStats.create({ receivingTDs: 1, receivingYards: event.yards });
-        case 55: // yardage after fumble recovery
-            return PlayerStats.create({ rushingYards: event.yards }); // treating this the same as rushing yards?
+        case 26: // interception yards with a touchdown
+            // TODO: verify this
+            return PlayerStats.create({ tdsFromTurnovers: 1 });
+        case 28: // interception, lateralled to a teammate who got a touchdown.  wtf?
+            // TODO: verify this
+            return PlayerStats.create({ tdsFromTurnovers: 1 });
         case 56: // yardage after fumble recovery with touchdown
-            return PlayerStats.create({ rushingYards: event.yards, rushingTDs: 1 }); // treating this the same as a rushing td?
+            // TODO: verify this
+            return PlayerStats.create({ tdsFromTurnovers: 1 });
         case 69: // missed field goal yards
             return PlayerStats.create({ fieldGoalsMissed: 1 });
         case 70: // made field goal yards
@@ -42,6 +47,9 @@ GameEventService.prototype.buildPlayerStatsFromEvent = function buildPlayerStats
             return PlayerStats.create({ extraPointsMade: 1 });
         case 73: // extra point missed
             return PlayerStats.create({ extraPointsMissed: 1 });
+        case 74: // extra point blocked
+            // TODO: verify this
+            return PlayerStats.create({ extraPointsBlocked: 1});
         case 75: // 2 point conversion good rush
             return PlayerStats.create({ conversions: 1 });
         case 77: // 2 point conversion good pass
@@ -62,7 +70,6 @@ GameEventService.prototype.buildPlayerStatsFromEvent = function buildPlayerStats
         case 14: // pass, no completion
         case 23: // pass reception yards resulting from lateral
         case 25: // interception yards
-        case 26: // interception yards with a touchdown
         case 27: // interception yards with a lateral
         case 29: // punt
         case 30: // punt inside 20
@@ -88,16 +95,16 @@ GameEventService.prototype.buildPlayerStatsFromEvent = function buildPlayerStats
         case 52: // forced fumble. zero because we only lose points if it's not recovered (see 106)
         case 53: // unforced fumble. zero because we only lose points if it's not recovered (see 106)
         case 54: // fumble out of bounds.  no points against i don't think
+        case 55: // yardage after fumble recovery
         case 57: // if a player recovered a fumble by his own team, then lateraled to a teammate, the yardage gained/lost by the teammate would be recorded with this stat.  not really sure what to do here
         case 59: // opponent fumble recovery yards
-        case 60: // opponent fumble recovery yards with touchdown
+        case 60: // opponent fumble recovery yards with touchdown // TODO: verify this
         case 61: // opponent fumble recovery yards with lateral
-        case 62: // opponent fumble recovery yards with lateral and a touchdown
+        case 62: // opponent fumble recovery yards with lateral and a touchdown // TODO: verify this
         case 63: // misc yardage (blocked punt)
-        case 64: // misc yards resulting in touchdown.  not sure what to do with this
+        case 64: // misc yards resulting in touchdown.  not sure what to do with this // TODO: verify this
         case 68: // timeout
-        case 71: // field goal blocked (offense).  that seems bad
-        case 74: // extra point blocked
+        case 71: // field goal blocked (offense, that seems bad)
         case 76: // 2 point conversion failure rush
         case 78: // 2 point conversion failure pass
         case 79: // tackle with no assist
@@ -115,14 +122,14 @@ GameEventService.prototype.buildPlayerStatsFromEvent = function buildPlayerStats
         case 91: // forced fumble (defense)
         case 93: // penalty
         case 95: // tackled for a loss
-        case 96: // extra point results in safety
-        case 99: // 2 point rush safety
-        case 100: // 2 point pass safety
+        case 96: // extra point results in safety // TODO: verify this
+        case 99: // 2 point rush safety // TODO: verify this
+        case 100: // 2 point pass safety // TODO: verify this
         case 102: // kickoff kick downed
         case 103: // sack yards, no sack. fumble, recover, lateral
         case 105: // 2 point reception failed, passing
         case 107: // own kickoff recovered
-        case 108: // own kickoff recovered for touchdown
+        case 108: // own kickoff recovered for touchdown // TODO: verify this
         case 110: // quarterback hit
         case 111: // passing length minus receiver yardage (see 15)
         case 112: // passing length, no completion

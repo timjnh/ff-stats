@@ -21,6 +21,17 @@ var assert = require('assert'),
         'sacks',
         'interceptions',
         'fumbleRecoveries',
+        'tdsFromTurnovers',
+        'extraPointsBlocked',
+
+        'pointsAllowed0',
+        'pointsAllowedLessThan7',
+        'pointsAllowedLessThan14',
+        'pointsAllowedLessThan18',
+        'pointsAllowedLessThan28',
+        'pointsAllowedLessThan35',
+        'pointsAllowedLessThan46',
+        'pointsAllowed46OrMore',
 
         'rushingYardsAllowed',
         'rushingTDsAllowed',
@@ -34,7 +45,7 @@ var assert = require('assert'),
         'fieldGoalsMade40Plus',
         'fieldGoalsMade0Plus',
         'extraPointsMade',
-        'extraPointsMissed',
+        'extraPointsMissed'
     ];
 
 function PlayerStats(attributes) {
