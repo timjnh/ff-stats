@@ -25,8 +25,8 @@ argv = require('yargs')
     .alias('h', 'help')
     .describe('t', 'Name of team that should be extracted')
     .alias('t', 'team')
-    .boolean('debug')
-    .describe('debug', 'If true, the list of players and each of their games will be printed after extraction')
+    .describe('g', 'EID of the game to extract players from')
+    .alias('g', 'game')
     .argv;
 
 function addGameToPlayer(playerName, teamName, game, playerStats) {
@@ -89,6 +89,7 @@ function extractStatsFromDrives(game, playerStats) {
                     if(!playerStats[teamName].hasOwnProperty(event.playerName)) {
                         playerStats[teamName][event.playerName] = PlayerStats.create({});
                     }
+
                     playerStats[teamName][event.playerName].add(gameEventService.buildPlayerStatsFromEvent(event));
                 }
             }
@@ -136,16 +137,13 @@ function extractPlayersFromGame(game) {
 function getGames() {
     if(argv.team) {
         return gameRepository.findGamesWithTeam(argv.team);
+    } else if(argv.game) {
+        return gameRepository.findOneByEid(argv.game)
+            .then(function convertToList(game) {
+                return [game];
+            });
     } else {
         return gameRepository.findAll();
-    }
-}
-
-function getPlayers() {
-    if(argv.team) {
-        return playerRepository.findAllByTeam(argv.team);
-    } else {
-        return playerRepository.findAll();
     }
 }
 
@@ -173,25 +171,6 @@ bootstrap.start()
             extractPlayersChain = extractPlayersChain.then(extractPlayersFromGame.bind(this, game));
         });
         return extractPlayersChain;
-    })
-    .then(function debugPlayers() {
-        if(!argv.debug) {
-            return;
-        }
-
-        return getPlayers()
-            .then(function debugPlayers(players) {
-                players.forEach(function(player) {
-                    console.log('');console.log('');
-                    console.log(player.name + ', ' + player.team);
-
-                    var orderedGames = player.getOrderedGames();
-                    for(var i in orderedGames) {
-                        console.log('Week ' + orderedGames[i].week + ', ' + orderedGames[i].year + ': ' + orderedGames[i].points);
-                    }
-                });
-                return players;
-            })
     })
     .then(function allDone() {
         console.log('All done!');
