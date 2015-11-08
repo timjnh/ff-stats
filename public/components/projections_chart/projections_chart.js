@@ -35,6 +35,9 @@
                     .then(function assembleChartData(projections) {
                         _this.isLoading = false;
 
+                        _this.labels = [];
+                        _this.data = [[], []];
+
                         projections.forEach(function addProjectionToChartData(projection) {
                             if(projection.projected !== undefined) {
                                 _this.labels.push('Week ' + projection.game.week + ', ' + projection.game.year);
