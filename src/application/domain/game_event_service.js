@@ -78,6 +78,7 @@ GameEventService.prototype.buildPlayerStatsFromEvent = function buildPlayerStats
         case 33: // punt return yards
         case 34: // punt return yards with touchdown
         case 35: // punt return yards with lateral
+        case 36: // punt reutrn yards with lateral resulting in a touchdown
         case 37: // punt out of bounds
         case 38: // punt downed by kicking team
         case 39: // punt with fair catch
@@ -89,6 +90,7 @@ GameEventService.prototype.buildPlayerStatsFromEvent = function buildPlayerStats
         case 45: // kickoff return yards
         case 46: // kickoff return yards with touchdown
         case 47: // kickoff return yards with lateral
+        case 48: // kickoff return yards with lateral resulting in touchdown
         case 49: // kickoff out of bounds
         case 50: // kickoff with fair catch
         case 51: // kickoff with touchback
@@ -138,6 +140,7 @@ GameEventService.prototype.buildPlayerStatsFromEvent = function buildPlayerStats
         case 120: // tackled for a loss
         case 301: // extra point aborted
         case 402: // ?
+        case 403: // ?
         case 410: // ?
             return PlayerStats.create();
         default:
