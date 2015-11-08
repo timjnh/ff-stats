@@ -167,11 +167,10 @@ bootstrap.start()
 
             extractPlayersFromGame(game)
                 .then(function resumeStream() {
-                    // all don processing the game so we can resume the stream again
+                    // all done processing the game so we can resume the stream again
                     gameStream.resume();
                 })
                 .catch(function closeStreamAnFail(err) {
-                    gameStream.destroy();
                     deferred.reject(err);
                 })
                 .done();
