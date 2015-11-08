@@ -8,22 +8,27 @@ var assert = require('assert'),
 
 function GameRepository() {}
 
-GameRepository.prototype.findGamesWithoutStats = function findGamesWithoutStats() {
+GameRepository.prototype.findGamesWithoutStats = function findGamesWithoutStats(options) {
     var criteria = { stats: { $exists: false } };
-    return this._findWithCriteria(criteria);
+    return this._findWithCriteria(criteria, options);
 };
 
-GameRepository.prototype.findGamesWithTeam = function findGamesWithTeam(team) {
+GameRepository.prototype.findGamesWithTeam = function findGamesWithTeam(team, options) {
     var criteria = { $or: [{ home: team }, { away: team }]};
-    return this._findWithCriteria(criteria);
+    return this._findWithCriteria(criteria, options);
 };
 
 GameRepository.prototype.findOneByEid = function findOneByEid(eid) {
     return this._findOneWithCriteria({ eid: eid });
 };
 
+// A bit annoying but added this version to support the streaming interface for extract_players
+GameRepository.prototype.findAllByEid = function findAllByEid(eid, options) {
+    return this._findWithCriteria({ eid: eid }, options);
+};
+
 GameRepository.prototype._findOneWithCriteria = function _findOneWithCriteria(criteria) {
-    return this._findWithCriteria(criteria)
+    return this._findWithCriteria(criteria, {})
         .then(function reduceToOne(games) {
             assert(games.length <= 1, 'Found multiple Games with criteria "' + JSON.stringify(criteria) + '"');
             assert(games.length != 0, 'Could not find a Game matching "' + JSON.stringify(criteria) + '"');
@@ -31,21 +36,31 @@ GameRepository.prototype._findOneWithCriteria = function _findOneWithCriteria(cr
         });
 };
 
-GameRepository.prototype.findAll = function findAll() {
-    return this._findWithCriteria({});
+GameRepository.prototype.findAll = function findAll(options) {
+    return this._findWithCriteria({}, options);
 };
 
-GameRepository.prototype._findWithCriteria = function _findWithCriteria(criteria) {
+function createGameFromDoc(doc) {
+    return Game.create(doc.toObject());
+}
+
+GameRepository.prototype._findWithCriteria = function _findWithCriteria(criteria, options) {
     return q.Promise(function(resolve, reject) {
-        GameModel.find(criteria, function(err, games) {
-            if(err) {
-                reject(err);
-            } else {
-                resolve(games.map(function createGame(game) {
-                    return Game.create(game.toObject());
-                }));
-            }
-        });
+        var stream,
+            query = GameModel.find(criteria).batchSize(10);
+
+        if(options.stream) {
+            stream = query.stream({ transform: createGameFromDoc});
+            resolve(stream);
+        } else {
+            query.exec(function (err, games) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(games.map(createGameFromDoc));
+                }
+            });
+        }
     });
 };
 

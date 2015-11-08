@@ -141,43 +141,47 @@ function extractPlayersFromGame(game) {
         });
 }
 
-function getGames() {
+function getGamesAsStream() {
     if(argv.team) {
-        return gameRepository.findGamesWithTeam(argv.team);
+        return gameRepository.findGamesWithTeam(argv.team, { stream: true });
     } else if(argv.game) {
-        return gameRepository.findOneByEid(argv.game)
-            .then(function convertToList(game) {
-                return [game];
-            });
+        return gameRepository.findAllByEid(argv.game, { stream: true });
     } else {
-        return gameRepository.findAll();
+        return gameRepository.findAll({ stream: true });
     }
 }
 
 bootstrap.start()
-    .then(function findGames() {
-        console.log('Retrieving games...');
-        return getGames()
-            .then(function mergeGames(games) {
-                console.log('Found games...');
-                return _.uniq(
-                    _.flatten(games),
-                    false,
-                    function extractEid(game) { return game.eid; }
-                );
-            });
-    })
-    .then(function skipGamesWithoutStats(games) {
-        return _.filter(games, function(game) { return game.hasOwnProperty('stats'); });
-    })
-    .then(function extractPlayers(games) {
-        console.log('Building extract player promise chain...');
-        // this needs to be done sequentially so we're not fighting over player objects
-        var extractPlayersChain = q.when();
-        games.map(function buildExtractPlayersPromiseChain(game) {
-            extractPlayersChain = extractPlayersChain.then(extractPlayersFromGame.bind(this, game));
+    .then(getGamesAsStream)
+    .then(function extractPlayers(gameStream) {
+        var deferred = q.defer();
+
+        gameStream.on('data', function(game) {
+            // skip games without any stats since they won't have any players
+            if(!game.hasOwnProperty('stats')) {
+                return;
+            }
+
+            // pause the stream until we are done processing this game
+            gameStream.pause();
+
+            extractPlayersFromGame(game)
+                .then(function resumeStream() {
+                    // all don processing the game so we can resume the stream again
+                    gameStream.resume();
+                })
+                .catch(function closeStreamAnFail(err) {
+                    gameStream.destroy();
+                    deferred.reject(err);
+                })
+                .done();
+        }).on('error', function(err) {
+            deferred.reject(err);
+        }).on('close', function() {
+            deferred.resolve();
         });
-        return extractPlayersChain;
+
+        return deferred.promise;
     })
     .then(function allDone() {
         console.log('All done!');
