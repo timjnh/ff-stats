@@ -22,6 +22,8 @@ GameEventService.prototype.buildPlayerStatsFromEvent = function buildPlayerStats
             return PlayerStats.create({ passingYards: event.yards });
         case 21: // pass reception yards
             return PlayerStats.create({ receivingYards: event.yards });
+        case 22: // pass reception yards with touchdown
+            return PlayerStats.create({ receivingTDs: 1, receivingYards: event.yards });
         case 55: // yardage after fumble recovery
             return PlayerStats.create({ rushingYards: event.yards }); // treating this the same as rushing yards?
         case 56: // yardage after fumble recovery with touchdown
@@ -58,7 +60,6 @@ GameEventService.prototype.buildPlayerStatsFromEvent = function buildPlayerStats
         case 9: // 4th down attempt failed
         case 12: // rushing yards, no rush (lateral something something)
         case 14: // pass, no completion
-        case 22: // pass reception yards with touchdown (see 16)
         case 23: // pass reception yards resulting from lateral
         case 25: // interception yards
         case 26: // interception yards with a touchdown
