@@ -102,8 +102,8 @@ InputsService.prototype.getInputsForPlayerAndGame = function getInputsForPlayerA
     return q.all(inputPromises)
         .then(function mapInputs(inputs) {
             var mappedInputs = {};
-            for(var i in _this.inputTypes) {
-                mappedInputs[_this.inputTypes[i].getName()] = inputs[i];
+            for(var i in playerInputTypes) {
+                mappedInputs[playerInputTypes[i].getName()] = inputs[i];
             }
             return InputSet.create(mappedInputs);
         });
