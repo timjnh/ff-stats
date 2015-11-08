@@ -18,11 +18,14 @@ var _ = require('underscore'),
     RecentRushingTouchdownsAllowedByOpponent = require('./recent_rushing_touchdowns_allowed_by_opponent'),
     RecentSacksByOpponent = require('./recent_sacks_by_opponent'),
     RecentInterceptionsByOpponent = require('./recent_interceptions_by_opponent'),
+    PlayerPosition = require('../player_position'),
     Input = require('./input'),
     InputSet = require('../input_set');
 
 function InputsService() {
-    this.inputTypes = [
+    this.inputsByPosition = {};
+
+    this.inputsByPosition[PlayerPosition.QB] = [
         new HomeVsAway(),
         new PointsInRecentGames(3),
         new Opponent(),
@@ -40,11 +43,59 @@ function InputsService() {
         new RecentSacksByOpponent(3),
         new RecentInterceptionsByOpponent(3)
     ];
+
+    this.inputsByPosition[PlayerPosition.RB] = [
+        new HomeVsAway(),
+        new PointsInRecentGames(3),
+        new Opponent(),
+        new AveragePointsAgainstOpponent(),
+        new RecentPointsAgainstOpponent(3),
+        new DaysOff(),
+        new RecentRushingYards(3),
+        new RecentRushingTouchdowns(3),
+        new RecentPassingYardsAllowedByOpponent(3),
+        new RecentRushingYardsAllowedByOpponent(3),
+        new RecentPassingTouchdownsAllowedByOpponent(3),
+        new RecentRushingTouchdownsAllowedByOpponent(3)
+    ];
+
+    this.inputsByPosition[PlayerPosition.WR] = [
+        new HomeVsAway(),
+        new PointsInRecentGames(3),
+        new Opponent(),
+        new AveragePointsAgainstOpponent(),
+        new RecentPointsAgainstOpponent(3),
+        new DaysOff(),
+        new RecentPassingYardsAllowedByOpponent(3),
+        new RecentRushingYardsAllowedByOpponent(3),
+        new RecentPassingTouchdownsAllowedByOpponent(3),
+        new RecentRushingTouchdownsAllowedByOpponent(3),
+        new RecentInterceptionsByOpponent(3)
+    ];
+
+    this.inputsByPosition[PlayerPosition.DEFENSE] = [
+        new HomeVsAway(),
+        new PointsInRecentGames(3),
+        new Opponent(),
+        new AveragePointsAgainstOpponent(),
+        new RecentPointsAgainstOpponent(3),
+        new DaysOff()
+    ];
+
+    this.inputsByPosition[PlayerPosition.KICKER] = [
+        new HomeVsAway(),
+        new PointsInRecentGames(3),
+        new Opponent(),
+        new AveragePointsAgainstOpponent(),
+        new RecentPointsAgainstOpponent(3),
+        new DaysOff()
+    ];
 }
 
 InputsService.prototype.getInputsForPlayerAndGame = function getInputsForPlayerAndGame(player, game) {
     var _this = this,
-        inputPromises = this.inputTypes.map(function getInputForPlayerAndGame(input) {
+        playerInputTypes = this.getInputsForPosition(player.position),
+        inputPromises = playerInputTypes.map(function getInputForPlayerAndGame(input) {
             return q.when(input.evaluate(player, game));
         });
 
@@ -58,8 +109,13 @@ InputsService.prototype.getInputsForPlayerAndGame = function getInputsForPlayerA
         });
 };
 
-InputsService.prototype.getInputsList = function getInputsList() {
-    return this.inputTypes.map(function getName(input) { return input.getName(); });
+InputsService.prototype.getInputsForPosition = function getInputsForPosition(position) {
+    return this.inputsByPosition[position];
+};
+
+InputsService.prototype.getInputsListForPosition = function getInputsListForPosition(position) {
+    var inputsForPosition = this.getInputsForPosition(position);
+    return inputsForPosition.map(function getName(input) { return input.getName(); });
 };
 
 module.exports = new InputsService();

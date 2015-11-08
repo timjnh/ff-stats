@@ -6,8 +6,8 @@ var q = require('q'),
 
 function InputsResource() {}
 
-InputsResource.prototype.getAll = function getAll() {
-    return q.when(inputsService.getInputsList())
+InputsResource.prototype.getListForPosition = function getListForPosition(position) {
+    return q.when(inputsService.getInputsListForPosition(position))
         .then(function buildInputModels(inputNames) {
             return inputNames.map(function buildInputModel(inputName) {
                 return InputModel.create({name: inputName});

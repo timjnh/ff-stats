@@ -29,7 +29,9 @@ function buildAndSaveInputsForPlayer(player) {
     var inputsPromiseChain = q.when(player);
     player.games.forEach(function(playerGame) {
         inputsPromiseChain = inputsPromiseChain.then(function getInputsForPlayerAndGame(updatedPlayer) {
-            if(playerGame.hasAllInputs(inputsService.getInputsList()) && !args.forceInputCalc) {
+            var playerInputList = inputsService.getInputsListForPosition(updatedPlayer.position);
+
+            if(playerGame.hasAllInputs(playerInputList) && !args.forceInputCalc) {
                 console.log('Player "' + updatedPlayer.name + '" has required inputs for week ' + playerGame.week + ', ' + playerGame.year + '.  Skipping...');
                 return updatedPlayer;
             } else {
@@ -50,7 +52,7 @@ function buildAndSaveInputsForPlayer(player) {
 
 function showProjectionsForPlayerOverTime(player) {
     console.log('Projections for "' + player.name + ' of the ' + player.team);
-    return projectionsService.buildProjectionsForAllGames(player, inputsService.getInputsList())
+    return projectionsService.buildProjectionsForAllGames(player, inputsService.getInputsListForPosition(player.position))
         .then(function displayProjections(projections) {
             projections.forEach(function displayProjection(projection) {
                 console.log('  Week ' + projection.game.week + ', ' + projection.game.year + ': ' + projection.projected + ' projected, ' + projection.actual + ' actual');

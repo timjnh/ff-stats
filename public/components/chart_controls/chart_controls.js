@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    angular.module('myApp.chartControls', ['myApp.chartControlsService', 'myApp.playersService', 'myApp.inputsService', 'underscore', 'angular.filter'])
+    angular.module('myApp.chartControls', ['myApp.chartControlsService', 'myApp.playersService', 'underscore', 'angular.filter'])
         .directive('chartControls', function() {
             return {
                 restrict: 'E',
@@ -18,14 +18,6 @@
 
             playersService.getAll().then(function(players) {
                 _this.players = players;
-            });
-
-            inputsService.getAll().then(function(inputs) {
-                _this.inputs = inputs;
-
-                for(var k in inputs) {
-                    chartControlsService.setInputSelected(k, true);
-                }
             });
 
             this.playerSearchText = '';

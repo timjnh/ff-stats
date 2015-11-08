@@ -5,8 +5,8 @@
         .factory('inputsService', function($http) {
             var inputsService = {};
 
-            inputsService.getAll = function getAll() {
-                return $http.get('/inputs').then(function (response) {
+            inputsService.getInputsForPosition = function getInputsForPosition(position) {
+                return $http.get('/inputs/' + position).then(function (response) {
                     var mappedByName = {};
                     response.data.forEach(function mapByName(input) {
                         mappedByName[input.name] = input;

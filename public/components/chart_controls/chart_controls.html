@@ -9,7 +9,7 @@
                          md-items="player in chartControlsController.getMatchedPlayers(chartControlsController.playerSearchText)"
                          md-item-text="chartControlsController.getFullPlayerName(player)"
                          placeholder="Select a player..."
-                         md-selected-item-change="chartControlsController.chartControlsService.onChange()">
+                         md-selected-item-change="chartControlsController.chartControlsService.onPlayerSelected()">
             <md-item-template>
                 <span md-highlight-text="chartControlsController.playerSearchText" md-highlight-flags="gi">{{player.name | ucfirst}}, {{player.team | ucfirst}}</span>
             </md-item-template>
@@ -25,10 +25,15 @@
     </div>
     <md-content flex>
         <md-list>
-            <md-list-item ng-repeat="input in chartControlsController.inputs">
+            <md-list-item ng-repeat="input in chartControlsController.chartControlsService.inputs">
                 <md-checkbox ng-model="chartControlsController.chartControlsService.inputs[input.name].selected" ng-change="chartControlsController.chartControlsService.onChange()"></md-checkbox>
                 <p>{{input.name}}</p>
             </md-list-item>
         </md-list>
+
+        <div ng-if="!chartControlsController.chartControlsService.hasInputs() && !chartControlsController.chartsControlService.isRetrievingInputs">Select a player to see available inputs</div>
+        <div layout="row" layout-align="center">
+            <md-progress-circular md-mode="indeterminate" ng-if="chartControlsController.chartControlsService.isRetrievingInputs"></md-progress-circular>
+        </div>
     </md-content>
 </div>

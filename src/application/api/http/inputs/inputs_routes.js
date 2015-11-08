@@ -6,9 +6,9 @@ var inputsResource = require('./inputs_resource.js'),
 module.exports = [
     {
         method: 'GET',
-        path: '/inputs',
+        path: '/inputs/{position}',
         handler: function (request, reply) {
-            inputsResource.getAll()
+            inputsResource.getListForPosition(request.params.position)
                 .then(function afterRead(response) {
                     reply(response);
                 })
