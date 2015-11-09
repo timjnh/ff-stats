@@ -3,7 +3,8 @@ module.exports = (function() {
 
     var q = require('q'),
         os = require('os'),
-        cluster = require('cluster');
+        cluster = require('cluster'),
+        logger = require('../logger');
 
     var workQueue = [],
         availableWorkers = [],
@@ -14,10 +15,10 @@ module.exports = (function() {
     function WorkerService(workerPath) { this.workerPath = workerPath; }
 
     WorkerService.prototype.start = function start() {
-        console.log('Starting ' + this.constructor.name + ' worker service...');
+        logger.info('Starting ' + this.constructor.name + ' worker service...');
 
         cluster.on('exit', function handleChildDeath(worker) {
-            console.log('Worker ' + worker.id + ' has died...');
+            logger.warn('Worker ' + worker.id + ' has died...');
         });
 
         cluster.setupMaster({
@@ -40,9 +41,11 @@ module.exports = (function() {
         cluster.on('online', function() {
             onlineWorkers++;
             if(onlineWorkers == numWorkersToStart) {
+                // TODO - this exists so we don't send jobs to the workers before they're listening
+                // a better way would be to send our own message back once we're started
                 setTimeout(function resolveDeferred() {
                     deferred.resolve();
-                }, 100);
+                }, 500);
             }
         });
 
@@ -58,7 +61,7 @@ module.exports = (function() {
     WorkerService.prototype.stop = function stop() {
         var deferred = q.defer();
 
-        console.log('Stopping ' + this.constructor.name + ' worker service');
+        logger.info('Stopping ' + this.constructor.name + ' worker service');
 
         if(queueCheckInterval) {
             clearInterval(queueCheckInterval);
@@ -82,7 +85,7 @@ module.exports = (function() {
         var job = workQueue.shift();
         worker.send(job);
 
-        console.log('Sent job to worker ' + worker.id + ' with deferredId ' +  job.deferredId + '...');
+        logger.debug('Sent job to worker ' + worker.id + ' with deferredId ' +  job.deferredId + '...');
     }
 
     function receivedMessage(msg) {
@@ -90,7 +93,7 @@ module.exports = (function() {
 
         availableWorkers.push(cluster.workers[msg.workerId]);
 
-        console.log('Job completed by worker ' + msg.workerId + '...');
+        logger.debug('Job completed by worker ' + msg.workerId + '...');
 
         deferred.resolve(this.onMsgReceived(msg.payload));
         delete workerDeferreds[msg.deferredId];

@@ -14,7 +14,8 @@ var argv,
     Player = require('./application/domain/player'),
     PlayerGame = require('./application/domain/player_game'),
     playerRepository = require('./port/player/player_repository'),
-    extractPlayerWorkerService = require('./application/domain/extract_player_worker_service');
+    extractPlayerWorkerService = require('./application/domain/extract_player_worker_service'),
+    logger = require('./lib/logger');
 
 var HOME = 'home',
     AWAY = 'away',
@@ -30,7 +31,12 @@ argv = require('yargs')
     .alias('t', 'team')
     .describe('g', 'EID of the game to extract players from')
     .alias('g', 'game')
+    .describe('log-level', 'Log level to use')
+    .choices('log-level', Object.keys(logger.levels))
+    .default('log-level', 'info')
     .argv;
+
+logger.level = argv.logLevel;
 
 function addGameToPlayer(playerName, teamName, game, playerStats) {
     var points = fantasyPointService.calculatePointsForPlayerStats(playerStats),
@@ -108,10 +114,10 @@ function extractDefensiveStatsFromHomeAndAway(game, playerStats, side) {
 }
 
 function extractPlayersFromGame(game) {
-    var startTime,
+    var startTime = new Date(),
         playerStats = {};
 
-    console.log('Extracting players from game between ' + game.home + ' and ' + game.away + ' for week ' + game.week + ', ' + game.year);
+    logger.info('Extracting players from game between ' + game.home + ' and ' + game.away + ' for week ' + game.week + ', ' + game.year);
 
     extractStatsFromDrives(game, playerStats);
 
@@ -129,11 +135,10 @@ function extractPlayersFromGame(game) {
         }
     }
 
-    startTime = new Date();
-    console.log('Saving stats data for ' + playerPromises.length + ' players...');
+    logger.verbose('Saving stats data for ' + playerPromises.length + ' players...');
     return q.all(playerPromises)
         .then(function() {
-            console.log('Done saving stats data in ' + ((new Date()).getTime() - startTime.getTime()) + ' ms...');
+            logger.info('Done extracting players in ' + ((new Date()).getTime() - startTime.getTime()) + ' ms...');
         });
 }
 
@@ -182,7 +187,7 @@ bootstrap.start()
         return deferred.promise;
     })
     .then(function allDone() {
-        console.log('All done!');
+        console.info('All done!');
     })
     .finally(function stopEverything() {
         return extractPlayerWorkerService.stop()

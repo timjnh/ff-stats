@@ -1,7 +1,8 @@
 'use strict';
 
 var q = require('q'),
-    cluster = require('cluster');
+    cluster = require('cluster'),
+    logger = require('../logger');
 
 function Worker() {}
 
@@ -9,10 +10,10 @@ Worker.prototype.start = function start() {
     var _this = this,
         deferred = q.defer();
 
-    console.log('Started ' + this.constructor.name + ' worker ' + cluster.worker.id + '...');
+    logger.info('Started ' + this.constructor.name + ' worker ' + cluster.worker.id + '...');
 
     process.on('message', function(msg) {
-        console.log('Worker ' + cluster.worker.id + ' received a "' + msg.command + '" event');
+        logger.debug('Worker ' + cluster.worker.id + ' received a "' + msg.command + '" event');
 
         _this.onMsgReceived(msg.payload)
             .then(function respondToMaster(payload) {
@@ -27,7 +28,7 @@ Worker.prototype.start = function start() {
 
     return deferred.promise
         .then(function inform() {
-            console.log('Stopping ' + _this.constructor.name + ' worker #' + cluster.worker.id + '...');
+            logger.debug('Stopping ' + _this.constructor.name + ' worker #' + cluster.worker.id + '...');
         });
 };
 
