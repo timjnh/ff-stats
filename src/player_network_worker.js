@@ -1,48 +1,29 @@
 'use strict';
 
-var q = require('q'),
-    cluster = require('cluster'),
+var _ = require('underscore'),
     bootstrap = require('./bootstrap'),
     Player = require('./application/domain/player'),
     PlayerGame = require('./application/domain/player_game'),
-    playerNetworkService = require('./application/domain/player_network_service');
+    playerNetworkService = require('./application/domain/player_network_service'),
+    Worker = require('./lib/worker/worker');
+
+function PlayerNetworkWorker() {
+    Worker.call(this);
+}
+PlayerNetworkWorker.prototype = _.create(Worker.prototype, { constructor: PlayerNetworkWorker });
+
+PlayerNetworkWorker.prototype.onMsgReceived = function onMsgReceived(payload) {
+    var player = Player.create(payload.player),
+        game = PlayerGame.create(payload.game),
+        inputs = payload.inputs;
+
+    return playerNetworkService.buildNetworkUpToGame(player, game, inputs);
+};
 
 bootstrap.start()
     .then(function waitForWork() {
-        var deferred = q.defer();
-
-        console.log('Started player network worker ' + cluster.worker.id + '...');
-
-        process.on('message', function(msg) {
-            var player,
-                game,
-                inputs;
-
-            console.log('Worker ' + cluster.worker.id + ' received a buildNetworkUpToGame event');
-
-            player = Player.create(msg.payload.player);
-            game = PlayerGame.create(msg.payload.game);
-            inputs = msg.payload.inputs;
-
-            playerNetworkService.buildNetworkUpToGame(player, game, inputs)
-                .then(function respondToMaster(playerNetwork) {
-                    process.send({
-                        deferredId: msg.deferredId,
-                        workerId: cluster.worker.id,
-                        payload: playerNetwork
-                    });
-                })
-                .done();
-        });
-
-        cluster.on('disconnect', function resolveDeferred() {
-            deferred.resolve();
-        });
-
-        return deferred.promise;
-    })
-    .then(function inform() {
-        console.log('Stopping player network worker #' + cluster.worker.id + '...');
+        var playerNetworkWorker = new PlayerNetworkWorker();
+        return playerNetworkWorker.start();
     })
     .finally(bootstrap.stop.bind(bootstrap))
     .done();

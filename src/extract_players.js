@@ -13,7 +13,8 @@ var argv,
     PlayerStats = require('./application/domain/player_stats'),
     Player = require('./application/domain/player'),
     PlayerGame = require('./application/domain/player_game'),
-    playerRepository = require('./port/player/player_repository');
+    playerRepository = require('./port/player/player_repository'),
+    extractPlayerWorkerService = require('./application/domain/extract_player_worker_service');
 
 var HOME = 'home',
     AWAY = 'away',
@@ -33,27 +34,18 @@ argv = require('yargs')
 
 function addGameToPlayer(playerName, teamName, game, playerStats) {
     var points = fantasyPointService.calculatePointsForPlayerStats(playerStats),
-        opponent = game.getOpposingTeam(teamName);
-
-    return playerRepository.findOneByNameAndTeam(playerName, teamName, true)
-        .then(function addGameToPlayer(player) {
-            return player.addGame(PlayerGame.create({
-                eid: game.eid,
-                week: game.week,
-                year: game.year,
-                opponent: opponent,
-                points: parseFloat(points.toFixed(1)),
-                stats: playerStats,
-                inputs: {}
-            }));
-        })
-        .then(function guessPlayerPosition(player) {
-            var position = playerPositionService.calculatePlayerPosition(player);
-            return player.setPosition(position);
-        })
-        .then(function savePlayer(player) {
-            return playerRepository.save(player);
+        opponent = game.getOpposingTeam(teamName),
+        playerGame = PlayerGame.create({
+            eid: game.eid,
+            week: game.week,
+            year: game.year,
+            opponent: opponent,
+            points: parseFloat(points.toFixed(1)),
+            stats: playerStats,
+            inputs: {}
         });
+
+    return extractPlayerWorkerService.addGameToPlayer(playerName, teamName, playerGame);
 }
 
 function findNameForTeamByClubCode(teams, clubcode) {
@@ -156,6 +148,9 @@ function getGamesAsStream() {
 }
 
 bootstrap.start()
+    .then(function startExtractPlayerWorkerService() {
+        return extractPlayerWorkerService.start();
+    })
     .then(getGamesAsStream)
     .then(function extractPlayers(gameStream) {
         var deferred = q.defer();
@@ -189,5 +184,8 @@ bootstrap.start()
     .then(function allDone() {
         console.log('All done!');
     })
-    .finally(bootstrap.stop.bind(bootstrap))
+    .finally(function stopEverything() {
+        return extractPlayerWorkerService.stop()
+            .then(bootstrap.stop.bind(bootstrap));
+    })
     .done();
