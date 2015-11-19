@@ -2,3 +2,12 @@ http://www.nfl.com/liveupdate/scorestrip/ss.xml
 http://www.nfl.com/liveupdate/scorestrip/postseason/ss.xml
 nfl.com/liveupdate/game-center/2012080953/2012080953_gtd.json
 http://www.nfl.com/ajax/scorestrip?season=2012&week=2&seasonType=REG
+
+depth charts
+http://feeds.nfl.com/feeds-rs/depthChartClub/byTeam/NE.json
+
+injuries
+http://www.fantasyfootballnerd.com/fantasy-football-api#injuries
+http://www.pro-football-reference.com/years/2015/WR-fantasy-matchups.htm#fantasy_stats::none
+
+https://api.nfl.com/docs/getting-started/index.html
