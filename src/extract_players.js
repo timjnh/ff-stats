@@ -6,6 +6,7 @@ var argv,
     synaptic = require('synaptic'),
     bootstrap = require('./bootstrap'),
     gameRepository = require('./port/game/game_repository'),
+    GameQueryBuilder = require('./port/game/game_query_builder'),
     fantasyPointService = require('./application/domain/fantasy_point_service'),
     gameEventService = require('./application/domain/game_event_service'),
     defensiveStatsService = require('./application/domain/defensive_stats_service'),
@@ -31,6 +32,9 @@ argv = require('yargs')
     .alias('t', 'team')
     .describe('g', 'EID of the game to extract players from')
     .alias('g', 'game')
+    .array('y')
+    .describe('y', 'Year or list of years to extract players from')
+    .alias('y', 'year')
     .describe('log-level', 'Log level to use')
     .choices('log-level', Object.keys(logger.levels))
     .default('log-level', 'info')
@@ -143,13 +147,21 @@ function extractPlayersFromGame(game) {
 }
 
 function getGamesAsStream() {
+    var queryBuilder = GameQueryBuilder.create();
+
     if(argv.team) {
-        return gameRepository.findGamesWithTeam(argv.team, { stream: true });
-    } else if(argv.game) {
-        return gameRepository.findAllByEid(argv.game, { stream: true });
-    } else {
-        return gameRepository.findAll({ stream: true });
+        queryBuilder.withTeam(argv.team);
     }
+
+    if(argv.game) {
+        queryBuilder.withEid(argv.game);
+    }
+
+    if(argv.year) {
+        queryBuilder.withYears(argv.year);
+    }
+
+    return gameRepository.findAllWithBuilder(queryBuilder, { stream: true });
 }
 
 bootstrap.start()

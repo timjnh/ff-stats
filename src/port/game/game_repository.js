@@ -13,18 +13,8 @@ GameRepository.prototype.findGamesWithoutStats = function findGamesWithoutStats(
     return this._findWithCriteria(criteria, options);
 };
 
-GameRepository.prototype.findGamesWithTeam = function findGamesWithTeam(team, options) {
-    var criteria = { $or: [{ home: team }, { away: team }]};
-    return this._findWithCriteria(criteria, options);
-};
-
 GameRepository.prototype.findOneByEid = function findOneByEid(eid) {
     return this._findOneWithCriteria({ eid: eid });
-};
-
-// A bit annoying but added this version to support the streaming interface for extract_players
-GameRepository.prototype.findAllByEid = function findAllByEid(eid, options) {
-    return this._findWithCriteria({ eid: eid }, options);
 };
 
 GameRepository.prototype._findOneWithCriteria = function _findOneWithCriteria(criteria) {
@@ -37,7 +27,6 @@ GameRepository.prototype._findOneWithCriteria = function _findOneWithCriteria(cr
 };
 
 GameRepository.prototype.findAllWithBuilder = function findAllWithBuilder(queryBuilder, options) {
-    console.log(queryBuilder.build());
     return this._findWithCriteria(queryBuilder.build(), options);
 };
 
