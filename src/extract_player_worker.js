@@ -5,6 +5,7 @@ var _ = require('underscore'),
     PlayerGame = require('./application/domain/player_game'),
     playerRepository = require('./port/player/player_repository'),
     playerPositionService = require('./application/domain/player_position_service'),
+    playerTimelineService = require('./application/domain/player_timeline_service'),
     Worker = require('./lib/worker/worker');
 
 function ExtractPlayerWorker() {
@@ -13,14 +14,16 @@ function ExtractPlayerWorker() {
 ExtractPlayerWorker.prototype = _.create(Worker.prototype, { constructor: ExtractPlayerWorker });
 
 ExtractPlayerWorker.prototype.onMsgReceived = function onMsgReceived(payload) {
-    var _this = this,
-        playerName = payload.playerName,
+    var playerName = payload.playerName,
         teamName = payload.teamName,
         playerGame = PlayerGame.create(payload.playerGame);
 
     return playerRepository.findOneByNameAndTeam(playerName, teamName, true)
         .then(function addGameToPlayer(player) {
             return player.addGame(playerGame);
+        })
+        .then(function fillGameGaps(player) {
+            return playerTimelineService.addMissingGamesToPlayer(player);
         })
         .then(function guessPlayerPosition(player) {
             var position = playerPositionService.calculatePlayerPosition(player);
