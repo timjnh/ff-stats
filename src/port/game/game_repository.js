@@ -36,6 +36,11 @@ GameRepository.prototype._findOneWithCriteria = function _findOneWithCriteria(cr
         });
 };
 
+GameRepository.prototype.findAllWithBuilder = function findAllWithBuilder(queryBuilder, options) {
+    console.log(queryBuilder.build());
+    return this._findWithCriteria(queryBuilder.build(), options);
+};
+
 GameRepository.prototype.findAll = function findAll(options) {
     return this._findWithCriteria({}, options);
 };
