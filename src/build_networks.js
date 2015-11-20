@@ -15,7 +15,8 @@ args = require('yargs')
     .strict()
     .help('h')
     .alias('h', 'help')
-    .describe('p', 'Name of player to calculate inputs and build network for')
+    .array('p')
+    .describe('p', 'Name of player or players to calculate inputs and build network for')
     .alias('p', 'player')
     .describe('t', 'Name of team whose player inputs and networks should be calculated')
     .alias('t', 'team')
@@ -62,7 +63,7 @@ function showProjectionsForPlayerOverTime(player) {
 
 function getPlayers() {
     if(args.player) {
-        return playerRepository.findAllByName(args.player);
+        return playerRepository.findAllByNames(args.player);
     } else if(args.team) {
         return playerRepository.findAllByTeam(args.team);
     } else {

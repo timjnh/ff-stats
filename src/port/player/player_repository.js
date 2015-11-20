@@ -33,8 +33,8 @@ PlayerRepository.prototype.findAll = function findAll() {
     return this._findWithCriteria({});
 };
 
-PlayerRepository.prototype.findAllByName = function findAllByName(name) {
-    return this._findWithCriteria({ name: name });
+PlayerRepository.prototype.findAllByNames = function findAllByNames(names) {
+    return this._findWithCriteria({ name: { '$in': names } });
 };
 
 PlayerRepository.prototype.findAllByTeam = function findAllByTeam(team) {
