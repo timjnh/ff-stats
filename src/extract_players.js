@@ -35,6 +35,9 @@ argv = require('yargs')
     .array('y')
     .describe('y', 'Year or list of years to extract players from')
     .alias('y', 'year')
+    .array('p')
+    .describe('p', 'Player or list of players to extract.  Note that this does not restrict the number of games that need to be evaluated.')
+    .alias('p', 'player')
     .describe('log-level', 'Log level to use')
     .choices('log-level', Object.keys(logger.levels))
     .default('log-level', 'info')
@@ -89,6 +92,16 @@ function extractStatsFromDrives(game, playerStats) {
                 for(var k in play.players[j]) {
                     event = play.players[j][k];
                     teamName = findNameForTeamByClubCode(teams, event.clubcode);
+
+                    if(argv.team && argv.team.indexOf(teamName) == -1) {
+                        logger.debug('Skipping event for team "' + teamName + '"');
+                        continue;
+                    }
+
+                    if(argv.player && argv.player.indexOf(event.playerName) == -1) {
+                        logger.debug('Skipping event for player "' + event.playerName + '"');
+                        continue;
+                    }
 
                     if(!playerStats[teamName].hasOwnProperty(event.playerName)) {
                         playerStats[teamName][event.playerName] = PlayerStats.create({});
