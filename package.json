@@ -6,13 +6,14 @@
     "fetch-games": "node ./src/fetch_games.js",
     "fetch-stats": "node ./src/fetch_stats.js",
     "fetch-stats-nm": "./node_modules/.bin/nodemon ./src/fetch_stats.js",
+    "fetch-injury-stats": "node ./src/fetch_injury_stats.js",
     "fetch-injury-stats-nm": "./node_modules/.bin/nodemon ./src/fetch_injury_stats.js",
     "extract-players-nm": "./node_modules/.bin/nodemon ./src/extract_players.js",
     "extract-players": "node ./src/extract_players.js",
     "build-networks-nm": "./node_modules/.bin/nodemon ./src/build_networks.js",
     "build-networks": "node ./src/build_networks.js",
     "postinstall": "bower install",
-    "start-app-nm": "./node_modules/.bin/nodemon ./app.js"
+    "start-app-nm": "./node_modules/.bin/nodemon ./apwp.js"
   },
   "author": "",
   "license": "MIT",
