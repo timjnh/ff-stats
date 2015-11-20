@@ -21,9 +21,9 @@ GameEventService.prototype.buildPlayerStatsFromEvent = function buildPlayerStats
             assert(event.yards <= 0, 'Expected yardage to be negative for a sack!');
             return PlayerStats.create({ passingYards: event.yards });
         case 21: // pass reception yards
-            return PlayerStats.create({ receivingYards: event.yards });
+            return PlayerStats.create({ receivingYards: event.yards, targets: 1 });
         case 22: // pass reception yards with touchdown
-            return PlayerStats.create({ receivingTDs: 1, receivingYards: event.yards });
+            return PlayerStats.create({ receivingTDs: 1, receivingYards: event.yards, targets: 1 });
         case 26: // interception yards with a touchdown
             // TODO: verify this
             return PlayerStats.create({ tdsFromTurnovers: 1 });
@@ -55,9 +55,11 @@ GameEventService.prototype.buildPlayerStatsFromEvent = function buildPlayerStats
         case 77: // 2 point conversion good pass
             return PlayerStats.create({ conversions: 1 });
         case 104: // 2 point conversion received passing
-            return PlayerStats.create({ conversions: 1, receivingYards: event.yards });
+            return PlayerStats.create({ conversions: 1, receivingYards: event.yards, targets: 1 });
         case 106: // lost fumble
             return PlayerStats.create({ fumblesLost: 1 });
+        case 115: // player was the target of a pass attempt`
+            return PlayerStats.create({ targets: 1 });
         case 2: // blocked punt (offense)
         case 3: // first down resulting from rush
         case 4: // first down resulting from pass

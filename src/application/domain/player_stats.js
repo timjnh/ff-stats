@@ -13,6 +13,7 @@ var assert = require('assert'),
 
         'receivingYards',
         'receivingTDs',
+        'targets',
 
         'fumblesLost',
         'interceptionsLost',

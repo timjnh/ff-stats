@@ -21,6 +21,7 @@ var GameSchema = new Schema({
 
         receivingYards: Number,
         receivingTDs: Number,
+        targets: Number,
 
         fumblesLost: Number,
         interceptionsLost: Number,
