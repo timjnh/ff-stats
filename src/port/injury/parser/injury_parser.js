@@ -4,7 +4,8 @@ module.exports = (function() {
 
     var _ = require('underscore'),
         cheerio = require('cheerio'),
-        Injury = require('../model/injury');
+        Injury = require('../model/injury'),
+        PlayerInjury = require('../../../application/domain/player_injury');
 
     function InjuryParser(team, year) {
         this.team = team;
@@ -60,7 +61,7 @@ module.exports = (function() {
             reason = cheerio(column).find('span').attr('tip').split(':')[1].trim();
         }
 
-        Injury.STATUSES.forEach(function checkElementForStatus(_status) {
+        PlayerInjury.STATUSES.forEach(function checkElementForStatus(_status) {
             if(column.hasClass(_status)) {
                 status = _status;
             }

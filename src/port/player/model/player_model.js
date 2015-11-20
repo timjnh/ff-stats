@@ -59,11 +59,20 @@ var GameSchema = new Schema({
     inputs: { type: Schema.Types.Mixed, default: {} }
 }, { strict: 'throw', id: false, minimize: false });
 
+var InjurySchema = new Schema({
+    week: Number,
+    year: Number,
+    status: String,
+    reason: String,
+    played: Boolean
+});
+
 var PlayerSchema = new Schema({
     name: { type: String },
     team: { type: String },
     position: { type: String },
-    games: [GameSchema]
+    games: [GameSchema],
+    injuries: [InjurySchema]
 }, { strict: 'throw'});
 
 PlayerSchema.index({ name: 1, team: 1 }, { unique: true });

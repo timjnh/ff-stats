@@ -5,6 +5,7 @@ var _ = require('underscore'),
     PlayerStats = require('./player_stats'),
     PlayerGame = require('./player_game'),
     PlayerPosition = require('./player_position'),
+    PlayerInjury = require('./player_injury'),
     Joi = require('joi');
 
 function Player(attributes) {
@@ -22,13 +23,20 @@ Player.schema = {
     name: Joi.string().min(1).required(),
     team: Joi.string().min(1).required(),
     position: Joi.string().valid(_.values(PlayerPosition)).optional(),
-    games: Joi.array().items(PlayerGame.schema).required()
+    games: Joi.array().items(PlayerGame.schema).required(),
+    injuries: Joi.array().items(PlayerInjury.schema).required()
 };
 
 Player.create = function create(attributes) {
     if(attributes.games && attributes.games.length > 0) {
         attributes.games = attributes.games.map(function createPlayerGame(game) {
             return PlayerGame.create(game);
+        });
+    }
+
+    if(attributes.injuries && attributes.injuries.length > 0) {
+        attributes.injuries = attributes.injuries.map(function createPlayerInjury(injury) {
+            return PlayerInjury.create(injury);
         });
     }
 
@@ -50,6 +58,27 @@ Player.prototype.addGame = function addGame(playerGame) {
 
 Player.prototype.setPosition = function setPosition(position) {
     return Player.create(_.extend(_.clone(this), { position: position }));
+};
+
+Player.prototype.addInjuries = function addInjuries(injuries) {
+    var player = this;
+    for(var i in injuries) {
+        player = player.addInjury(injuries[i]);
+    }
+    return player;
+};
+
+Player.prototype.addInjury = function addInjury(injury) {
+    var injuries = _.clone(this.injuries),
+        existingInjuryIndex = _.findIndex(injuries, function(existingInjury) { return injury.week == existingInjury.week && injury.year == existingInjury.year; });
+
+    if(existingInjuryIndex != -1) {
+        injuries[existingInjuryIndex] = injury;
+    } else {
+        injuries.push(injury);
+    }
+
+    return Player.create(_.extend(_.clone(this), { injuries: injuries }));
 };
 
 Player.prototype.getStatsTotal = function getStatsTotal(statName) {

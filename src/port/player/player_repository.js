@@ -20,7 +20,7 @@ PlayerRepository.prototype.findOneByNameAndTeam = function findByNameAndTeam(nam
         .then(function buildIfNotFound(players) {
             assert(players.length <= 1, 'Found multiple players with name "' + name + '" and team "' + team + '"');
             if(players.length == 0 && createIfNotFound) {
-                return new Player({name: name, team: team, games: []});
+                return new Player({name: name, team: team, games: [], injuries: []});
             } else if(players.length == 0) {
                 throw 'Player ' + name + ' of ' + team + ' not found';
             } else {
