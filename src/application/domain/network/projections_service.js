@@ -2,9 +2,9 @@
 
 var q = require('q'),
     synaptic = require('synaptic'),
-    playerNetworkRepository = require('../../port/player_network/player_network_repository'),
-    inputsService = require('./inputs/inputs_service'),
-    InputSet = require('./input_set'),
+    playerNetworkRepository = require('../../../port/player_network/player_network_repository'),
+    inputsService = require('../inputs/inputs_service'),
+    InputSet = require('../inputs/input_set'),
     playerNetworkWorkerService = require('./player_network_worker_service'),
     Projection = require('./projection');
 

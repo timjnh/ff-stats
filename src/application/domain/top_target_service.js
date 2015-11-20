@@ -4,7 +4,7 @@ module.exports = (function() {
 
     var _ = require('underscore'),
         playerRepository = require('../../port/player/player_repository'),
-        PlayerPosition = require('./player_position');
+        PlayerPosition = require('./player/player_position');
 
     function TopTargetService() {}
 

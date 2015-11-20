@@ -2,7 +2,7 @@
 
 var q = require('q'),
     playerRepository = require('../../../../port/player/player_repository'),
-    projectionsService = require('../../../domain/projections_service');
+    projectionsService = require('../../../domain/network/projections_service');
 
 function ProjectionsResource() {}
 

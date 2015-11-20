@@ -2,10 +2,10 @@
 
 var _ = require('underscore'),
     bootstrap = require('./bootstrap'),
-    PlayerGame = require('./application/domain/player_game'),
+    PlayerGame = require('./application/domain/player/player_game'),
     playerRepository = require('./port/player/player_repository'),
-    playerPositionService = require('./application/domain/player_position_service'),
-    playerTimelineService = require('./application/domain/player_timeline_service'),
+    playerPositionService = require('./application/domain/player/player_position_service'),
+    playerTimelineService = require('./application/domain/player/player_timeline_service'),
     Worker = require('./lib/worker/worker');
 
 function ExtractPlayerWorker() {

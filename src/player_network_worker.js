@@ -2,9 +2,9 @@
 
 var _ = require('underscore'),
     bootstrap = require('./bootstrap'),
-    Player = require('./application/domain/player'),
-    PlayerGame = require('./application/domain/player_game'),
-    playerNetworkService = require('./application/domain/player_network_service'),
+    Player = require('./application/domain/player/player'),
+    PlayerGame = require('./application/domain/player/player_game'),
+    playerNetworkService = require('./application/domain/network/player_network_service'),
     Worker = require('./lib/worker/worker');
 
 function PlayerNetworkWorker() {

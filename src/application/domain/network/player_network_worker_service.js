@@ -3,7 +3,7 @@ module.exports = (function() {
     'use strict';
 
     var _ = require('underscore'),
-        WorkerService = require('../..//lib/worker/worker_service'),
+        WorkerService = require('../../../lib/worker/worker_service'),
         PlayerNetwork = require('./player_network');
 
     function PlayerNetworkWorkerService() {

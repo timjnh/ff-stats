@@ -3,7 +3,7 @@
 var _ = require('underscore'),
     assert = require('assert'),
     Joi = require('joi'),
-    PlayerInjury = require('../../../application/domain/player_injury');
+    PlayerInjury = require('../../../application/domain/player/player_injury');
 
 var MIN_YEAR = 2009;
 

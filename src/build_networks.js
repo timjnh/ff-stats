@@ -7,8 +7,8 @@ var args,
     playerRepository = require('./port/player/player_repository'),
     inputsService = require('./application/domain/inputs/inputs_service'),
     playerInputsService = require('./application/domain/inputs/player_inputs_service'),
-    projectionsService = require('./application/domain/projections_service'),
-    playerNetworkWorkerService = require('./application/domain/player_network_worker_service');
+    projectionsService = require('./application/domain/network/projections_service'),
+    playerNetworkWorkerService = require('./application/domain/network/player_network_worker_service');
 
 args = require('yargs')
     .usage('Usage: npm run build-networks[-nm] -- [options]')

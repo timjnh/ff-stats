@@ -1,7 +1,7 @@
 'use strict';
 
 var q = require('q'),
-    SimpleGame = require('../../application/domain/simple_game'),
+    SimpleGame = require('../../application/domain/game/simple_game'),
     GameModel = require('./model/game_model');
 
 function SimpleGameRepository() {

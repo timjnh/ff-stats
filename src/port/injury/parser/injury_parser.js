@@ -5,7 +5,7 @@ module.exports = (function() {
     var _ = require('underscore'),
         cheerio = require('cheerio'),
         Injury = require('../model/injury'),
-        PlayerInjury = require('../../../application/domain/player_injury');
+        PlayerInjury = require('../../../application/domain/player/player_injury');
 
     function InjuryParser(team, year) {
         this.team = team;

@@ -21,9 +21,9 @@ var _ = require('underscore'),
     OutDueToInjury = require('./out_due_to_injury'),
     PlayingInjured = require('./playing_injured'),
     TopTargetOut = require('./top_target_out'),
-    PlayerPosition = require('../player_position'),
+    PlayerPosition = require('../player/player_position'),
     Input = require('./input'),
-    InputSet = require('../input_set');
+    InputSet = require('./input_set');
 
 function InputsService() {
     var sharedInputs = [

@@ -4,7 +4,7 @@ var _ = require('underscore'),
     q = require('q'),
     assert = require('assert'),
     PlayerNetworkModel = require('./model/player_network_model'),
-    PlayerNetwork = require('../../application/domain/player_network');
+    PlayerNetwork = require('../../application/domain/network/player_network');
 
 function PlayerNetworkRepository() {}
 

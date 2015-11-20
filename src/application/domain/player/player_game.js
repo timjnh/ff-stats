@@ -3,7 +3,7 @@
 var _ = require('underscore'),
     Joi = require('joi'),
     PlayerStats = require('./player_stats'),
-    InputSet = require('./input_set');
+    InputSet = require('../inputs/input_set');
 
 function PlayerGame(attributes) {
     var validatedAttributes = Joi.validate(attributes, PlayerGame.schema, { stripUnknown: true });

@@ -1,9 +1,9 @@
 'use strict';
 
-var logger = require('../../lib/logger'),
+var logger = require('../../../lib/logger'),
     PlayerGame = require('./player_game'),
     PlayerStats = require('./player_stats'),
-    simpleGameRepository = require('../../port/game/simple_game_repository');
+    simpleGameRepository = require('../../../port/game/simple_game_repository');
 
 function PlayerTimelineService() {}
 

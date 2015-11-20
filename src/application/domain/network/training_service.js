@@ -3,7 +3,7 @@
 var _ = require('underscore'),
     q = require('q'),
     TrainingSet = require('./training_set'),
-    inputsService = require('./inputs/inputs_service');
+    inputsService = require('../inputs/inputs_service');
 
 function TrainingService() {}
 

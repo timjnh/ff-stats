@@ -8,7 +8,7 @@ var argv,
     Team = require('./application/domain/team'),
     injuryRepository = require('./port/injury/injury_repository'),
     playerRepository = require('./port/player/player_repository'),
-    PlayerInjury = require('./application/domain/player_injury');
+    PlayerInjury = require('./application/domain/player/player_injury');
 
 argv = require('yargs')
     .usage('Usage: npm run fetch-injury-stats-nm -- [options]')

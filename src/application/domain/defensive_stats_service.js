@@ -1,7 +1,7 @@
 'use strict';
 
 var _ = require('underscore'),
-    PlayerStats = require('./player_stats');
+    PlayerStats = require('./player/player_stats');
 
 function DefensiveStatsService() {}
 
