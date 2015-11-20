@@ -6,6 +6,7 @@ var _ = require('underscore'),
     PlayerGame = require('./player_game'),
     PlayerPosition = require('./player_position'),
     PlayerInjury = require('./player_injury'),
+    PlayerInjuries = require('./player_injuries'),
     Joi = require('joi');
 
 function Player(attributes) {
@@ -24,7 +25,9 @@ Player.schema = {
     team: Joi.string().min(1).required(),
     position: Joi.string().valid(_.values(PlayerPosition)).optional(),
     games: Joi.array().items(PlayerGame.schema).required(),
-    injuries: Joi.array().items(PlayerInjury.schema).required()
+    injuries: Joi.required() // would like to validate this as an array but Joi does some funny stuff with
+                            // array cloning during validation.  an object won't work because joi is pretty
+                            // strict about type checking Array vs Object
 };
 
 Player.create = function create(attributes) {
@@ -34,10 +37,12 @@ Player.create = function create(attributes) {
         });
     }
 
-    if(attributes.injuries && attributes.injuries.length > 0) {
+    if(attributes.injuries) {
         attributes.injuries = attributes.injuries.map(function createPlayerInjury(injury) {
             return PlayerInjury.create(injury);
         });
+
+        _.extend(attributes.injuries, PlayerInjuries);
     }
 
     return new Player(attributes);

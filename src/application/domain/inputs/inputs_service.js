@@ -18,20 +18,25 @@ var _ = require('underscore'),
     RecentRushingTouchdownsAllowedByOpponent = require('./recent_rushing_touchdowns_allowed_by_opponent'),
     RecentSacksByOpponent = require('./recent_sacks_by_opponent'),
     RecentInterceptionsByOpponent = require('./recent_interceptions_by_opponent'),
+    OutDueToInjury = require('./out_due_to_injury'),
     PlayerPosition = require('../player_position'),
     Input = require('./input'),
     InputSet = require('../input_set');
 
 function InputsService() {
-    this.inputsByPosition = {};
-
-    this.inputsByPosition[PlayerPosition.QB] = [
+    var sharedInputs = [
         new HomeVsAway(),
         new PointsInRecentGames(3),
         new Opponent(),
         new AveragePointsAgainstOpponent(),
         new RecentPointsAgainstOpponent(3),
         new DaysOff(),
+        new OutDueToInjury()
+    ];
+
+    this.inputsByPosition = {};
+
+    this.inputsByPosition[PlayerPosition.QB] = [
         new RecentPassingYards(3),
         new RecentPassingTouchdowns(3),
         new RecentRushingYards(3),
@@ -41,55 +46,29 @@ function InputsService() {
         new RecentPassingTouchdownsAllowedByOpponent(3),
         new RecentRushingTouchdownsAllowedByOpponent(3),
         new RecentSacksByOpponent(3),
-        new RecentInterceptionsByOpponent(3)
-    ];
+        new RecentInterceptionsByOpponent(3),
+    ].concat(sharedInputs);
 
     this.inputsByPosition[PlayerPosition.RB] = [
-        new HomeVsAway(),
-        new PointsInRecentGames(3),
-        new Opponent(),
-        new AveragePointsAgainstOpponent(),
-        new RecentPointsAgainstOpponent(3),
-        new DaysOff(),
         new RecentRushingYards(3),
         new RecentRushingTouchdowns(3),
         new RecentPassingYardsAllowedByOpponent(3),
         new RecentRushingYardsAllowedByOpponent(3),
         new RecentPassingTouchdownsAllowedByOpponent(3),
-        new RecentRushingTouchdownsAllowedByOpponent(3)
-    ];
+        new RecentRushingTouchdownsAllowedByOpponent(3),
+    ].concat(sharedInputs);
 
     this.inputsByPosition[PlayerPosition.WR] = [
-        new HomeVsAway(),
-        new PointsInRecentGames(3),
-        new Opponent(),
-        new AveragePointsAgainstOpponent(),
-        new RecentPointsAgainstOpponent(3),
-        new DaysOff(),
         new RecentPassingYardsAllowedByOpponent(3),
         new RecentRushingYardsAllowedByOpponent(3),
         new RecentPassingTouchdownsAllowedByOpponent(3),
         new RecentRushingTouchdownsAllowedByOpponent(3),
-        new RecentInterceptionsByOpponent(3)
-    ];
+        new RecentInterceptionsByOpponent(3),
+    ].concat(sharedInputs);
 
-    this.inputsByPosition[PlayerPosition.DEFENSE] = [
-        new HomeVsAway(),
-        new PointsInRecentGames(3),
-        new Opponent(),
-        new AveragePointsAgainstOpponent(),
-        new RecentPointsAgainstOpponent(3),
-        new DaysOff()
-    ];
+    this.inputsByPosition[PlayerPosition.DEFENSE] = sharedInputs;
 
-    this.inputsByPosition[PlayerPosition.KICKER] = [
-        new HomeVsAway(),
-        new PointsInRecentGames(3),
-        new Opponent(),
-        new AveragePointsAgainstOpponent(),
-        new RecentPointsAgainstOpponent(3),
-        new DaysOff()
-    ];
+    this.inputsByPosition[PlayerPosition.KICKER] = sharedInputs;
 }
 
 InputsService.prototype.getInputsForPlayerAndGame = function getInputsForPlayerAndGame(player, game) {
