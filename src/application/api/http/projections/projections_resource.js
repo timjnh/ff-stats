@@ -6,10 +6,10 @@ var q = require('q'),
 
 function ProjectionsResource() {}
 
-ProjectionsResource.prototype.get = function get(player, inputs) {
+ProjectionsResource.prototype.get = function get(player, inputs, startYear, endYear) {
     return playerRepository.findOneByNameAndTeam(player.name, player.team)
         .then(function buildProjectionsForPlayer(foundPlayer) {
-            return projectionsService.buildProjectionsForAllGames(foundPlayer, inputs);
+            return projectionsService.buildProjectionsForYearRange(foundPlayer, inputs, startYear, endYear);
         });
 };
 

@@ -30,11 +30,11 @@ function createNetworkIfNotExists(player, game, inputs, playerNetwork) {
     }
 }
 
-ProjectionsService.prototype.buildProjectionsForAllGames = function buildProjectionsForAllGames(player, inputs) {
+ProjectionsService.prototype.buildProjectionsForYearRange = function buildProjectionsForYearRange(player, inputs, startYear, endYear) {
     var _this = this,
         projectionPromises;
 
-    projectionPromises = player.getOrderedGames().map(function calculateProjectionsForGame(game) {
+    projectionPromises = player.getOrderedGamesInYearRange(startYear, endYear).map(function calculateProjectionsForGame(game) {
         return playerNetworkRepository.findByPlayerAndGameAndInputList(player, game, inputs)
             .then(createNetworkIfNotExists.bind(_this, player, game, inputs))
             .then(function activateNetwork(playerNetwork) {
@@ -59,6 +59,13 @@ ProjectionsService.prototype.buildProjectionsForAllGames = function buildProject
     });
 
     return q.all(projectionPromises);
+};
+
+ProjectionsService.prototype.buildProjectionsForAllGames = function buildProjectionsForAllGames(player, inputs) {
+    var startYear = 2009,
+        endYear = new Date().getYear();
+
+    return this.buildProjectionsForYearRange(player, inputs, startYear, endYear);
 };
 
 module.exports = new ProjectionsService();

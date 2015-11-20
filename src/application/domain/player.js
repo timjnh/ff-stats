@@ -136,4 +136,10 @@ Player.prototype.getOrderedGames = function getOrderedGames() {
     return gamesCopy;
 };
 
+Player.prototype.getOrderedGamesInYearRange = function getOrderedGamesInYearRange(startYear, endYear) {
+    return _.filter(this.getOrderedGames(), function isGameInRange(game) {
+        return game.year >= startYear && game.year <= endYear;
+    });
+};
+
 module.exports = Player;
