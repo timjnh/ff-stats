@@ -1,13 +1,14 @@
 module.exports = (function() {
     'use strict';
 
-    var _ = require('underscore'),
-        PerceptronStrategy = require('./perceptron_strategy');
+    var PerceptronStrategy = require('./perceptron_strategy'),
+        LSTMStrategy = require('./lstm_strategy');
 
     function NetworkStrategyFactory() {}
 
     NetworkStrategyFactory.STRATEGIES = {};
     NetworkStrategyFactory.STRATEGIES[PerceptronStrategy.NAME] = PerceptronStrategy;
+    NetworkStrategyFactory.STRATEGIES[LSTMStrategy.NAME] = LSTMStrategy;
 
     NetworkStrategyFactory.createStrategy = function createStrategy(name) {
         if(NetworkStrategyFactory.STRATEGIES.hasOwnProperty(name)) {
