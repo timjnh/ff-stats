@@ -25,6 +25,10 @@ args = require('yargs')
     .default('strategy', PerceptronStrategy.NAME)
     .array('input')
     .describe('input', 'Input name or list of inputs to use when building networks')
+    .describe('start-year', 'Year to start calculations on.  Affects network calculations, not input calculations')
+    .default('start-year', 2009)
+    .describe('end-year', 'Year to end calculations on.  Affectds network calculations, not input calculations')
+    .default('end-year', (new Date().getYear()) + 1900)
     .boolean('inputs-only')
     .describe('inputs-only', 'If set, inputs will be calculated by not networks')
     .boolean('force-input-calc')
@@ -74,7 +78,7 @@ function buildAndSaveInputsForPlayer(player) {
 
 function showProjectionsForPlayerOverTime(player) {
     console.log('Projections for "' + player.name + ' of the ' + player.team);
-    return projectionsService.buildProjectionsForAllGames(player, getInputsForPlayer(player), args.strategy)
+    return projectionsService.buildProjectionsForYearRange(player, getInputsForPlayer(player), args.strategy, args.startYear, args.endYear)
         .then(function displayProjections(projections) {
             projections.forEach(function displayProjection(projection) {
                 console.log('  Week ' + projection.game.week + ', ' + projection.game.year + ': ' + projection.projected + ' projected, ' + projection.actual + ' actual');
