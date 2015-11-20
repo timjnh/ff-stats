@@ -11,3 +11,9 @@ http://www.fantasyfootballnerd.com/fantasy-football-api#injuries
 http://www.pro-football-reference.com/years/2015/WR-fantasy-matchups.htm#fantasy_stats::none
 
 https://api.nfl.com/docs/getting-started/index.html
+
+
+http://www.pro-football-reference.com/teams/cin/2014_injuries.htm
+
+depth charts
+http://www.ourlads.com/nfldepthcharts/pfdeptharchive/BUF/158

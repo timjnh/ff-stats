@@ -72,10 +72,19 @@ Team.TEAMS = [
     Team.TEXANS
 ];
 
+Team.codes = {};
+Team.codes[Team.BENGALS] = {
+    threeLetterCityCode: 'cin'
+};
+
 Team.getId = function getId(teamName) {
     var teamIndex = Team.TEAMS.indexOf(teamName);
     assert(teamIndex != -1, 'Could not find id for team "' + teamName + '"');
     return teamIndex;
+};
+
+Team.getThreeLetterCityCode = function getThreeLetterCityCode(teamName) {
+    return Team.codes[teamName].threeLetterCityCode;
 };
 
 module.exports = Team;
