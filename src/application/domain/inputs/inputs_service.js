@@ -19,6 +19,7 @@ var _ = require('underscore'),
     RecentSacksByOpponent = require('./recent_sacks_by_opponent'),
     RecentInterceptionsByOpponent = require('./recent_interceptions_by_opponent'),
     OutDueToInjury = require('./out_due_to_injury'),
+    PlayingInjured = require('./playing_injured'),
     PlayerPosition = require('../player_position'),
     Input = require('./input'),
     InputSet = require('../input_set');
@@ -31,7 +32,8 @@ function InputsService() {
         new AveragePointsAgainstOpponent(),
         new RecentPointsAgainstOpponent(3),
         new DaysOff(),
-        new OutDueToInjury()
+        new OutDueToInjury(),
+        new PlayingInjured()
     ];
 
     this.inputsByPosition = {};
