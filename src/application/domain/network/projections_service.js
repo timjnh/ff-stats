@@ -61,11 +61,4 @@ ProjectionsService.prototype.buildProjectionsForYearRange = function buildProjec
     return q.all(projectionPromises);
 };
 
-ProjectionsService.prototype.buildProjectionsForAllGames = function buildProjectionsForAllGames(player, inputs, strategy) {
-    var startYear = 2009,
-        endYear = (new Date().getYear()) + 1900;
-
-    return this.buildProjectionsForYearRange(player, inputs, strategy, startYear, endYear);
-};
-
 module.exports = new ProjectionsService();
