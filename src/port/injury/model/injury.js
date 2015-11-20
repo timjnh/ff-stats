@@ -10,7 +10,7 @@ var MIN_YEAR = 2009;
 var schema = {
     name: Joi.string().min(1).required(),
     team: Joi.string().min(1).required(),
-    week: Joi.number().min(1).max(17).required(),
+    week: Joi.number().min(1).max(19).required(),
     year: Joi.number().min(MIN_YEAR).max((new Date).getFullYear()).required(),
     status: Joi.string().allow([PlayerInjury.STATUSES]).required(),
     reason: Joi.string().min(1).required(),

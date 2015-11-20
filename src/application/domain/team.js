@@ -76,6 +76,9 @@ Team.codes = {};
 Team.codes[Team.BENGALS] = {
     threeLetterCityCode: 'cin'
 };
+Team.codes[Team.PATRIOTS] = {
+    threeLetterCityCode: 'nwe'
+};
 
 Team.getId = function getId(teamName) {
     var teamIndex = Team.TEAMS.indexOf(teamName);

@@ -15,6 +15,14 @@ argv = require('yargs')
     .strict()
     .help('h')
     .alias('h', 'help')
+    .array('t')
+    .describe('t', 'Team or teams to extract injury stats for')
+    .alias('t', 'team')
+    .default('t', Team.TEAMS)
+    .array('y')
+    .describe('y', 'Year or years to extract injury stats for')
+    .alias('y', 'year')
+    .default('y', _.range(2009, 2016)) // range is exclusive so we're only up to 2015 here
     .describe('log-level', 'Log level to use')
     .choices('log-level', Object.keys(logger.levels))
     .default('log-level', 'info')
@@ -26,7 +34,7 @@ function addInjuriesToPlayer(name, team, injuries) {
     logger.debug('Finding "' + name + '" of the ' + team);
     return playerRepository.findOneByNameAndTeam(name, team)
         .then(function addInjuriesToPlayer(player) {
-            logger.info('Adding ' + injuries.length + ' injuries to "' + name + ' of the ' + team);
+            logger.info('Adding ' + injuries.length + ' injuries to "' + name + '" of the ' + team);
             player = player.addInjuries(injuries.map(PlayerInjury.create.bind(PlayerInjury)));
             return playerRepository.save(player);
         })
@@ -39,18 +47,37 @@ function addInjuriesToPlayer(name, team, injuries) {
         })
 }
 
+function findAndAddInjuriesToPlayersForTeamAndYear(team, year) {
+    logger.info('Finding injuries for team ' + team + ' and year ' + year);
+    return injuryRepository.findByTeamAndYear(team, year)
+        .then(function addToPlayers(injuries) {
+            var injuryPromises = [];
+
+            for(var k in injuries) {
+                injuryPromises.push(addInjuriesToPlayer(k, team, injuries[k]));
+            }
+
+            return q.all(injuryPromises);
+        });
+}
+
 bootstrap.start()
     .then(function fetchInjuries() {
-        return injuryRepository.findByTeamAndYear(Team.BENGALS, 2010);
-    })
-    .then(function addToPlayers(injuries) {
-        var injuryPromises = [];
+        var injuryPromiseChain = q.when();
 
-        for(var k in injuries) {
-            injuryPromises.push(addInjuriesToPlayer(k, Team.BENGALS, injuries[k]));
-        }
+        argv.team.forEach(function(team) {
+            argv.year.forEach(function(year) {
+                injuryPromiseChain = injuryPromiseChain.then(function getInjuriesForTeamAndYear() {
+                        return findAndAddInjuriesToPlayersForTeamAndYear(team, year);
+                    })
+                    .then(function pause() {
+                        logger.info('Pausing...');
+                        return q.delay(2000);
+                    });
+            });
+        });
 
-        return q.all(injuryPromises);
+        return injuryPromiseChain;
     })
     .then(function allDone() {
         logger.info('All done!');
