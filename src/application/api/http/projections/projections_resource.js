@@ -2,14 +2,15 @@
 
 var q = require('q'),
     playerRepository = require('../../../../port/player/player_repository'),
-    projectionsService = require('../../../domain/network/projections_service');
+    projectionsService = require('../../../domain/network/projections_service'),
+    PerceptronStrategy = require('../../../domain/network/strategies/perceptron_strategy');
 
 function ProjectionsResource() {}
 
 ProjectionsResource.prototype.get = function get(player, inputs, startYear, endYear) {
     return playerRepository.findOneByNameAndTeam(player.name, player.team)
         .then(function buildProjectionsForPlayer(foundPlayer) {
-            return projectionsService.buildProjectionsForYearRange(foundPlayer, inputs, startYear, endYear);
+            return projectionsService.buildProjectionsForYearRange(foundPlayer, inputs, PerceptronStrategy.NAME, startYear, endYear);
         });
 };
 

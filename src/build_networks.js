@@ -8,6 +8,8 @@ var args,
     inputsService = require('./application/domain/inputs/inputs_service'),
     playerInputsService = require('./application/domain/inputs/player_inputs_service'),
     projectionsService = require('./application/domain/network/projections_service'),
+    networkStrategyFactory = require('./application/domain/network/strategies/network_strategy_factory'),
+    PerceptronStrategy = require('./application/domain/network/strategies/perceptron_strategy'),
     playerNetworkWorkerService = require('./application/domain/network/player_network_worker_service');
 
 args = require('yargs')
@@ -20,6 +22,10 @@ args = require('yargs')
     .alias('p', 'player')
     .describe('t', 'Name of team whose player inputs and networks should be calculated')
     .alias('t', 'team')
+    .describe('s', 'Network strategy to use')
+    .alias('s', 'strategy')
+    .choices('s', networkStrategyFactory.getStrategyNames())
+    .default('s', PerceptronStrategy.NAME)
     .boolean('inputs-only')
     .describe('inputs-only', 'If set, inputs will be calculated by not networks')
     .boolean('force-input-calc')
@@ -53,7 +59,7 @@ function buildAndSaveInputsForPlayer(player) {
 
 function showProjectionsForPlayerOverTime(player) {
     console.log('Projections for "' + player.name + ' of the ' + player.team);
-    return projectionsService.buildProjectionsForAllGames(player, inputsService.getInputsListForPosition(player.position))
+    return projectionsService.buildProjectionsForAllGames(player, inputsService.getInputsListForPosition(player.position), args.strategy)
         .then(function displayProjections(projections) {
             projections.forEach(function displayProjection(projection) {
                 console.log('  Week ' + projection.game.week + ', ' + projection.game.year + ': ' + projection.projected + ' projected, ' + projection.actual + ' actual');

@@ -1,7 +1,8 @@
 'use strict';
 
 var _ = require('underscore'),
-    Joi = require('joi');
+    Joi = require('joi'),
+    networkStrategyFactory = require('./strategies/network_strategy_factory');
 
 function PlayerNetwork(attributes) {
     var validatedAttributes = Joi.validate(attributes, PlayerNetwork.schema, { stripUnknown: true });
@@ -28,6 +29,7 @@ PlayerNetwork.schema = {
         eid: Joi.string().min(1).required()
     }).required(),
     inputsList: Joi.array().items(Joi.string().min(1)).min(1).required(),
+    strategy: Joi.string().allow(networkStrategyFactory.getStrategyNames()).required(),
     network: Joi.object().required()
 };
 

@@ -10,7 +10,7 @@ var q = require('q'),
 
 function ProjectionsService() {}
 
-function createNetworkIfNotExists(player, game, inputs, playerNetwork) {
+function createNetworkIfNotExists(player, game, inputs, strategy, playerNetwork) {
     if(playerNetwork) {
         return playerNetwork;
     } else {
@@ -18,7 +18,7 @@ function createNetworkIfNotExists(player, game, inputs, playerNetwork) {
             console.log('No network exists for ' + player.name + ' of the ' + player.team + ' in week ' + game.week + ', ' + game.year + ' and inputs have not been generated to build the network from scratch');
             return playerNetwork;
         } else {
-            return playerNetworkWorkerService.buildNetworkUpToGame(player, game, inputs)
+            return playerNetworkWorkerService.buildNetworkUpToGame(player, game, inputs, strategy)
                 .then(function saveNetwork(generatedPlayerNetwork) {
                     // there will not be network if we couldn't generate training sets
                     if(generatedPlayerNetwork) {
@@ -30,13 +30,13 @@ function createNetworkIfNotExists(player, game, inputs, playerNetwork) {
     }
 }
 
-ProjectionsService.prototype.buildProjectionsForYearRange = function buildProjectionsForYearRange(player, inputs, startYear, endYear) {
+ProjectionsService.prototype.buildProjectionsForYearRange = function buildProjectionsForYearRange(player, inputs, strategy, startYear, endYear) {
     var _this = this,
         projectionPromises;
 
     projectionPromises = player.getOrderedGamesInYearRange(startYear, endYear).map(function calculateProjectionsForGame(game) {
-        return playerNetworkRepository.findByPlayerAndGameAndInputList(player, game, inputs)
-            .then(createNetworkIfNotExists.bind(_this, player, game, inputs))
+        return playerNetworkRepository.findByPlayerAndGameAndInputListAndStrategy(player, game, inputs, strategy)
+            .then(createNetworkIfNotExists.bind(_this, player, game, inputs, strategy))
             .then(function activateNetwork(playerNetwork) {
                 var projected;
 
@@ -61,11 +61,11 @@ ProjectionsService.prototype.buildProjectionsForYearRange = function buildProjec
     return q.all(projectionPromises);
 };
 
-ProjectionsService.prototype.buildProjectionsForAllGames = function buildProjectionsForAllGames(player, inputs) {
+ProjectionsService.prototype.buildProjectionsForAllGames = function buildProjectionsForAllGames(player, inputs, strategy) {
     var startYear = 2009,
-        endYear = new Date().getYear();
+        endYear = (new Date().getYear()) + 1900;
 
-    return this.buildProjectionsForYearRange(player, inputs, startYear, endYear);
+    return this.buildProjectionsForYearRange(player, inputs, strategy, startYear, endYear);
 };
 
 module.exports = new ProjectionsService();

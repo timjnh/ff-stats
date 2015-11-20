@@ -19,11 +19,12 @@ module.exports = (function() {
         return playerNetwork;
     };
 
-    PlayerNetworkWorkerService.prototype.buildNetworkUpToGame = function buildNetworkUpToGame(player, game, inputs) {
+    PlayerNetworkWorkerService.prototype.buildNetworkUpToGame = function buildNetworkUpToGame(player, game, inputs, strategy) {
         var payload = {
             player: player,
             game: game,
-            inputs: inputs
+            inputs: inputs,
+            strategy: strategy
         };
         return this.queueJob('buildNetworkUpToGame', payload);
     };

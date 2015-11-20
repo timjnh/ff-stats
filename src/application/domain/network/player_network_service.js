@@ -2,16 +2,17 @@
 
 var synaptic = require('synaptic'),
     trainingService = require('./training_service'),
+    NetworkStrategyFactory = require('./strategies/network_strategy_factory'),
     PlayerNetwork = require('./player_network');
 
 function PlayerNetworkService() {}
 
-PlayerNetworkService.prototype.buildNetworkUpToGame = function buildNetworkUpToGame(player, game, inputs) {
+PlayerNetworkService.prototype.buildNetworkUpToGame = function buildNetworkUpToGame(player, game, inputs, strategy) {
     console.log('Building network for player "' + player.name + '" for ' + game.year + ', week ' + game.week + ' with inputs ' + inputs.join(', '));
     return trainingService.getTrainingSetsForPlayerUpToGame(player, game, inputs)
         .then(function buildNetworkFromTrainingSets(trainingSets) {
             var network,
-                trainer,
+                networkStrategy = NetworkStrategyFactory.createStrategy(strategy),
                 startTime = new Date();
 
             if(!trainingSets.length) {
@@ -19,16 +20,14 @@ PlayerNetworkService.prototype.buildNetworkUpToGame = function buildNetworkUpToG
                 return null;
             }
 
-            network = new synaptic.Architect.Perceptron(trainingSets[0].input.length, trainingSets[0].input.length + 1, 1);
-            trainer = new synaptic.Trainer(network);
-
-            trainer.train(trainingSets, { rate: 0.01, iterations: 20000 });
+            network = networkStrategy.createAndTrainNetwork(trainingSets);
 
             console.log('Network built in ' + ((new Date).getTime() - startTime.getTime()) + ' ms');
 
             return PlayerNetwork.create({
                 player: { name: player.name, team: player.team },
                 game: { eid: game.eid },
+                strategy: strategy,
                 inputsList: inputs,
                 network: network.toJSON()
             });

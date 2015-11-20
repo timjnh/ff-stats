@@ -15,9 +15,10 @@ PlayerNetworkWorker.prototype = _.create(Worker.prototype, { constructor: Player
 PlayerNetworkWorker.prototype.onMsgReceived = function onMsgReceived(payload) {
     var player = Player.create(payload.player),
         game = PlayerGame.create(payload.game),
-        inputs = payload.inputs;
+        inputs = payload.inputs,
+        strategy = payload.strategy;
 
-    return playerNetworkService.buildNetworkUpToGame(player, game, inputs);
+    return playerNetworkService.buildNetworkUpToGame(player, game, inputs, strategy);
 };
 
 bootstrap.start()

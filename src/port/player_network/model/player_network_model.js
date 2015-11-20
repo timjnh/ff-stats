@@ -17,6 +17,7 @@ var PlayerNetworkSchema = new Schema({
     game: GameSchema,
     inputsList: [{ type: String }],
     inputsListKey: String,
+    strategy: String,
     network: Schema.Types.Mixed
 }, { strict: 'throw'});
 
@@ -24,7 +25,8 @@ PlayerNetworkSchema.index({
     'player.name': 1,
     'player.team': 1,
     'game.eid': 1,
-    'inputsListKey': 1
+    'inputsListKey': 1,
+    'strategy': 1
 }, { unique: true });
 
 PlayerNetworkSchema.pre('save', function setInputsListKey(next) {

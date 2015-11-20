@@ -8,7 +8,7 @@ var _ = require('underscore'),
 
 function PlayerNetworkRepository() {}
 
-PlayerNetworkRepository.prototype.findByPlayerAndGameAndInputList = function findByPlayerAndGameAndInputList(player, game, inputsList) {
+PlayerNetworkRepository.prototype.findByPlayerAndGameAndInputListAndStrategy = function findByPlayerAndGameAndInputListAndStrategy(player, game, inputsList, strategy) {
     var criteria,
         inputsListKey;
 
@@ -23,7 +23,8 @@ PlayerNetworkRepository.prototype.findByPlayerAndGameAndInputList = function fin
         game: {
             eid: game.eid
         },
-        inputsListKey: inputsListKey
+        inputsListKey: inputsListKey,
+        strategy: strategy
     };
 
     return this._findOneWithCriteria(criteria);
