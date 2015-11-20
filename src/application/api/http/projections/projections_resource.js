@@ -7,10 +7,10 @@ var q = require('q'),
 
 function ProjectionsResource() {}
 
-ProjectionsResource.prototype.get = function get(player, inputs, startYear, endYear) {
+ProjectionsResource.prototype.get = function get(player, inputs, networkStrategy, startYear, endYear) {
     return playerRepository.findOneByNameAndTeam(player.name, player.team)
         .then(function buildProjectionsForPlayer(foundPlayer) {
-            return projectionsService.buildProjectionsForYearRange(foundPlayer, inputs, PerceptronStrategy.NAME, startYear, endYear);
+            return projectionsService.buildProjectionsForYearRange(foundPlayer, inputs, networkStrategy, startYear, endYear);
         });
 };
 

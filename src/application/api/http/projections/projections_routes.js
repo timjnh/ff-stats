@@ -13,7 +13,7 @@ module.exports = [
         handler: function (request, reply) {
             var player = { name: request.params.name, team: request.params.team };
 
-            projectionsResource.get(player, request.query.inputs, request.query.startYear, request.query.endYear)
+            projectionsResource.get(player, request.query.inputs, request.query.networkStrategy, request.query.startYear, request.query.endYear)
                 .then(function afterRead(response) {
                     reply(response);
                 })
