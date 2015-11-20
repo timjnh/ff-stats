@@ -35,7 +35,7 @@
                 _this.labels = [];
                 _this.data = [[], []];
 
-                projectionsService.getProjectionsForAllGames(chartControlsService.player, chartControlsService.getSelectedInputs())
+                projectionsService.getProjectionsForAllGames(chartControlsService.player, chartControlsService.getSelectedInputs(), chartControlsService.networkStrategy)
                     .then(function assembleChartData(projections) {
                         _this.isLoading = false;
 

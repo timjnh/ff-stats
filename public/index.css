@@ -12,6 +12,10 @@ div[projections-chart] .loading {
   max-height: 70vh;
 }
 
+.chart-control_network-strategy {
+  min-height: 100px;
+}
+
 .chart-controls_header {
   margin-bottom: 10px;
 }

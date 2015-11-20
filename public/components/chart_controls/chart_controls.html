@@ -20,6 +20,17 @@
     </div>
 
     <div flex="none" class="chart-controls_header">
+        <md-subheader>Network Type</md-subheader>
+        <md-divider></md-divider>
+    </div>
+    <md-content flex class="chart-control_network-strategy">
+        <md-radio-group ng-model="chartControlsController.chartControlsService.networkStrategy" ng-change="chartControlsController.chartControlsService.onChange()">
+            <md-radio-button value="perceptron">Perceptron</md-radio-button>
+            <md-radio-button value="lstm">Long Short Term Memory</md-radio-button>
+        </md-radio-group>
+    </md-content>
+
+    <div flex="none" class="chart-controls_header">
         <md-subheader>Inputs</md-subheader>
         <md-divider></md-divider>
     </div>

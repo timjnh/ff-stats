@@ -8,7 +8,8 @@
                 onChangeTimeout: null,
                 player: null,
                 inputs: {},
-                isRetrievingInputs: false,
+                networkStrategy: 'perceptron',
+                isRetrievingInputs: false
             };
 
             chartControlsService.getSelectedInputs = function getSelectedInputs() {

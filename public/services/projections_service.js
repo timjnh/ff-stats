@@ -5,11 +5,11 @@
         .factory('projectionsService', function($http) {
             var projectionsService = {};
 
-            projectionsService.getProjectionsForAllGames = function getProjectionsForAllGames(player, inputs) {
+            projectionsService.getProjectionsForAllGames = function getProjectionsForAllGames(player, inputs, networkStrategy) {
                 return $http({
                         method: 'GET',
                         url: '/projections/' + player.name + '/' + player.team,
-                        params: { "inputs[]": inputs, startYear: 2012, endYear: 2015 },
+                        params: { "inputs[]": inputs, startYear: 2012, endYear: 2015, networkStrategy: networkStrategy },
                         timeout: 5 * 60 * 1000 // 5 minutes
                     }).then(function (response) {
                         return response.data;
