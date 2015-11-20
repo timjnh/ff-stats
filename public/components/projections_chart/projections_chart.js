@@ -25,6 +25,10 @@
                     return;
                 }
 
+                if(!chartControlsService.hasSelectedInputs()) {
+                    return;
+                }
+
                 _this.title = chartControlsService.player.name + ' - ' + chartControlsService.player.team;
                 _this.isLoading = true;
 

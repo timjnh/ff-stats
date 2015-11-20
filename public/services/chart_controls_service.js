@@ -2,12 +2,13 @@
     'use strict';
 
     angular.module('myApp.chartControlsService', ['underscore', 'myApp.inputsService'])
-        .factory('chartControlsService' , function(_, inputsService) {
+        .factory('chartControlsService', function(_, inputsService, $timeout) {
             var chartControlsService = {
                 onChangeCallbacks: [],
+                onChangeTimeout: null,
                 player: null,
                 inputs: {},
-                isRetrievingInputs: false
+                isRetrievingInputs: false,
             };
 
             chartControlsService.getSelectedInputs = function getSelectedInputs() {
@@ -24,6 +25,10 @@
                 this.inputs[input].selected = selected;
             };
 
+            chartControlsService.hasSelectedInputs = function hasSelectedInputs() {
+                return this.getSelectedInputs().length > 0;
+            };
+
             chartControlsService.hasValidPlayer = function hasValidPlayer() {
                 return this.player && this.player.name;
             };
@@ -37,7 +42,7 @@
                 return inputsService.getInputsForPosition(this.player.position).then(function(inputs) {
                     _this.inputs = inputs;
                     for(var k in inputs) {
-                        _this.setInputSelected(k, true);
+                        _this.setInputSelected(k, false);
                     }
                 })
                 .finally(function unsetIsRetrievingInputs() {
@@ -57,14 +62,28 @@
             };
 
             chartControlsService.onChange = function onChange(callback) {
+                var _this = this;
+
+                cancelOnChangeTimeout();
+
                 if(callback === undefined) {
-                    this.onChangeCallbacks.forEach(function executeCallback(callback) {
-                        callback();
-                    });
+                    this.onChangeTimeout = $timeout(function executeOnChangeCallbacks() {
+                        cancelOnChangeTimeout();
+                        _this.onChangeCallbacks.forEach(function executeCallback(callback) {
+                            callback();
+                        });
+                    }, 1000);
                 } else {
                     this.onChangeCallbacks.push(callback);
                 }
             };
+
+            function cancelOnChangeTimeout() {
+                if(chartControlsService.onChangeTimeout) {
+                    $timeout.cancel(chartControlsService.onChangeTimeout);
+                    chartControlsService.onChangeTimeout = null;
+                }
+            }
 
             return chartControlsService;
         })
