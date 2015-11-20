@@ -13,7 +13,7 @@
     "build-networks-nm": "./node_modules/.bin/nodemon ./src/build_networks.js",
     "build-networks": "node ./src/build_networks.js",
     "postinstall": "bower install",
-    "start-app-nm": "./node_modules/.bin/nodemon ./apwp.js"
+    "start-app-nm": "./node_modules/.bin/nodemon ./app.js"
   },
   "author": "",
   "license": "MIT",
