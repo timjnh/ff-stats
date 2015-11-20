@@ -20,6 +20,7 @@ var _ = require('underscore'),
     RecentInterceptionsByOpponent = require('./recent_interceptions_by_opponent'),
     OutDueToInjury = require('./out_due_to_injury'),
     PlayingInjured = require('./playing_injured'),
+    TopTargetOut = require('./top_target_out'),
     PlayerPosition = require('../player_position'),
     Input = require('./input'),
     InputSet = require('../input_set');
@@ -49,6 +50,7 @@ function InputsService() {
         new RecentRushingTouchdownsAllowedByOpponent(3),
         new RecentSacksByOpponent(3),
         new RecentInterceptionsByOpponent(3),
+        new TopTargetOut()
     ].concat(sharedInputs);
 
     this.inputsByPosition[PlayerPosition.RB] = [
@@ -57,7 +59,7 @@ function InputsService() {
         new RecentPassingYardsAllowedByOpponent(3),
         new RecentRushingYardsAllowedByOpponent(3),
         new RecentPassingTouchdownsAllowedByOpponent(3),
-        new RecentRushingTouchdownsAllowedByOpponent(3),
+        new RecentRushingTouchdownsAllowedByOpponent(3)
     ].concat(sharedInputs);
 
     this.inputsByPosition[PlayerPosition.WR] = [
@@ -65,7 +67,7 @@ function InputsService() {
         new RecentRushingYardsAllowedByOpponent(3),
         new RecentPassingTouchdownsAllowedByOpponent(3),
         new RecentRushingTouchdownsAllowedByOpponent(3),
-        new RecentInterceptionsByOpponent(3),
+        new RecentInterceptionsByOpponent(3)
     ].concat(sharedInputs);
 
     this.inputsByPosition[PlayerPosition.DEFENSE] = sharedInputs;
@@ -74,8 +76,7 @@ function InputsService() {
 }
 
 InputsService.prototype.getInputsForPlayerAndGame = function getInputsForPlayerAndGame(player, game) {
-    var _this = this,
-        playerInputTypes = this.getInputsForPosition(player.position),
+    var playerInputTypes = this.getInputsForPosition(player.position),
         inputPromises = playerInputTypes.map(function getInputForPlayerAndGame(input) {
             return q.when(input.evaluate(player, game));
         });
