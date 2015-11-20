@@ -3,7 +3,7 @@
 var _ = require('underscore'),
     Hapi = require('hapi'),
     bootstrap = require('./src/bootstrap'),
-    playerNetworkWorkerService = require('./src/application/domain/player_network_worker_service'),
+    playerNetworkWorkerService = require('./src/application/domain/network/player_network_worker_service'),
     routes = [
         require('./src/application/api/http/projections/projections_routes'),
         require('./src/application/api/http/players/players_routes'),

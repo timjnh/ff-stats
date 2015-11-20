@@ -7,7 +7,7 @@ module.exports = (function() {
         PlayerNetwork = require('./player_network');
 
     function PlayerNetworkWorkerService() {
-        WorkerService.call(this, __dirname + '/../../player_network_worker.js');
+        WorkerService.call(this, __dirname + '/../../../player_network_worker.js');
     }
     PlayerNetworkWorkerService.prototype = _.create(WorkerService.prototype, { constructor: PlayerNetworkWorkerService });
 
