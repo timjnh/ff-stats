@@ -11,7 +11,7 @@ module.exports = (function() {
     function NetworkSetService() {}
 
     NetworkSetService.prototype.findOrCreateSet = function findOrCreateSet(player, inputs, strategy, startYear, endYear) {
-        logger.info('Building networks for "' + player.name + ' of the ' + player.team + ' with strategy ' + strategy + ' and inputs ' + _.invoke(inputs, 'getName').join(', '));
+        logger.info('Building networks for "' + player.name + ' of the ' + player.team + ' with strategy ' + strategy + ' and inputs ' + inputs.join(', '));
 
         return projectionsService.buildProjectionsForYearRange(player, inputs, strategy, startYear, endYear)
             .then(function createNetworkSet(projections) {
