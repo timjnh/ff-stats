@@ -8,6 +8,7 @@
                 onChangeTimeout: null,
                 player: null,
                 inputs: {},
+                allInputsSelected: false,
                 networkStrategy: 'perceptron',
                 isRetrievingInputs: false
             };
@@ -24,6 +25,17 @@
 
             chartControlsService.setInputSelected = function setInputSelected(input, selected) {
                 this.inputs[input].selected = selected;
+
+                this.allInputsSelected = true;
+                for(var k in this.inputs) {
+                    this.allInputsSelected = this.allInputsSelected && this.inputs[k].selected;
+                }
+            };
+
+            chartControlsService.setAllInputsSelected = function setAllInputsSelected(selected) {
+                for(var k in this.inputs) {
+                    this.setInputSelected(k, selected);
+                }
             };
 
             chartControlsService.hasSelectedInputs = function hasSelectedInputs() {
@@ -57,9 +69,14 @@
 
             chartControlsService.onPlayerSelected = function onPlayerSelected() {
                 var _this = this;
+
+                if(!this.player) {
+                    return;
+                }
+
                 this.getInputsForCurrentPlayer().then(function() {
                     _this.onChange();
-                })
+                });
             };
 
             chartControlsService.onChange = function onChange(callback) {

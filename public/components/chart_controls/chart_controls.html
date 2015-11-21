@@ -36,8 +36,16 @@
     </div>
     <md-content flex>
         <md-list>
+            <md-list-item ng-if="chartControlsController.chartControlsService.hasInputs()">
+                <md-checkbox ng-model="chartControlsController.chartControlsService.allInputsSelected"
+                             ng-change="chartControlsController.chartControlsService.setAllInputsSelected(chartControlsController.chartControlsService.allInputsSelected);chartControlsController.chartControlsService.onChange()">
+                </md-checkbox>
+                <p>Select All</p>
+            </md-list-item>
             <md-list-item ng-repeat="input in chartControlsController.chartControlsService.inputs">
-                <md-checkbox ng-model="chartControlsController.chartControlsService.inputs[input.name].selected" ng-change="chartControlsController.chartControlsService.onChange()"></md-checkbox>
+                <md-checkbox ng-model="chartControlsController.chartControlsService.inputs[input.name].selected"
+                             ng-change="chartControlsController.chartControlsService.onChange()">
+                </md-checkbox>
                 <p>{{input.name}}</p>
             </md-list-item>
         </md-list>
