@@ -28,7 +28,7 @@ module.exports = (function() {
                 return PlayerNetworkSetRepository.findMatching(networkSet)
                     .then(function updateIfExists(existingNetworkSet) {
                         if(existingNetworkSet) {
-                            networkSet._id = existingNetworkSet._id;
+                            networkSet = networkSet.setId(existingNetworkSet._id);
                         }
                         return PlayerNetworkSetRepository.save(networkSet);
                     });

@@ -34,4 +34,8 @@ PlayerNetworkSet.create = function create(attributes) {
     return new PlayerNetworkSet(attributes);
 };
 
+PlayerNetworkSet.prototype.setId = function setId(id) {
+    return PlayerNetworkSet.create(_.extend(_.clone(this), { _id: id }));
+};
+
 module.exports = PlayerNetworkSet;
