@@ -6,7 +6,7 @@
     </md-toolbar>
 
     <canvas
-        ng-if="!projectionsChartController.isLoading"
+        ng-if="!projectionsChartController.isLoading && projectionsChartController.hasData()"
         id="line"
         class="chart chart-line"
         chart-data="projectionsChartController.data"

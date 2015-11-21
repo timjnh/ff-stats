@@ -22,6 +22,10 @@
 
             this.onChangeTimeout = null;
 
+            this.hasData = function hasData() {
+                return _this.labels.length > 0;
+            };
+
             chartControlsService.onChange(function doChartUpdate() {
                 cancelOnChangeTimeout();
 
