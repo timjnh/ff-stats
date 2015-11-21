@@ -12,6 +12,8 @@
     "extract-players": "node ./src/extract_players.js",
     "build-networks-nm": "./node_modules/.bin/nodemon ./src/build_networks.js",
     "build-networks": "node ./src/build_networks.js",
+    "build-network-combos-nm": "./node_modules/.bin/nodemon ./src/build_network_combos.js",
+    "build-network-combos": "node ./src/build_network_combos.js",
     "postinstall": "bower install",
     "start-app-nm": "./node_modules/.bin/nodemon ./app.js"
   },
@@ -24,6 +26,8 @@
     "hapi": "^11.0.2",
     "inert": "^3.2.0",
     "joi": "^6.7.1",
+    "js-combinatorics": "^0.5.0",
+    "mathjs": "^2.4.2",
     "mongoose": "^4.1.7",
     "q": "^1.4.1",
     "sprintf-js": "^1.0.2",
