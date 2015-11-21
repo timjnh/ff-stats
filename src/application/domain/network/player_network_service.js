@@ -8,12 +8,15 @@ var synaptic = require('synaptic'),
 function PlayerNetworkService() {}
 
 PlayerNetworkService.prototype.buildNetworkUpToGame = function buildNetworkUpToGame(player, game, inputs, strategy) {
+    var startTime = new Date();
     console.log('Building network for player "' + player.name + '" for ' + game.year + ', week ' + game.week + ' with inputs ' + inputs.join(', '));
     return trainingService.getTrainingSetsForPlayerUpToGame(player, game, inputs)
         .then(function buildNetworkFromTrainingSets(trainingSets) {
             var network,
-                networkStrategy = NetworkStrategyFactory.createStrategy(strategy),
-                startTime = new Date();
+                networkStrategy = NetworkStrategyFactory.createStrategy(strategy);
+
+            console.log('Training set with ' + trainingSets.length + ' items retrieved in ' + ((new Date()).getTime() - startTime.getTime()) + ' ms');
+            startTime = new Date();
 
             if(!trainingSets.length) {
                 console.log('Could not build any training sets for player "' + player.name + '" in ' + game.year + ', week ' + game.week);
@@ -22,7 +25,7 @@ PlayerNetworkService.prototype.buildNetworkUpToGame = function buildNetworkUpToG
 
             network = networkStrategy.createAndTrainNetwork(trainingSets);
 
-            console.log('Network built in ' + ((new Date).getTime() - startTime.getTime()) + ' ms');
+            console.log('Network built in ' + ((new Date()).getTime() - startTime.getTime()) + ' ms');
 
             return PlayerNetwork.create({
                 player: { name: player.name, team: player.team },
