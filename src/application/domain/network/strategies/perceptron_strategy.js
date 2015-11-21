@@ -16,7 +16,13 @@ module.exports = (function() {
         var network = new synaptic.Architect.Perceptron(trainingSets[0].input.length, trainingSets[0].input.length + 1, 1),
             trainer = new synaptic.Trainer(network);
 
-        trainer.train(trainingSets, { rate: 0.01, iterations: 20000 });
+        trainer.train(
+            trainingSets,
+            {
+                rate: [0.1, 0.1, 0.05, 0.01],
+                iterations: 50000
+            }
+        );
 
         return network;
     };
