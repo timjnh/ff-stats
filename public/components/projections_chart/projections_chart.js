@@ -10,7 +10,7 @@
                 controller: 'projectionsChartController'
             };
         }])
-        .controller('projectionsChartController', function($scope, projectionsService, chartControlsService) {
+        .controller('projectionsChartController', function($scope, projectionsService, chartControlsService, $timeout) {
             var _this = this;
 
             this.series = ['Projected', 'Actual'];
@@ -20,7 +20,14 @@
             this.title = 'Select a player';
             this.isLoading = false;
 
-            chartControlsService.onChange(function updateChart() {
+            this.onChangeTimeout = null;
+
+            chartControlsService.onChange(function doChartUpdate() {
+                cancelOnChangeTimeout();
+
+                _this.labels = [];
+                _this.data = [[], []];
+
                 if(!chartControlsService.hasValidPlayer()) {
                     return;
                 }
@@ -29,6 +36,13 @@
                     return;
                 }
 
+                _this.onChangeTimeout = $timeout(function beginChartUpdate() {
+                    cancelOnChangeTimeout();
+                    updateChart();
+                }, 1000);
+            });
+
+            function updateChart() {
                 _this.title = chartControlsService.player.name + ' - ' + chartControlsService.player.team;
                 _this.isLoading = true;
 
@@ -50,6 +64,13 @@
                             }
                         });
                     });
-            });
+            }
+
+            function cancelOnChangeTimeout() {
+                if(_this.onChangeTimeout) {
+                    $timeout.cancel(_this.onChangeTimeout);
+                    _this.onChangeTimeout = null;
+                }
+            }
         });
 })();

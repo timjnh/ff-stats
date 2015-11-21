@@ -2,10 +2,9 @@
     'use strict';
 
     angular.module('myApp.chartControlsService', ['underscore', 'myApp.inputsService'])
-        .factory('chartControlsService', function(_, inputsService, $timeout) {
+        .factory('chartControlsService', function(_, inputsService) {
             var chartControlsService = {
                 onChangeCallbacks: [],
-                onChangeTimeout: null,
                 player: null,
                 inputs: {},
                 allInputsSelected: false,
@@ -80,28 +79,14 @@
             };
 
             chartControlsService.onChange = function onChange(callback) {
-                var _this = this;
-
-                cancelOnChangeTimeout();
-
                 if(callback === undefined) {
-                    this.onChangeTimeout = $timeout(function executeOnChangeCallbacks() {
-                        cancelOnChangeTimeout();
-                        _this.onChangeCallbacks.forEach(function executeCallback(callback) {
-                            callback();
-                        });
-                    }, 1000);
+                    this.onChangeCallbacks.forEach(function executeCallback(callback) {
+                        callback();
+                    });
                 } else {
                     this.onChangeCallbacks.push(callback);
                 }
             };
-
-            function cancelOnChangeTimeout() {
-                if(chartControlsService.onChangeTimeout) {
-                    $timeout.cancel(chartControlsService.onChangeTimeout);
-                    chartControlsService.onChangeTimeout = null;
-                }
-            }
 
             return chartControlsService;
         })
