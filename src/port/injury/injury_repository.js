@@ -6,7 +6,7 @@ module.exports = (function() {
         superagent = require('superagent'),
         sprintf = require('sprintf-js').sprintf,
         InjuryParser = require('./parser/injury_parser'),
-        Team = require('../../application/domain/team');
+        Team = require('../../application/domain/team/team');
 
     function InjuryRepository() {
         this.baseUrl = 'http://www.pro-football-reference.com/teams/%(team)s/%(year)s_injuries.htm';

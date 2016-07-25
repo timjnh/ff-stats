@@ -6,8 +6,7 @@ var q = require('q'),
 function Bootstrap() {}
 
 Bootstrap.prototype.start = function start() {
-    var connection,
-        deferred = q.defer();
+    var deferred = q.defer();
 
     mongoose.connect('mongodb://localhost/stats');
 

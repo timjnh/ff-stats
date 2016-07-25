@@ -5,7 +5,7 @@ var argv,
     q = require('q'),
     logger = require('./lib/logger'),
     bootstrap = require('./bootstrap'),
-    Team = require('./application/domain/team'),
+    Team = require('./application/domain/team/team'),
     injuryRepository = require('./port/injury/injury_repository'),
     playerRepository = require('./port/player/player_repository'),
     PlayerInjury = require('./application/domain/player/player_injury');

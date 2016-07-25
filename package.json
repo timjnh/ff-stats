@@ -14,6 +14,8 @@
     "build-networks": "node ./src/build_networks.js",
     "build-network-combos-nm": "./node_modules/.bin/nodemon ./src/build_network_combos.js",
     "build-network-combos": "node ./src/build_network_combos.js",
+    "extract-teams": "node ./src/extract_teams.js",
+    "extract-teams-nm": "./node_modules/.bin/nodemon ./src/extract_teams.js",
     "postinstall": "bower install",
     "start-app-nm": "./node_modules/.bin/nodemon ./app.js"
   },

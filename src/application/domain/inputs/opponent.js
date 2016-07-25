@@ -3,7 +3,7 @@
 var _ = require('underscore'),
     Input = require('./input'),
     gameRepository = require('../../../port/game/game_repository'),
-    Team = require('../team');
+    Team = require('../team/team');
 
 function Opponent() {
     Input.call(this);

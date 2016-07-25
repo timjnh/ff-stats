@@ -35,11 +35,15 @@ PlayerRepository.prototype.findAllByTeam = function findAllByTeam(team) {
 };
 
 PlayerRepository.prototype.findAllByTeams = function findAllByTeams(teams) {
-    return this._findWithCriteria({ team: { '$in': team } });
+    return this._findWithCriteria({ team: { '$in': teams } });
 };
 
 PlayerRepository.prototype.findAllByTeamAndPosition = function findAllByTeamAndPosition(team, position) {
     return this._findWithCriteria({ team: team, position: position });
+};
+
+PlayerRepository.prototype.findAllWithBuilder = function findAllWithBuilder(builder) {
+    return this._findWithCriteria(builder.build());
 };
 
 PlayerRepository.prototype._findWithCriteria = function _findWithCriteria(criteria) {

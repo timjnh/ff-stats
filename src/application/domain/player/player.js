@@ -2,7 +2,6 @@
 
 var _ = require('underscore'),
     assert = require('assert'),
-    PlayerStats = require('./player_stats'),
     PlayerGame = require('./player_game'),
     PlayerPosition = require('./player_position'),
     PlayerInjury = require('./player_injury'),
@@ -84,6 +83,18 @@ Player.prototype.addInjury = function addInjury(injury) {
     }
 
     return Player.create(_.extend(_.clone(this), { injuries: injuries }));
+};
+
+Player.prototype.isActivePlayerInGame = function isActivePlayerInGame(week, year) {
+    var injury,
+        game = _.findWhere(this.games, { week: week, year: year });
+
+    if(!game) {
+        return false;
+    }
+
+    injury = this.injuries.findByWeekAndYear(week, year);
+    return !injury || injury.played;
 };
 
 Player.prototype.getStatsTotal = function getStatsTotal(statName) {

@@ -1,8 +1,54 @@
 'use strict';
 
-var assert = require('assert');
+var _ = require('underscore'),
+    assert = require('assert'),
+    Joi = require('joi'),
+    TeamGame = require('./team_game');
 
-function Team() {}
+function Team(attributes) {
+    var validatedAttributes = Joi.validate(attributes, Team.schema, { stripUnknown: true });
+    if(validatedAttributes.error) {
+        throw validatedAttributes.error;
+    }
+
+    _.extendOwn(this, validatedAttributes.value);
+    Object.freeze(this);
+}
+
+Team.schema = {
+    _id: [Joi.object(), Joi.string().length(24)],
+    name: Joi.string().min(1).required(),
+    games: Joi.array().items(TeamGame.schema).required()
+};
+
+Team.create = function create(attributes) {
+    if(attributes.games && attributes.games.length > 0) {
+        attributes.games = attributes.games.map(function createTeamGame(game) {
+            if(game instanceof TeamGame) {
+                return game;
+            } else {
+                return TeamGame.create(game);
+            }
+        });
+    }
+
+    return new Team(attributes);
+};
+
+Team.prototype.addOrUpdateGame = function addOrUpdateGame(teamGame) {
+    var games = _.clone(this.games),
+        existingGameIndex = _.findIndex(games, function gameMatches(otherGame) {
+            return teamGame.week == otherGame.week && teamGame.year == otherGame.year;
+        });
+
+    if(existingGameIndex == -1) {
+        games.push(teamGame);
+    } else {
+        games[existingGameIndex] = games[existingGameIndex].merge(teamGame);
+    }
+
+    return Team.create(_.extend(_.clone(this), { games: games }));
+};
 
 Team.PATRIOTS = 'patriots';
 Team.PACKERS = 'packers';
