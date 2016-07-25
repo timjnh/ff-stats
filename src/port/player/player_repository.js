@@ -4,9 +4,6 @@ var _ = require('underscore'),
     q = require('q'),
     assert = require('assert'),
     Player = require('../../application/domain/player/player'),
-    PlayerGame = require('../../application/domain/player/player_game'),
-    InputSet = require('../../application/domain/inputs/input_set'),
-    PlayerStats = require('../../application/domain/player/player_stats'),
     PlayerModel = require('./model/player_model');
 
 function PlayerRepository() {}
@@ -27,10 +24,6 @@ PlayerRepository.prototype.findOneByNameAndTeam = function findByNameAndTeam(nam
                 return players[0];
             }
         });
-};
-
-PlayerRepository.prototype.findAll = function findAll() {
-    return this._findWithCriteria({});
 };
 
 PlayerRepository.prototype.findAllByNames = function findAllByNames(names) {
