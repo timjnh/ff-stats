@@ -35,17 +35,20 @@ Team.create = function create(attributes) {
     return new Team(attributes);
 };
 
-Team.prototype.addOrUpdateGame = function addOrUpdateGame(teamGame) {
-    var games = _.clone(this.games),
-        existingGameIndex = _.findIndex(games, function gameMatches(otherGame) {
+Team.prototype.addOrUpdateGames = function addOrUpdateGames(teamGames) {
+    var games = _.clone(this.games);
+
+    teamGames.forEach(function addTeamGame(teamGame) {
+        var existingGameIndex = _.findIndex(games, function gameMatches(otherGame) {
             return teamGame.week == otherGame.week && teamGame.year == otherGame.year;
         });
 
-    if(existingGameIndex == -1) {
-        games.push(teamGame);
-    } else {
-        games[existingGameIndex] = games[existingGameIndex].merge(teamGame);
-    }
+        if(existingGameIndex == -1) {
+            games.push(teamGame);
+        } else {
+            games[existingGameIndex] = games[existingGameIndex].merge(teamGame);
+        }
+    });
 
     return Team.create(_.extend(_.clone(this), { games: games }));
 };

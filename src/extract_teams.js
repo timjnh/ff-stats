@@ -30,6 +30,7 @@ function addPlayerToTeam(player) {
 
     return teamRepository.findOneByName(player.team)
         .then(function addPlayerGamesToTeam(team) {
+            var teamGames = [];
 
             if(!team) {
                 team = Team.create({
@@ -39,22 +40,23 @@ function addPlayerToTeam(player) {
             }
 
             player.games.forEach(function addPlayerGameToTeam(playerGame) {
-                var teamGame = TeamGame.create({
-                    eid: playerGame.eid,
-                    week: playerGame.week,
-                    year: playerGame.year,
-                    players: []
-                });
+                var teamPlayer = TeamPlayer.create({
+                        name: player.name,
+                        position: player.position,
+                        played: player.isActivePlayerInGame(playerGame.week, playerGame.year),
+                        injured: !!player.injuries.findByWeekAndYear(playerGame.week, playerGame.year)
+                    }),
+                    teamGame = TeamGame.create({
+                        eid: playerGame.eid,
+                        week: playerGame.week,
+                        year: playerGame.year,
+                        players: [teamPlayer]
+                    });
 
-                teamGame = teamGame.addPlayer(TeamPlayer.create({
-                    name: player.name,
-                    position: player.position,
-                    played: player.isActivePlayerInGame(playerGame.week, playerGame.year),
-                    injured: !!player.injuries.findByWeekAndYear(playerGame.week, playerGame.year)
-                }));
-
-                team = team.addOrUpdateGame(teamGame);
+                teamGames.push(teamGame);
             });
+
+            team = team.addOrUpdateGames(teamGames);
 
             return teamRepository.save(team);
         });
