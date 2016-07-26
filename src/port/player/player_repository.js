@@ -42,23 +42,31 @@ PlayerRepository.prototype.findAllByTeamAndPosition = function findAllByTeamAndP
     return this._findWithCriteria({ team: team, position: position });
 };
 
-PlayerRepository.prototype.findAllWithBuilder = function findAllWithBuilder(builder) {
-    return this._findWithCriteria(builder.build());
+PlayerRepository.prototype.findAllWithBuilder = function findAllWithBuilder(builder, options) {
+    return this._findWithCriteria(builder.build(), options);
 };
 
-PlayerRepository.prototype._findWithCriteria = function _findWithCriteria(criteria) {
+PlayerRepository.prototype._findWithCriteria = function _findWithCriteria(criteria, options) {
     var _this = this;
 
     return q.Promise(function(resolve, reject) {
-        PlayerModel.find(criteria, function(err, players) {
-            if(err) {
-                reject(err);
-            } else {
-                resolve(players.map(function createPlayer(player) {
-                    return _this._buildPlayerFromModel(player);
-                }));
-            }
-        });
+        var stream,
+            query = PlayerModel.find(criteria).batchSize(10);
+
+        if(options.stream) {
+            stream = query.stream({ transform: _this._buildPlayerFromModel.bind(_this) });
+            resolve(stream);
+        } else {
+            query.exec(function(err, players) {
+                if(err) {
+                    reject(err);
+                } else {
+                    resolve(players.map(function createPlayer(player) {
+                        return _this._buildPlayerFromModel(player);
+                    }));
+                }
+            });
+        }
     });
 };
 

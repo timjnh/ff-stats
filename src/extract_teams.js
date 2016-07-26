@@ -71,16 +71,29 @@ bootstrap.start()
         }
 
         logger.info('Finding players...');
-        return playerRepository.findAllWithBuilder(builder);
+        return playerRepository.findAllWithBuilder(builder, { stream: true });
     })
-    .then(function addPlayersToTeams(players) {
-        var teamChain = q.when();
+    .then(function addPlayersToTeams(playerStream) {
+        var deferred = q.defer();
 
-        players.forEach(function(player) {
-            teamChain = teamChain.then(addPlayerToTeam.bind(this, player));
+        playerStream.on('data', function(player) {
+            playerStream.pause();
+
+            addPlayerToTeam(player)
+                .then(function resumeStream() {
+                    playerStream.resume();
+                })
+                .catch(function closeStreamAndFail(err) {
+                    deferred.reject(err);
+                })
+                .done();
+        }).on('error', function(err) {
+            deferred.reject(err);
+        }).on('close', function() {
+            deferred.resolve();
         });
 
-        return teamChain;
+        return deferred.promise;
     })
     .then(function logCompletion() {
         logger.info('All done!');
