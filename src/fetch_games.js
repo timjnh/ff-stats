@@ -5,7 +5,7 @@ var q = require('q'),
     scheduleRepository = require('./port/schedule/schedule_repository'),
     gameRepository = require('./port/game/game_repository');
 
-var START_YEAR = 2007,
+var START_YEAR = 2009,
     WEEKS_PER_SEASON = 17,
     END_YEAR = 2016,
     END_WEEK = 1;
