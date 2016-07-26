@@ -49,6 +49,8 @@ PlayerRepository.prototype.findAllWithBuilder = function findAllWithBuilder(buil
 PlayerRepository.prototype._findWithCriteria = function _findWithCriteria(criteria, options) {
     var _this = this;
 
+    options = options || {};
+
     return q.Promise(function(resolve, reject) {
         var stream,
             query = PlayerModel.find(criteria).batchSize(10);

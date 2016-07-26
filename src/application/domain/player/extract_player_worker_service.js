@@ -6,7 +6,7 @@ module.exports = (function() {
         WorkerService = require('../../../lib/worker/worker_service');
 
     function ExtractPlayerWorkerService() {
-        WorkerService.call(this, __dirname + '/../../extract_player_worker.js');
+        WorkerService.call(this, __dirname + '/../../../extract_player_worker.js');
     }
     ExtractPlayerWorkerService.prototype = _.create(WorkerService.prototype, { constructor: ExtractPlayerWorkerService });
 
