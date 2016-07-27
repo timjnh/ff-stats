@@ -20,18 +20,25 @@ module.exports = (function() {
         var _this = this,
             injuries = {},
             page = cheerio.load(injuryPageBody),
-            injuryTable = page('table.injury_table'),
-            rows = injuryTable.find('tr').slice(1); // first row is the header
+            injuryTable = page('table#team_injuries'),
+            tbody = injuryTable.find('tbody'),
+            rows = tbody.find('tr');
 
         page(rows).each(function extractInjuriesFromRow(index, row) {
             var playerInjuries = [],
-                injuryColumns = page(row).find('td'),
+                injuryColumns = page(row).find('th,td'),
                 playerName = normalizePlayerName(injuryColumns.first().attr('csk'));
 
             // first column is the player name
             injuryColumns = injuryColumns.slice(1);
 
             for(var i = 0; i < injuryColumns.length; i++) {
+
+                // don't go into the post season yet
+                if(i + 1 > 19) {
+                    break;
+                }
+
                 playerInjuries.push(extractInjuryFromColumn.call(_this, playerName, i + 1, cheerio(injuryColumns.get(i))));
             }
 
@@ -52,18 +59,26 @@ module.exports = (function() {
         return firstName.substr(0, 1) + ' ' + lastName;
     }
 
+    var INJURY_CLASS_TO_INJURY_MAPPING = {
+        'probable': PlayerInjury.PROBABLE,
+        'questionable': PlayerInjury.QUESTIONABLE,
+        'out': PlayerInjury.OUT,
+        'doubtful': PlayerInjury.DOUBTFUL,
+        'I-R': PlayerInjury.INJURED_RESERVE
+    };
+
     function extractInjuryFromColumn(playerName, week, column) {
         var status,
             reason,
-            played = !column.hasClass('played'); // for whatever reason, this is backwards
+            played = !column.hasClass('dnp'); // dnp = did not play
 
-        if(cheerio(column).find('span').length) {
-            reason = cheerio(column).find('span').attr('tip').split(':')[1].trim();
+        if(cheerio(column).attr('data-tip') && cheerio(column).attr('data-tip').length) {
+            reason = cheerio(column).attr('data-tip').split(':')[1].trim();
         }
 
-        PlayerInjury.STATUSES.forEach(function checkElementForStatus(_status) {
+        Object.keys(INJURY_CLASS_TO_INJURY_MAPPING).forEach(function checkElementForStatus(_status) {
             if(column.hasClass(_status)) {
-                status = _status;
+                status = INJURY_CLASS_TO_INJURY_MAPPING[_status];
             }
         });
 
