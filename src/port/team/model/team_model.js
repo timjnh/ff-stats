@@ -1,6 +1,8 @@
 'use strict';
 
-var mongoose = require('mongoose'),
+var _ = require('underscore'),
+    mongoose = require('mongoose'),
+    PlayerPosition = require('../../../application/domain/player/player_position'),
     Schema = mongoose.Schema;
 
 var PlayerSchema = new Schema({
@@ -10,11 +12,17 @@ var PlayerSchema = new Schema({
     injured: Boolean
 });
 
+var depthChartSchema = {};
+_.each(PlayerPosition, function addPositionToDepthChart(position) {
+    depthChartSchema[position] = [String];
+});
+
 var GameSchema = new Schema({
     eid: String,
     week: Number,
     year: Number,
-    players: [PlayerSchema]
+    players: [PlayerSchema],
+    depthChart: depthChartSchema
 });
 
 var TeamSchema = new Schema({

@@ -3,7 +3,8 @@
 var _ = require('underscore'),
     assert = require('assert'),
     Joi = require('joi'),
-    TeamPlayer = require('./team_player');
+    TeamPlayer = require('./team_player'),
+    DepthChart = require('./depth_chart');
 
 function TeamGame(attributes) {
     var validatedAttributes = Joi.validate(attributes, TeamGame.schema, { stripUnknown: true });
@@ -19,7 +20,8 @@ TeamGame.schema = {
     eid: Joi.string().required(),
     week: Joi.number().required(),
     year: Joi.number().required(),
-    players: Joi.array().items(TeamPlayer.schema).required()
+    players: Joi.array().items(TeamPlayer.schema).required(),
+    depthChart: Joi.object(DepthChart.schema).default(DepthChart.create())
 };
 
 TeamGame.create = function create(attributes) {
@@ -58,7 +60,11 @@ TeamGame.prototype.merge = function merge(otherGame) {
         teamGame = teamGame.addPlayer(player);
     });
 
-    return teamGame;
+    return teamGame.setDepthChart(otherGame.depthChart);
+};
+
+TeamGame.prototype.setDepthChart = function setDepthChart(chart) {
+    return TeamGame.create(_.extend(_.clone(this), { depthChart: chart }));
 };
 
 module.exports = TeamGame;

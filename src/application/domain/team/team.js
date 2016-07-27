@@ -53,6 +53,22 @@ Team.prototype.addOrUpdateGames = function addOrUpdateGames(teamGames) {
     return Team.create(_.extend(_.clone(this), { games: games }));
 };
 
+Team.prototype.getOrderedGames = function getOrderedGames() {
+    var gamesCopy = _.clone(this.games);
+
+    gamesCopy.sort(function compareGames(a, b) {
+        if(a.year < b.year || (a.year == b.year && a.week < b.week)) {
+            return -1;
+        } else if(a.year == b.year && a.week == b.week) {
+            return 0;
+        } else {
+            return 1;
+        }
+    });
+
+    return gamesCopy;
+};
+
 Team.PATRIOTS = 'patriots';
 Team.PACKERS = 'packers';
 Team.VIKINGS = 'vikings';

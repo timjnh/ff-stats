@@ -153,4 +153,8 @@ Player.prototype.getOrderedGamesInYearRange = function getOrderedGamesInYearRang
     });
 };
 
+Player.prototype.findGameByWeekAndYear = function findGameByWeekAndYear(week, year) {
+    return _.findWhere(this.games, { week: week, year: year });
+};
+
 module.exports = Player;

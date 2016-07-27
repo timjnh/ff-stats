@@ -8,6 +8,10 @@ function TeamRepository() {
     this._cache = {};
 }
 
+TeamRepository.prototype.findAll = function findAll() {
+    return this._findWithCriteria({});
+};
+
 TeamRepository.prototype.findOneByName = function findOneByName(name) {
     var _this = this;
 
@@ -15,19 +19,30 @@ TeamRepository.prototype.findOneByName = function findOneByName(name) {
         return q.when(this._cache[name]);
     }
 
-    return q.Promise(function(resolve, reject) {
-        TeamModel.find({ name: name }, function(err, teams) {
-            var team;
+    return this._findWithCriteria({ name: name })
+        .then(function extractFirstTeam(teams) {
+            if(teams.length > 0) {
+                _this._cache[name] = teams[0];
+                return _this._cache[name];
+            } else {
+                return null;
+            }
+        });
+};
 
+TeamRepository.prototype.findAllByName = function findAllByName(names) {
+    return this._findWithCriteria({ name: { $in: names } });
+};
+
+TeamRepository.prototype._findWithCriteria = function _findWithCriteria(criteria) {
+    var _this = this;
+
+    return q.Promise(function(resolve, reject) {
+        TeamModel.find(criteria, function(err, teams) {
             if(err) {
                 reject(err);
-            } else if(teams.length == 0) {
-                resolve(null);
             } else {
-                team = _this._buildTeamFromModel(teams[0]);
-                _this._cache[team.name] = team;
-
-                resolve(team);
+                resolve(teams.map(_this._buildTeamFromModel.bind(_this)));
             }
         });
     });

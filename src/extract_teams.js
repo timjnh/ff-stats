@@ -9,15 +9,19 @@ var argv,
     teamRepository = require('./port/team/team_repository'),
     TeamPlayer = require('./application/domain/team/team_player'),
     TeamGame = require('./application/domain/team/team_game'),
-    Team = require('./application/domain/team/team');
+    Team = require('./application/domain/team/team'),
+    depthChartService = require('./application/domain/team/depth_chart_service');
 
 var argv = require('yargs')
     .usage('Usage: npm run extract-teams[-nm] -- [options]')
     .strict()
     .help('h')
     .alias('h', 'help')
-    .describe('t', 'Name of team that should be extracted')
+    .array('t')
+    .describe('t', 'Name of team(s) that should be extracted')
     .alias('t', 'team')
+    .describe('skip-rosters', 'If set, we don\'t bother to build rosters')
+    .default('skip-rosters', false)
     .describe('log-level', 'Log level to use')
     .choices('log-level', Object.keys(logger.levels))
     .default('log-level', 'info')
@@ -62,39 +66,83 @@ function addPlayerToTeam(player) {
         });
 }
 
-bootstrap.start()
-    .then(function getAllPlayers() {
-        var builder = PlayerQueryBuilder.create();
+function buildRosters() {
+    if(argv.skipRosters) {
+        return;
+    }
 
-        if(argv.team) {
-            builder.withTeam(argv.team);
-        }
+    logger.info('Building rosters...');
 
-        logger.info('Finding players...');
-        return playerRepository.findAllWithBuilder(builder, { stream: true });
-    })
-    .then(function addPlayersToTeams(playerStream) {
-        var deferred = q.defer();
+    var queryBuilder = PlayerQueryBuilder.create();
 
-        playerStream.on('data', function(player) {
-            playerStream.pause();
+    if(argv.team) {
+        queryBuilder.withTeam(argv.team);
+    }
 
-            addPlayerToTeam(player)
-                .then(function resumeStream() {
-                    playerStream.resume();
-                })
-                .catch(function closeStreamAndFail(err) {
-                    deferred.reject(err);
-                })
-                .done();
-        }).on('error', function(err) {
-            deferred.reject(err);
-        }).on('close', function() {
-            deferred.resolve();
+    return playerRepository.findAllWithBuilder(queryBuilder, { stream: true })
+        .then(function addPlayersToTeams(playerStream) {
+            var deferred = q.defer();
+
+            playerStream.on('data', function(player) {
+                playerStream.pause();
+
+                addPlayerToTeam(player)
+                    .then(function resumeStream() {
+                        playerStream.resume();
+                    })
+                    .catch(function closeStreamAndFail(err) {
+                        deferred.reject(err);
+                    })
+                    .done();
+            }).on('error', function(err) {
+                deferred.reject(err);
+            }).on('close', function() {
+                deferred.resolve();
+            });
+
+            return deferred.promise;
+        })
+        .then(function logCompletion() {
+            logger.info('Done building rosters');
         });
+}
 
-        return deferred.promise;
-    })
+function calculateTeamDepthCharts() {
+    var teamsPromise;
+
+    logger.info('Calculating team depth charts...');
+
+    if(argv.team) {
+        teamsPromise = teamRepository.findAllByName(argv.team);
+    } else {
+        teamsPromise = teamRepository.findAll();
+    }
+
+    return teamsPromise
+        .then(function calculateDepths(teams) {
+            var chartPromiseChain = q.when();
+
+            teams.forEach(function(team) {
+                chartPromiseChain = chartPromiseChain.then(function calculateNextTeamChart() {
+                    logger.info('Calculating depth charts for "' + team.name + '"');
+
+                    return depthChartService.calculateChartsForTeam(team)
+                        .then(function saveTeam(team) {
+                            return teamRepository.save(team);
+                        });
+                });
+            });
+
+            return chartPromiseChain;
+        })
+        .then(function logCompletion() {
+            logger.info('Done building depth charts');
+        });
+}
+
+bootstrap.start()
+    .then(buildRosters)
+    .then(calculateTeamDepthCharts)
     .then(function logCompletion() {
         logger.info('All done!');
     })
