@@ -122,11 +122,101 @@ Team.TEAMS = [
 ];
 
 Team.codes = {};
+Team.codes[Team.PATRIOTS] = {
+    threeLetterCityCode: 'nwe'
+};
+Team.codes[Team.PACKERS] = {
+    threeLetterCityCode: 'gnb'
+};
+Team.codes[Team.VIKINGS] = {
+    threeLetterCityCode: 'min'
+};
+Team.codes[Team.BEARS] = {
+    threeLetterCityCode: 'chi'
+};
+Team.codes[Team.BILLS] = {
+    threeLetterCityCode: 'buf'
+};
+Team.codes[Team.GIANTS] = {
+    threeLetterCityCode: 'nyg'
+};
+Team.codes[Team.SEAHAWKS] = {
+    threeLetterCityCode: 'sea'
+};
+Team.codes[Team.TITANS] = {
+    threeLetterCityCode: 'oti'
+};
+Team.codes[Team.DOLPHINS] = {
+    threeLetterCityCode: 'mia'
+};
+Team.codes[Team.CHARGERS] = {
+    threeLetterCityCode: 'sdg'
+};
 Team.codes[Team.BENGALS] = {
     threeLetterCityCode: 'cin'
 };
-Team.codes[Team.PATRIOTS] = {
-    threeLetterCityCode: 'nwe'
+Team.codes[Team.COLTS] = {
+    threeLetterCityCode: 'clt'
+};
+Team.codes[Team.BRONCOS] = {
+    threeLetterCityCode: 'den'
+};
+Team.codes[Team.JETS] = {
+    threeLetterCityCode: 'nyj'
+};
+Team.codes[Team.BROWNS] = {
+    threeLetterCityCode: 'cle'
+};
+Team.codes[Team.RAMS] = {
+    threeLetterCityCode: 'ram'
+};
+Team.codes[Team.JAGUARS] = {
+    threeLetterCityCode: 'jax'
+};
+Team.codes[Team.SAINTS] = {
+    threeLetterCityCode: 'nor'
+};
+Team.codes[Team.LIONS] = {
+    threeLetterCityCode: 'det'
+};
+Team.codes[Team.EAGLES] = {
+    threeLetterCityCode: 'phi'
+};
+Team.codes[Team.RAIDERS] = {
+    threeLetterCityCode: 'rai'
+};
+Team.codes[Team.STEELERS] = {
+    threeLetterCityCode: 'pit'
+};
+Team.codes[Team.CHIEFS] = {
+    threeLetterCityCode: 'kan'
+};
+Team.codes[Team.PANTHERS] = {
+    threeLetterCityCode: 'car'
+};
+Team.codes[Team.FALCONS] = {
+    threeLetterCityCode: 'atl'
+};
+Team.codes[Team.BUCCANEERS] = {
+    threeLetterCityCode: 'tam'
+};
+Team.codes[Team.RAVENS] = {
+    threeLetterCityCode: 'rav'
+};
+Team.codes[Team.CARDINALS] = {
+    threeLetterCityCode: 'crd'
+};
+Team.codes[Team.COWBOYS] = {
+    threeLetterCityCode: 'dal'
+};
+Team.codes[Team.REDSKINS] = {
+    threeLetterCityCode: 'was'
+};
+Team.codes[Team.FORTY_NINERS] = {
+    threeLetterCityCode: 'sfo'
+};
+Team.codes[Team.TEXANS] = {
+    threeLetterCityCode: 'htx'
 };
 
 Team.getId = function getId(teamName) {
