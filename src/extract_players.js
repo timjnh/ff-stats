@@ -218,6 +218,9 @@ bootstrap.start()
     .then(function allDone() {
         console.info('All done!');
     })
+    .catch(function(err) {
+        console.error(err);
+    })
     .finally(function stopEverything() {
         return extractPlayerWorkerService.stop()
             .then(bootstrap.stop.bind(bootstrap));

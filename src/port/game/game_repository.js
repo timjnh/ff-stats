@@ -41,7 +41,7 @@ function createGameFromDoc(doc) {
 GameRepository.prototype._findWithCriteria = function _findWithCriteria(criteria, options) {
     return q.Promise(function(resolve, reject) {
         var stream,
-            query = GameModel.find(criteria).batchSize(10);
+            query = GameModel.find(criteria, {}, { timeout: true }).batchSize(10); // timeout true actually removes the timeout...
 
         if(options.stream) {
             stream = query.stream({ transform: createGameFromDoc});
