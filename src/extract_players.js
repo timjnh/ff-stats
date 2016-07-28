@@ -10,11 +10,9 @@ var argv,
     fantasyPointService = require('./application/domain/fantasy_point_service'),
     gameEventService = require('./application/domain/game/game_event_service'),
     defensiveStatsService = require('./application/domain/defensive_stats_service'),
-    playerPositionService = require('./application/domain/player/player_position_service'),
     PlayerStats = require('./application/domain/player/player_stats'),
     Player = require('./application/domain/player/player'),
     PlayerGame = require('./application/domain/player/player_game'),
-    playerRepository = require('./port/player/player_repository'),
     extractPlayerWorkerService = require('./application/domain/player/extract_player_worker_service'),
     logger = require('./lib/logger');
 
@@ -83,8 +81,8 @@ function extractStatsFromDrives(game, playerStats) {
         }
     });
 
-    _.values(game.stats.drives).forEach(function(drive) {
-        _.values(drive.plays).forEach(function(play) {
+    _.values(game.stats.drives).forEach(function(drive, driveIndex) {
+        _.values(drive.plays).forEach(function(play, playIndex) {
             var event,
                 teamName;
 
@@ -92,6 +90,12 @@ function extractStatsFromDrives(game, playerStats) {
                 for(var k in play.players[j]) {
                     event = play.players[j][k];
                     teamName = findNameForTeamByClubCode(teams, event.clubcode);
+
+                    // some events have blank playerNames. skip em
+                    if(event.playerName == '') {
+                        logger.warn('Skipping event with blank player name for game with eid "' + game.eid + '", driveIndex ' + driveIndex + ' and playIndex ' + playIndex);
+                        continue;
+                    }
 
                     if(argv.team && argv.team.indexOf(teamName) == -1) {
                         logger.debug('Skipping event for team "' + teamName + '"');
