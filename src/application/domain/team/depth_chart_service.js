@@ -32,10 +32,10 @@ DepthChartService.prototype._calculateChartForGame = function _calculateChartFor
         positionPlayers.forEach(function calculateTargets(positionPlayer) {
             var player = _.findWhere(players, { name: positionPlayer.name }),
                 playerGame = player.findGameByWeekAndYear(game.week, game.year),
-                targets = playerGame.getStat('targets');
-
-            // TODO: include touches as well as targets
-            playerUtility[positionPlayer.name] = targets;
+                targets = playerGame.getStat('targets'),
+                touches = playerGame.getStat('touches');
+            
+            playerUtility[positionPlayer.name] = targets + touches;
         });
 
         depthChart = depthChart.setChartAtPosition(position, _.pluck(_.sortBy(_.pairs(playerUtility), '1').reverse(), '0'));
