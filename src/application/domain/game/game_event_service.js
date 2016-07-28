@@ -8,9 +8,9 @@ function GameEventService() {}
 GameEventService.prototype.buildPlayerStatsFromEvent = function buildPlayerStatsFromEvent(event) {
     switch(event.statId) {
         case 10: // rushing yards
-            return PlayerStats.create({ rushingYards: event.yards });
+            return PlayerStats.create({ rushingYards: event.yards, touches: 1 });
         case 11: // rushing td
-            return PlayerStats.create({ rushingTDs: 1 });
+            return PlayerStats.create({ rushingTDs: 1, touches: 1 });
         case 15: // passing yards including distance covered by receiver (see also 111)
             return PlayerStats.create({ passingYards: event.yards });
         case 16: // passing yards with td
@@ -51,7 +51,7 @@ GameEventService.prototype.buildPlayerStatsFromEvent = function buildPlayerStats
             // TODO: verify this
             return PlayerStats.create({ extraPointsBlocked: 1});
         case 75: // 2 point conversion good rush
-            return PlayerStats.create({ conversions: 1 });
+            return PlayerStats.create({ conversions: 1, touches: 1 });
         case 77: // 2 point conversion good pass
             return PlayerStats.create({ conversions: 1 });
         case 104: // 2 point conversion received passing
@@ -138,7 +138,6 @@ GameEventService.prototype.buildPlayerStatsFromEvent = function buildPlayerStats
         case 111: // passing length minus receiver yardage (see 15)
         case 112: // passing length, no completion
         case 113: // yards after catch
-        case 115: // player was the target of a pass attempt
         case 120: // tackled for a loss
         case 301: // extra point aborted
         case 402: // ?

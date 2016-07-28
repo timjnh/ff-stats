@@ -18,6 +18,7 @@ var GameSchema = new Schema({
 
         rushingYards: Number,
         rushingTDs: Number,
+        touches: Number,
 
         receivingYards: Number,
         receivingTDs: Number,

@@ -10,6 +10,7 @@ var assert = require('assert'),
 
         'rushingYards',
         'rushingTDs',
+        'touches',
 
         'receivingYards',
         'receivingTDs',
