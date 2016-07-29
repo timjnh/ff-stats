@@ -53,6 +53,10 @@ Team.prototype.addOrUpdateGames = function addOrUpdateGames(teamGames) {
     return Team.create(_.extend(_.clone(this), { games: games }));
 };
 
+Team.prototype.findGameByWeekAndYear = function findGameByWeekAndYear(week, year) {
+    return _.findWhere(this.games, { week: week, year: year });
+};
+
 Team.prototype.getOrderedGames = function getOrderedGames() {
     var gamesCopy = _.clone(this.games);
 

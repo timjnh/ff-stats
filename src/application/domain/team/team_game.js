@@ -31,12 +31,16 @@ TeamGame.create = function create(attributes) {
         });
     }
 
+    if(attributes.depthChart) {
+        attributes.depthChart = DepthChart.create(attributes.depthChart);
+    }
+
     return new TeamGame(attributes);
 };
 
 TeamGame.prototype.addPlayer = function addPlayer(teamPlayer) {
     var players,
-        existingPlayer = _.findWhere(this.players, { name: teamPlayer.name });
+        existingPlayer = this.findPlayerByName(teamPlayer.name);
 
     if(existingPlayer) {
         assert(existingPlayer.equals(teamPlayer));
@@ -65,6 +69,10 @@ TeamGame.prototype.merge = function merge(otherGame) {
 
 TeamGame.prototype.setDepthChart = function setDepthChart(chart) {
     return TeamGame.create(_.extend(_.clone(this), { depthChart: chart }));
+};
+
+TeamGame.prototype.findPlayerByName = function findPlayerByName(name) {
+    return _.findWhere(this.players, { name: name });
 };
 
 module.exports = TeamGame;

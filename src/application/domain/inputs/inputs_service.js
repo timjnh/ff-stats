@@ -23,7 +23,7 @@ var _ = require('underscore'),
     TopTargetOut = require('./top_target_out'),
     WeekOfYear = require('./week_of_year'),
     PlayerPosition = require('../player/player_position'),
-    Input = require('./input'),
+    TopOfDepthChartInjured = require('./top_of_depth_chart_injured'),
     InputSet = require('./input_set');
 
 function InputsService() {
@@ -52,7 +52,8 @@ function InputsService() {
         new RecentRushingTouchdownsAllowedByOpponent(3),
         new RecentSacksByOpponent(3),
         new RecentInterceptionsByOpponent(3),
-        new TopTargetOut()
+        new TopTargetOut(),
+        new TopOfDepthChartInjured()
     ].concat(sharedInputs);
 
     this.inputsByPosition[PlayerPosition.RB] = [
@@ -61,7 +62,8 @@ function InputsService() {
         new RecentPassingYardsAllowedByOpponent(3),
         new RecentRushingYardsAllowedByOpponent(3),
         new RecentPassingTouchdownsAllowedByOpponent(3),
-        new RecentRushingTouchdownsAllowedByOpponent(3)
+        new RecentRushingTouchdownsAllowedByOpponent(3),
+        new TopOfDepthChartInjured()
     ].concat(sharedInputs);
 
     this.inputsByPosition[PlayerPosition.WR] = [
@@ -69,7 +71,8 @@ function InputsService() {
         new RecentRushingYardsAllowedByOpponent(3),
         new RecentPassingTouchdownsAllowedByOpponent(3),
         new RecentRushingTouchdownsAllowedByOpponent(3),
-        new RecentInterceptionsByOpponent(3)
+        new RecentInterceptionsByOpponent(3),
+        new TopOfDepthChartInjured()
     ].concat(sharedInputs);
 
     this.inputsByPosition[PlayerPosition.DEFENSE] = sharedInputs;

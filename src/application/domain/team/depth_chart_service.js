@@ -34,7 +34,7 @@ DepthChartService.prototype._calculateChartForGame = function _calculateChartFor
                 playerGame = player.findGameByWeekAndYear(game.week, game.year),
                 targets = playerGame.getStat('targets'),
                 touches = playerGame.getStat('touches');
-            
+
             playerUtility[positionPlayer.name] = targets + touches;
         });
 
