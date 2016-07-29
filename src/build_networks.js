@@ -123,6 +123,9 @@ bootstrap.start()
     .then(function() {
         console.log('All done!');
     })
+    .catch(function handleError(err) {
+        console.error(err.stack);
+    })
     .finally(function stopEverything() {
         return playerNetworkWorkerService.stop()
             .then(bootstrap.stop.bind(bootstrap));
