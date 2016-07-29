@@ -80,7 +80,11 @@ function InputsService() {
 InputsService.prototype.getInputsForPlayerAndGame = function getInputsForPlayerAndGame(player, game) {
     var playerInputTypes = this.getInputsForPosition(player.position),
         inputPromises = playerInputTypes.map(function getInputForPlayerAndGame(input) {
-            return q.when(input.evaluate(player, game));
+            try {
+                return q.when(input.evaluate(player, game));
+            } catch(err) {
+                return q.reject(err);
+            }
         });
 
     return q.all(inputPromises)
