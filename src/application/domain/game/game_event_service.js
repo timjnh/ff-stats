@@ -142,6 +142,7 @@ GameEventService.prototype.buildPlayerStatsFromEvent = function buildPlayerStats
         case 301: // extra point aborted
         case 402: // ?
         case 403: // ?
+        case 404: // ?
         case 410: // ?
             return PlayerStats.create();
         default:
