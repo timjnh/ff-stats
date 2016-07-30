@@ -5,7 +5,8 @@ module.exports = (function() {
     var _ = require('underscore'),
         cheerio = require('cheerio'),
         Injury = require('../model/injury'),
-        PlayerInjury = require('../../../application/domain/player/player_injury');
+        PlayerInjury = require('../../../application/domain/player/player_injury'),
+        logger = require('../../../lib/logger');
 
     function InjuryParser(team, year) {
         this.team = team;
@@ -64,7 +65,8 @@ module.exports = (function() {
         'questionable': PlayerInjury.QUESTIONABLE,
         'out': PlayerInjury.OUT,
         'doubtful': PlayerInjury.DOUBTFUL,
-        'I-R': PlayerInjury.INJURED_RESERVE
+        'I-R': PlayerInjury.INJURED_RESERVE,
+        'injured-reserve': PlayerInjury.INJURED_RESERVE
     };
 
     function extractInjuryFromColumn(playerName, week, column) {
@@ -81,6 +83,10 @@ module.exports = (function() {
                 status = INJURY_CLASS_TO_INJURY_MAPPING[_status];
             }
         });
+
+        if(!played && !status) {
+            logger.warn('Possible error case in the InjuryParser.  Player did not play but has no injury status');
+        }
 
         if(status) {
             return Injury.create({
