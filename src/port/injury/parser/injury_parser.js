@@ -66,7 +66,8 @@ module.exports = (function() {
         'out': PlayerInjury.OUT,
         'doubtful': PlayerInjury.DOUBTFUL,
         'I-R': PlayerInjury.INJURED_RESERVE,
-        'injured-reserve': PlayerInjury.INJURED_RESERVE
+        'injured-reserve': PlayerInjury.INJURED_RESERVE,
+        'physically-unable': PlayerInjury.PHYSICALLY_UNABLE
     };
 
     function extractInjuryFromColumn(playerName, week, column) {
@@ -85,7 +86,7 @@ module.exports = (function() {
         });
 
         if(!played && !status) {
-            logger.warn('Possible error case in the InjuryParser.  Player did not play but has no injury status');
+            logger.warn('Possible error case in the InjuryParser.  Player ' + playerName + ' did not play but has no injury status');
         }
 
         if(status) {

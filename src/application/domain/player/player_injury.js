@@ -33,13 +33,15 @@ PlayerInjury.QUESTIONABLE = 'questionable';
 PlayerInjury.OUT = 'out';
 PlayerInjury.DOUBTFUL = 'doubtful';
 PlayerInjury.INJURED_RESERVE = 'injured-reserve';
+PlayerInjury.PHYSICALLY_UNABLE = 'physically-unable';
 
 PlayerInjury.STATUSES = [
     PlayerInjury.PROBABLE,
     PlayerInjury.QUESTIONABLE,
     PlayerInjury.OUT,
     PlayerInjury.DOUBTFUL,
-    PlayerInjury.INJURED_RESERVE
+    PlayerInjury.INJURED_RESERVE,
+    PlayerInjury.PHYSICALLY_UNABLE
 ];
 
 module.exports = PlayerInjury;
