@@ -5,9 +5,18 @@ var q = require('q'),
     scheduleRepository = require('./port/schedule/schedule_repository'),
     gameRepository = require('./port/game/game_repository');
 
-var START_YEAR = 2009,
-    WEEKS_PER_SEASON = 17,
-    END_YEAR = 2016,
+var argv = require('yargs')
+    .usage('Usage: npm run fetch-games[-nm] -- [options]')
+    .strict()
+    .help('h')
+    .alias('h', 'help')
+    .describe('start-year', 'Year to start with')
+    .default('start-year', 2009)
+    .describe('end-year', 'Year to end with')
+    .default('end-year', 2017)
+    .argv;
+
+var WEEKS_PER_SEASON = 17,
     END_WEEK = 1;
 
 function findAndSaveGamesByYearAndWeekNumber(year, weekNumber) {
@@ -52,8 +61,8 @@ bootstrap.start()
     .then(function retrieveGames() {
         var retrieveChain = q.when();
 
-        for(var year = START_YEAR; year <= END_YEAR; ++year) {
-            for (var weekNumber = 1; (year != END_YEAR || weekNumber < END_WEEK) && weekNumber <= WEEKS_PER_SEASON; weekNumber++) {
+        for(var year = argv.startYear; year <= argv.endYear; ++year) {
+            for (var weekNumber = 1; (year != argv.endYear || weekNumber < END_WEEK) && weekNumber <= WEEKS_PER_SEASON; weekNumber++) {
                 console.log('Setting up retrieval for ' + year + ', week ' + weekNumber);
 
                 retrieveChain = retrieveChain.then(findAndSaveGamesByYearAndWeekNumber.bind(this, year, weekNumber))
