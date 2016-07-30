@@ -8,7 +8,8 @@ var argv,
     Team = require('./application/domain/team/team'),
     injuryRepository = require('./port/injury/injury_repository'),
     playerRepository = require('./port/player/player_repository'),
-    PlayerInjury = require('./application/domain/player/player_injury');
+    PlayerInjury = require('./application/domain/player/player_injury'),
+    seasonService = require('./application/domain/season_service');
 
 argv = require('yargs')
     .usage('Usage: npm run fetch-injury-stats-nm -- [options]')
@@ -22,7 +23,7 @@ argv = require('yargs')
     .array('y')
     .describe('y', 'Year or years to extract injury stats for')
     .alias('y', 'year')
-    .default('y', _.range(2009, 2016)) // range is exclusive so we're only up to 2015 here
+    .default('y', _.range(2009, seasonService.getCurrentSeason() + 1)) // range is exclusive so we have to add one
     .describe('log-level', 'Log level to use')
     .choices('log-level', Object.keys(logger.levels))
     .default('log-level', 'info')
