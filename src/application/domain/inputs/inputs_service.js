@@ -115,4 +115,14 @@ InputsService.prototype.getInputsListForPosition = function getInputsListForPosi
     return inputsForPosition.map(function getName(input) { return input.getName(); });
 };
 
+InputsService.prototype.getInputsList = function getInputsList() {
+    var allInputs = [];
+
+    for(var position in this.inputsByPosition) {
+        allInputs = allInputs.concat(this.getInputsListForPosition(position));
+    }
+
+    return _.uniq(allInputs);
+};
+
 module.exports = new InputsService();

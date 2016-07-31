@@ -12,5 +12,7 @@ module.exports = {
         } else {
             return currentYear;
         }
-    }
+    },
+
+    getFirstSeason: function getFirstSeason() { return 2009; }
 };
