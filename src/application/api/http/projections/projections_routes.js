@@ -35,7 +35,7 @@ module.exports = [
                     reply(response);
                 })
                 .catch(function readFailed(err) {
-                    reply(Boom.badImplementation(err));
+                    throw Boom.wrap(err, 500);
                 })
                 .done();
         }
