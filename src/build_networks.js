@@ -10,7 +10,8 @@ var args,
     projectionsService = require('./application/domain/network/projections_service'),
     networkStrategyFactory = require('./application/domain/network/strategies/network_strategy_factory'),
     PerceptronStrategy = require('./application/domain/network/strategies/perceptron_strategy'),
-    playerNetworkWorkerService = require('./application/domain/network/player_network_worker_service');
+    playerNetworkWorkerService = require('./application/domain/network/player_network_worker_service'),
+    GameDate = require('./application/domain/season/game_date');
 
 args = require('yargs')
     .usage('Usage: npm run build-networks[-nm] -- [options]')
@@ -77,8 +78,11 @@ function buildAndSaveInputsForPlayer(player) {
 }
 
 function showProjectionsForPlayerOverTime(player) {
+    var startDate = new GameDate({ week: GameDate.getMinWeek(), year: args.startYear }),
+        endDate = new GameDate({ week: GameDate.getMaxDate(), year: args.endYear });
+
     console.log('Projections for "' + player.name + ' of the ' + player.team);
-    return projectionsService.buildProjectionsForYearRange(player, getInputsForPlayer(player), args.strategy, args.startYear, args.endYear)
+    return projectionsService.buildProjectionsForDateRange(player, getInputsForPlayer(player), args.strategy, startDate, endDate)
         .then(function displayProjections(projections) {
             projections.forEach(function displayProjection(projection) {
                 console.log('  Week ' + projection.game.week + ', ' + projection.game.year + ': ' + projection.projected + ' projected, ' + projection.actual + ' actual');

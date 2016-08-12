@@ -147,12 +147,6 @@ Player.prototype.getOrderedGames = function getOrderedGames() {
     return gamesCopy;
 };
 
-Player.prototype.getOrderedGamesInYearRange = function getOrderedGamesInYearRange(startYear, endYear) {
-    return _.filter(this.getOrderedGames(), function isGameInRange(game) {
-        return game.year >= startYear && game.year <= endYear;
-    });
-};
-
 Player.prototype.getOrderedGamesInDateRange = function getOrderedGamesInDateRange(startDate, endDate) {
     return _.filter(this.getOrderedGames(), function isGameInRange(game) {
         return (game.year >= startDate.year || (game.year == startDate.year && game.week >= startDate.week)) &&

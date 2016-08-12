@@ -30,37 +30,6 @@ function createNetworkIfNotExists(player, game, inputs, strategy, playerNetwork)
     }
 }
 
-ProjectionsService.prototype.buildProjectionsForYearRange = function buildProjectionsForYearRange(player, inputs, strategy, startYear, endYear) {
-    var _this = this,
-        projectionPromises;
-
-    projectionPromises = player.getOrderedGamesInYearRange(startYear, endYear).map(function calculateProjectionsForGame(game) {
-        return playerNetworkRepository.findByPlayerAndGameAndInputListAndStrategy(player, game, inputs, strategy)
-            .then(createNetworkIfNotExists.bind(_this, player, game, inputs, strategy))
-            .then(function activateNetwork(playerNetwork) {
-                var projected;
-
-                // if we don't have a network there's nothing we can do at this point
-                if(playerNetwork) {
-                    var inputSet = game.inputs.getSubset(inputs),
-                        network = synaptic.Network.fromJSON(playerNetwork.network),
-                        projection = network.activate(inputSet.sortAndFlatten());
-
-                    projected = projection * 100;
-                }
-
-                return Projection.create({
-                    projected: projected,
-                    actual: game.points,
-                    game: game,
-                    player: player
-                });
-            });
-    });
-
-    return q.all(projectionPromises);
-};
-
 ProjectionsService.prototype.buildProjectionsForDateRange = function buildProjectionsForDateRange(player, inputs, strategy, startDate, endDate) {
     var _this = this,
         projectionPromises;
