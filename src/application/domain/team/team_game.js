@@ -20,6 +20,7 @@ TeamGame.schema = {
     eid: Joi.string().required(),
     week: Joi.number().required(),
     year: Joi.number().required(),
+    date: Joi.date().required(),
     players: Joi.array().items(TeamPlayer.schema).required(),
     depthChart: Joi.object(DepthChart.schema).default(DepthChart.create())
 };
@@ -73,6 +74,10 @@ TeamGame.prototype.setDepthChart = function setDepthChart(chart) {
 
 TeamGame.prototype.findPlayerByName = function findPlayerByName(name) {
     return _.findWhere(this.players, { name: name });
+};
+
+TeamGame.prototype.hasBeenPlayed = function hasBeenPlayed() {
+    return this.date <= new Date();
 };
 
 module.exports = TeamGame;

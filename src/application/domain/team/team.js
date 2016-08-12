@@ -73,6 +73,20 @@ Team.prototype.getOrderedGames = function getOrderedGames() {
     return gamesCopy;
 };
 
+Team.prototype.findLastPlayedGameInYear = function findLastPlayedGameInYear(year) {
+    var lastGameInYear = null;
+    this.getOrderedGames().forEach(function findLastGame(game) {
+        if(!game.hasBeenPlayed()) {
+            return;
+        }
+
+        if(game.year == year) {
+            lastGameInYear = game;
+        }
+    });
+    return lastGameInYear;
+};
+
 Team.PATRIOTS = 'patriots';
 Team.PACKERS = 'packers';
 Team.VIKINGS = 'vikings';

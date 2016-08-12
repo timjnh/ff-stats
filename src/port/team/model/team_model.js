@@ -21,6 +21,7 @@ var GameSchema = new Schema({
     eid: String,
     week: Number,
     year: Number,
+    date: Date,
     players: [PlayerSchema],
     depthChart: depthChartSchema
 });

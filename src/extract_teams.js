@@ -54,6 +54,7 @@ function addPlayerToTeam(player) {
                         eid: playerGame.eid,
                         week: playerGame.week,
                         year: playerGame.year,
+                        date: playerGame.date,
                         players: [teamPlayer]
                     });
 
