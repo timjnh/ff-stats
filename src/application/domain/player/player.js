@@ -153,6 +153,13 @@ Player.prototype.getOrderedGamesInYearRange = function getOrderedGamesInYearRang
     });
 };
 
+Player.prototype.getOrderedGamesInDateRange = function getOrderedGamesInDateRange(startDate, endDate) {
+    return _.filter(this.getOrderedGames(), function isGameInRange(game) {
+        return (game.year >= startDate.year || (game.year == startDate.year && game.week >= startDate.week)) &&
+            (game.year <= endDate.year || (game.year == endDate.year && game.week <= endDate.week));
+    });
+};
+
 Player.prototype.findGameByWeekAndYear = function findGameByWeekAndYear(week, year) {
     return _.findWhere(this.games, { week: week, year: year });
 };

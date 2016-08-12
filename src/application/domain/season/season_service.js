@@ -9,7 +9,7 @@ module.exports = {
 
         // if we're before september (months are zero-indexed) then we return
         // the previous year because the current season hasn't started yet
-        if(currentMonth < 8) {
+        if(currentMonth < 7) {
             return currentYear - 1;
         } else {
             return currentYear;

@@ -48,6 +48,14 @@ PlayerGame.prototype.getStat = function getStat(statName) {
     return this.stats.getValue(statName);
 };
 
+PlayerGame.prototype.hasStats = function hasStats() {
+    return !this.stats.isEmpty();
+};
+
+PlayerGame.prototype.hasBeenPlayed = function hasBeenPlayed() {
+    return this.date <= new Date();
+};
+
 PlayerGame.prototype.hasAllInputs = function hasAllInputs(inputs) {
     for(var k in inputs) {
         if(!this.inputs.hasValueForInput(inputs[k])) {
