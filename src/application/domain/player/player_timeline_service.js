@@ -31,6 +31,7 @@ PlayerTimelineService.prototype.addMissingGamesToPlayer = function addMissingGam
                             eid: allOrderedGames[i].eid,
                             week: allOrderedGames[i].week,
                             year: allOrderedGames[i].year,
+                            date: allOrderedGames[i].date,
                             opponent: allOrderedGames[i].getOpposingTeam(player.team),
                             points: 0,
                             stats: PlayerStats.create({}),

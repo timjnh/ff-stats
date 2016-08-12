@@ -3,7 +3,7 @@
 var projectionsResource = require('./projections_resource.js'),
     Boom = require('Boom'),
     Joi = require('joi'),
-    seasonService = require('../../../domain/season_service'),
+    seasonService = require('../../../domain/season/season_service'),
     inputsService = require('../../../domain/inputs/inputs_service'),
     Team = require('../../../domain/team/team'),
     networkStrategyFactory = require('../../../domain/network/strategies/network_strategy_factory');

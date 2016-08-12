@@ -1,5 +1,7 @@
 'use strict';
 
+var GameDate = require('./game_date');
+
 module.exports = {
     getCurrentSeason: function getCurrentSeason() {
         var currentYear = new Date().getFullYear(),
@@ -14,5 +16,5 @@ module.exports = {
         }
     },
 
-    getFirstSeason: function getFirstSeason() { return 2009; }
+    getFirstSeason: function getFirstSeason() { return GameDate.getMinYear(); }
 };

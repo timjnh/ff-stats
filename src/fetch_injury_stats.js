@@ -9,7 +9,7 @@ var argv,
     injuryRepository = require('./port/injury/injury_repository'),
     playerRepository = require('./port/player/player_repository'),
     PlayerInjury = require('./application/domain/player/player_injury'),
-    seasonService = require('./application/domain/season_service');
+    seasonService = require('./application/domain/season/season_service');
 
 argv = require('yargs')
     .usage('Usage: npm run fetch-injury-stats-nm -- [options]')

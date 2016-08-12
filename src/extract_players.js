@@ -50,6 +50,7 @@ function addGameToPlayer(playerName, teamName, game, playerStats) {
             eid: game.eid,
             week: game.week,
             year: game.year,
+            date: game.date,
             opponent: opponent,
             points: parseFloat(points.toFixed(1)),
             stats: playerStats,

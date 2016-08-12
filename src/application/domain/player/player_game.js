@@ -3,7 +3,8 @@
 var _ = require('underscore'),
     Joi = require('joi'),
     PlayerStats = require('./player_stats'),
-    InputSet = require('../inputs/input_set');
+    InputSet = require('../inputs/input_set'),
+    GameDate = require('../season/game_date');
 
 function PlayerGame(attributes) {
     var validatedAttributes = Joi.validate(attributes, PlayerGame.schema, { stripUnknown: true });
@@ -19,6 +20,7 @@ PlayerGame.schema = {
     eid: Joi.string().min(1).required(),
     week: Joi.number().min(1).max(17).required(),
     year: Joi.number().required(),
+    date: Joi.date().min(new Date(GameDate.getMinYear())).required(),
     opponent: Joi.string().min(1).required(),
     points: Joi.number().required(),
     stats: Joi.object(PlayerStats.schema).required(),
