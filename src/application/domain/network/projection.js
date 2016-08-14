@@ -17,7 +17,7 @@ function Projection(attributes) {
 
 Projection.schema = {
     projected: Joi.number().optional(),
-    actual: Joi.number().required(),
+    actual: Joi.number().optional(),
     player: Joi.object({
         name: Joi.string().min(1).required(),
         team: Joi.string().min(1).required()

@@ -64,7 +64,7 @@
                             if(projection.projected !== undefined) {
                                 _this.labels.push('Week ' + projection.game.week + ', ' + projection.game.year);
                                 _this.data[0].push(Math.round(projection.projected * 10) / 10);
-                                _this.data[1].push(projection.actual);
+                                _this.data[1].push(projection.actual === undefined ? null : projection.actual);
                             }
                         });
                     });
