@@ -44,5 +44,9 @@ DepthChart.prototype.getPlayersBeforeDepth = function getPlayersBeforeDepth(posi
     return this[position].slice(0, depth);
 };
 
+DepthChart.prototype.getTopPlayerAtPosition = function getTopPlayerAtPosition(position) {
+    return this[position][0];
+};
+
 module.exports = DepthChart;
 

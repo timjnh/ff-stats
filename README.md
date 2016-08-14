@@ -15,7 +15,6 @@ npm run build-networks [--]
 
 ## Stats
 
-* QB injured (WR, RB)
 * Other player at same position injured (WR, RB)
 * Top running back out (QB)
 * Other player at same position targets/touches declining (RB, WR)
