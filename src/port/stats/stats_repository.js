@@ -15,8 +15,7 @@ function StatsRepository() {
 StatsRepository.prototype.findByEid = function findByEid(eid) {
     var _this = this,
         url = sprintf(this.baseUrl, { eid: eid } );
-
-    console.log(url);
+    
     return new q.Promise(function retrieveStats(resolve, reject) {
             superagent
                 .get(url)
