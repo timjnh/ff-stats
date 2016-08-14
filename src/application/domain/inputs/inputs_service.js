@@ -21,6 +21,7 @@ var _ = require('underscore'),
     OutDueToInjury = require('./out_due_to_injury'),
     PlayingInjured = require('./playing_injured'),
     TopTargetOut = require('./top_target_out'),
+    TopToucherOut = require('./top_toucher_out'),
     WeekOfYear = require('./week_of_year'),
     PlayerPosition = require('../player/player_position'),
     TopOfDepthChartInjured = require('./top_of_depth_chart_injured'),
@@ -60,6 +61,7 @@ function InputsService() {
         new RecentSacksByOpponent(3),
         new RecentInterceptionsByOpponent(3),
         new TopTargetOut(),
+        new TopToucherOut(),
         new TopOfDepthChartInjured()
     ].concat(sharedInputs);
 
