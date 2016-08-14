@@ -28,7 +28,9 @@ var _ = require('underscore'),
     RecentReceivingTouchdowns = require('./recent_receiving_touchdowns'),
     RecentReceivingYards = require('./recent_receiving_yards'),
     InputSet = require('./input_set'),
-    RecentTouches = require('./recent_touches');
+    RecentTouches = require('./recent_touches'),
+    RecentTouchesTrend = require('./recent_touches_trend'),
+    RecentTargetsTrend = require('./recent_targets_trend');
 
 function InputsService() {
     var sharedInputs = [
@@ -68,7 +70,8 @@ function InputsService() {
         new RecentPassingTouchdownsAllowedByOpponent(3),
         new RecentRushingTouchdownsAllowedByOpponent(3),
         new TopOfDepthChartInjured(),
-        new RecentTouches(3)
+        new RecentTouches(3),
+        new RecentTouchesTrend(4)
     ].concat(sharedInputs);
 
     this.inputsByPosition[PlayerPosition.WR] = [
@@ -80,7 +83,8 @@ function InputsService() {
         new TopOfDepthChartInjured(),
         new RecentTargets(3),
         new RecentReceivingTouchdowns(3),
-        new RecentReceivingYards(3)
+        new RecentReceivingYards(3),
+        new RecentTargetsTrend(4)
     ].concat(sharedInputs);
 
     this.inputsByPosition[PlayerPosition.DEFENSE] = sharedInputs;
