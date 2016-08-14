@@ -9,4 +9,17 @@ npm run build-networks [--]
 
 # Todo
 
+## General
+
 * Consolidate some of the retrieval scripts into one
+
+## Stats
+
+* QB injured (WR, RB)
+* Other player at same position injured (WR, RB)
+* Top running back out (QB)
+* Other player at same position targets/touches declining (RB, WR)
+* Recent touches decreasing (RB)
+* Recent targets decreasing (WR)
+* Recent touches increasing (RB)
+* Recent targets increasing (WR)
