@@ -134,7 +134,11 @@ bootstrap.start()
         console.log('All done!');
     })
     .catch(function handleError(err) {
-        console.error(err.stack);
+        if(!err.stack) {
+            console.error(err);
+        } else {
+            console.error(err.stack);
+        }
     })
     .finally(function stopEverything() {
         return playerNetworkWorkerService.stop()
