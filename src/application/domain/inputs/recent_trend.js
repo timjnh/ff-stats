@@ -1,6 +1,7 @@
 'use strict';
 
 var _ = require('underscore'),
+    q = require('q'),
     Input = require('./input');
 
 function RecentTrend(gamesToConsider) {
@@ -19,21 +20,23 @@ RecentTrend.prototype.evaluate = function evaluate(player, game) {
         trend = 0.5,
         increment = trend / this.gamesToConsider,
         precedingGames = player.findPrecedingGames(game, this.gamesToConsider),
-        trendValues = precedingGames.map(function getTrendValueForPlayerAndGame(game) {
-            return _this.getTrendValueForPlayerAndGame(player, game);
+        trendValuePromises = precedingGames.map(function getTrendValueForPlayerAndGame(game) {
+            return q.when(_this.getTrendValueForPlayerAndGame(player, game));
         });
 
-    for(var i in trendValues) {
-        if(i > 0) {
-            if(trendValues[i] > trendValues[i - 1]) {
-                trend += increment;
-            } else if(trendValues[i] < trendValues[i - 1]) {
-                trend -= increment;
+    return q.all(trendValuePromises)
+        .then(function calculateTrend(trendValues) {
+            for(var i in trendValues) {
+                if(i > 0) {
+                    if(trendValues[i] > trendValues[i - 1]) {
+                        trend += increment;
+                    } else if(trendValues[i] < trendValues[i - 1]) {
+                        trend -= increment;
+                    }
+                }
             }
-        }
-    }
 
-    return Math.min(1, Math.max(0, trend));
+            return Math.min(1, Math.max(0, trend));        });
 };
 
 RecentTrend.prototype.getTrendValueForPlayerAndGame = function getTrendValueForPlayerAndGame(player, game) {
