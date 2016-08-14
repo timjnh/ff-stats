@@ -15,4 +15,4 @@ npm run build-networks [--]
 
 ## Stats
 
-* Other player at same position targets/touches declining (RB, WR)
+* Look at global stats for trends in cases that are not common (QB injured)

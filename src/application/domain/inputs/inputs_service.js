@@ -39,7 +39,8 @@ var _ = require('underscore'),
     RecentTouches = require('./recent_touches'),
     RecentTouchesTrend = require('./recent_touches_trend'),
     RecentTargetsTrend = require('./recent_targets_trend'),
-    QbInjured = require('./qb_injured');
+    QbInjured = require('./qb_injured'),
+    TopOfDepthChartTargetsTrend = require('./top_of_depth_chart_targets_trend');
 
 function InputsService() {
     var sharedInputs = [
@@ -103,7 +104,8 @@ function InputsService() {
         new RecentReceivingTouchdownsTrend(4),
         new RecentReceivingYards(3),
         new RecentReceivingYardsTrend(4),
-        new QbInjured()
+        new QbInjured(),
+        new TopOfDepthChartTargetsTrend(4)
     ].concat(sharedInputs);
 
     this.inputsByPosition[PlayerPosition.DEFENSE] = sharedInputs;
