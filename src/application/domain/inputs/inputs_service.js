@@ -3,7 +3,7 @@
 var _ = require('underscore'),
     q = require('q'),
     HomeVsAway = require('./home_vs_away'),
-    PointsInRecentGames = require('./points_in_recent_games'),
+    RecentPoints = require('./recent_points'),
     Opponent = require('./opponent'),
     AveragePointsAgainstOpponent = require('./average_points_against_opponent'),
     RecentPointsAgainstOpponent = require('./recent_points_against_opponent'),
@@ -37,7 +37,7 @@ var _ = require('underscore'),
 function InputsService() {
     var sharedInputs = [
         new HomeVsAway(),
-        new PointsInRecentGames(3),
+        new RecentPoints(3),
         new Opponent(),
         new AveragePointsAgainstOpponent(),
         new RecentPointsAgainstOpponent(3),
