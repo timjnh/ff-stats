@@ -1,36 +1,15 @@
 'use strict';
 
 var _ = require('underscore'),
-    Input = require('./input');
+    RecentTrend = require('./recent_trend');
 
 function RecentTouchesTrend(gamesToConsider) {
-    Input.call(this);
-
-    this.gamesToConsider = gamesToConsider;
+    RecentTrend.call(this, gamesToConsider);
 }
-RecentTouchesTrend.prototype = _.create(Input.prototype, { constructor: RecentTouchesTrend });
+RecentTouchesTrend.prototype = _.create(RecentTrend.prototype, { constructor: RecentTouchesTrend });
 
-RecentTouchesTrend.prototype.getName = function getName() {
-    return this.constructor.name + this.gamesToConsider;
-};
-
-RecentTouchesTrend.prototype.evaluate = function evaluate(player, game) {
-    var trend = 0.5,
-        increment = trend / this.gamesToConsider,
-        precedingGames = player.findPrecedingGames(game, this.gamesToConsider),
-        touches = precedingGames.map(function getTouches(game) { return game.stats.touches });
-
-    for(var i in touches) {
-        if(i > 0) {
-            if(touches[i] > touches[i - 1]) {
-                trend += increment;
-            } else if(touches[i] < touches[i - 1]) {
-                trend -= increment;
-            }
-        }
-    }
-
-    return Math.min(1, Math.max(0, trend));
+RecentTouchesTrend.prototype.getTrendValueForGame = function getTrendValueForGame(game) {
+    return game.stats.touches;
 };
 
 module.exports = RecentTouchesTrend;

@@ -1,0 +1,41 @@
+'use strict';
+
+var _ = require('underscore'),
+    Input = require('./input');
+
+function RecentTrend(gamesToConsider) {
+    Input.call(this);
+
+    this.gamesToConsider = gamesToConsider;
+}
+RecentTrend.prototype = _.create(Input.prototype, { constructor: RecentTrend });
+
+RecentTrend.prototype.getName = function getName() {
+    return this.constructor.name + this.gamesToConsider;
+};
+
+RecentTrend.prototype.evaluate = function evaluate(player, game) {
+    var _this = this,
+        trend = 0.5,
+        increment = trend / this.gamesToConsider,
+        precedingGames = player.findPrecedingGames(game, this.gamesToConsider),
+        trendValues = precedingGames.map(function getTrendValueForGame(game) { return _this.getTrendValueForGame(game); });
+
+    for(var i in trendValues) {
+        if(i > 0) {
+            if(trendValues[i] > trendValues[i - 1]) {
+                trend += increment;
+            } else if(trendValues[i] < trendValues[i - 1]) {
+                trend -= increment;
+            }
+        }
+    }
+
+    return Math.min(1, Math.max(0, trend));
+};
+
+RecentTrend.prototype.getTrendValueForGame = function getTrendValueForGame(game) {
+    throw new Error(this.constructor.name + '.getTrendValueForGame not implemented!');
+};
+
+module.exports = RecentTrend;
