@@ -19,3 +19,4 @@ npm run build-networks [--]
 * Other player at same position injured (WR, RB)
 * Top running back out (QB)
 * Other player at same position targets/touches declining (RB, WR)
+* Recent everything trend (WR, RB, QB)
