@@ -55,6 +55,12 @@ function getInputsForPlayer(player) {
 function buildAndSaveInputsForPlayer(player) {
     var inputsPromiseChain = q.when(player);
     player.games.forEach(function(playerGame) {
+
+        // skip any games that have not been played
+        if(!playerGame.hasBeenPlayed()) {
+            return;
+        }
+
         inputsPromiseChain = inputsPromiseChain.then(function getInputsForPlayerAndGame(updatedPlayer) {
             var playerInputList = getInputsForPlayer(updatedPlayer);
 

@@ -4,7 +4,8 @@ var q = require('q'),
     playerRepository = require('../../../../port/player/player_repository'),
     projectionsService = require('../../../domain/network/projections_service'),
     GameDate = require('../../../domain/season/game_date'),
-    teamRepository = require('../../../../port/team/team_repository');
+    teamRepository = require('../../../../port/team/team_repository'),
+    playerInputsService = require('../../../domain/inputs/player_inputs_service');
 
 function ProjectionsResource() {}
 
@@ -25,8 +26,17 @@ ProjectionsResource.prototype.get = function get(player, inputs, networkStrategy
         .then(function buildProjections() {
             return playerRepository.findOneByNameAndTeam(player.name, player.team);
         })
-        .then(function buildProjectionsForPlayer(foundPlayer) {
-            return projectionsService.buildProjectionsForDateRange(foundPlayer, inputs, networkStrategy, startDate, endDate);
+        .then(function buildInputsForFinalGame(player) {
+            var lastGame = player.findLastGameInDateRange(startDate, endDate);
+
+            if(!lastGame.hasBeenPlayed() && !lastGame.hasAllInputs(inputs)) {
+                player = playerInputsService.updateInputsForPlayerAndGame(player, lastGame);
+            }
+
+            return player;
+        })
+        .then(function buildProjectionsForPlayer(player) {
+            return projectionsService.buildProjectionsForDateRange(player, inputs, networkStrategy, startDate, endDate);
         });
 };
 

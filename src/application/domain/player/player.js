@@ -158,4 +158,9 @@ Player.prototype.findGameByWeekAndYear = function findGameByWeekAndYear(week, ye
     return _.findWhere(this.games, { week: week, year: year });
 };
 
+Player.prototype.findLastGameInDateRange = function findLastGameInDateRange(startDate, endDate) {
+    var orderedGames = this.getOrderedGamesInDateRange(startDate, endDate);
+    return orderedGames[orderedGames.length - 1];
+};
+
 module.exports = Player;
