@@ -8,7 +8,7 @@ function RecentReceivingYardsTrend(gamesToConsider) {
 }
 RecentReceivingYardsTrend.prototype = _.create(RecentTrend.prototype, { constructor: RecentReceivingYardsTrend });
 
-RecentReceivingYardsTrend.prototype.getTrendValueForGame = function getTrendValueForGame(game) {
+RecentReceivingYardsTrend.prototype.getTrendValueForPlayerAndGame = function getTrendValueForPlayerAndGame(player, game) {
     return game.stats.receivingYards;
 };
 

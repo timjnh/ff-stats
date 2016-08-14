@@ -8,7 +8,7 @@ function RecentRushingYardsTrend(gamesToConsider) {
 }
 RecentRushingYardsTrend.prototype = _.create(RecentTrend.prototype, { constructor: RecentRushingYardsTrend });
 
-RecentRushingYardsTrend.prototype.getTrendValueForGame = function getTrendValueForGame(game) {
+RecentRushingYardsTrend.prototype.getTrendValueForPlayerAndGame = function getTrendValueForPlayerAndGame(player, game) {
     return game.stats.rushingYards;
 };
 

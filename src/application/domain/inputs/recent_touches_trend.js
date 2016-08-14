@@ -8,7 +8,7 @@ function RecentTouchesTrend(gamesToConsider) {
 }
 RecentTouchesTrend.prototype = _.create(RecentTrend.prototype, { constructor: RecentTouchesTrend });
 
-RecentTouchesTrend.prototype.getTrendValueForGame = function getTrendValueForGame(game) {
+RecentTouchesTrend.prototype.getTrendValueForPlayerAndGame = function getTrendValueForPlayerAndGame(player, game) {
     return game.stats.touches;
 };
 

@@ -19,7 +19,9 @@ RecentTrend.prototype.evaluate = function evaluate(player, game) {
         trend = 0.5,
         increment = trend / this.gamesToConsider,
         precedingGames = player.findPrecedingGames(game, this.gamesToConsider),
-        trendValues = precedingGames.map(function getTrendValueForGame(game) { return _this.getTrendValueForGame(game); });
+        trendValues = precedingGames.map(function getTrendValueForPlayerAndGame(game) {
+            return _this.getTrendValueForPlayerAndGame(player, game);
+        });
 
     for(var i in trendValues) {
         if(i > 0) {
@@ -34,8 +36,8 @@ RecentTrend.prototype.evaluate = function evaluate(player, game) {
     return Math.min(1, Math.max(0, trend));
 };
 
-RecentTrend.prototype.getTrendValueForGame = function getTrendValueForGame(game) {
-    throw new Error(this.constructor.name + '.getTrendValueForGame not implemented!');
+RecentTrend.prototype.getTrendValueForPlayerAndGame = function getTrendValueForPlayerAndGame(player, game) {
+    throw new Error(this.constructor.name + '.getTrendValueForPlayerAndGame not implemented!');
 };
 
 module.exports = RecentTrend;

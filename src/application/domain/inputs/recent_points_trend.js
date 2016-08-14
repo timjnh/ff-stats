@@ -8,7 +8,7 @@ function RecentPointsTrend(gamesToConsider) {
 }
 RecentPointsTrend.prototype = _.create(RecentTrend.prototype, { constructor: RecentPointsTrend });
 
-RecentPointsTrend.prototype.getTrendValueForGame = function getTrendValueForGame(game) {
+RecentPointsTrend.prototype.getTrendValueForPlayerAndGame = function getTrendValueForPlayerAndGame(player, game) {
     return game.points;
 };
 

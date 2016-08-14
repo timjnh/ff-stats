@@ -8,7 +8,7 @@ function RecentTargetsTrend(gamesToConsider) {
 }
 RecentTargetsTrend.prototype = _.create(RecentTrend.prototype, { constructor: RecentTargetsTrend });
 
-RecentTargetsTrend.prototype.getTrendValueForGame = function getTrendValueForGame(game) {
+RecentTargetsTrend.prototype.getTrendValueForPlayerAndGame = function getTrendValueForPlayerAndGame(player, game) {
     return game.stats.targets;
 };
 
