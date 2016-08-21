@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    angular.module('myApp.chartControls', ['myApp.chartControlsService', 'myApp.playersService', 'underscore', 'angular.filter'])
+    angular.module('myApp.chartControls', ['myApp.chartControlsService', 'myApp.playersService', 'myApp.teamsService', 'underscore', 'angular.filter'])
         .directive('chartControls', function() {
             return {
                 restrict: 'E',
@@ -11,14 +11,33 @@
                 controller: 'chartControlsController'
             };
         })
-        .controller('chartControlsController', function(chartControlsService, playersService, inputsService, _, $filter) {
+        .controller('chartControlsController', function(chartControlsService, playersService, teamsService, inputsService, _, $filter) {
             var _this = this;
 
             this.chartControlsService = chartControlsService;
 
-            playersService.getAll().then(function(players) {
-                _this.players = players;
+            this.teamSearchText = '';
+
+            teamsService.getAll().then(function(teams) {
+                _this.teams = teams;
             });
+
+            this.getMatchedTeams = function getMatchTeams(searchText) {
+                if(!_this.teams) {
+                    return [];
+                }
+
+                return _.filter(_this.teams, function doesMatchTeamText(team) {
+                    return team.name.toLowerCase().indexOf(searchText.toLowerCase()) !== -1;
+                });
+            };
+
+            this.findPlayersOnTeam = function findPlayersOnTeam(team) {
+                var _this = this;
+                playersService.findByTeam(team.name).then(function(players) {
+                    _this.players = players;
+                });
+            };
 
             this.playerSearchText = '';
 
@@ -31,14 +50,6 @@
                     return player.name.toLowerCase().indexOf(searchText.toLowerCase()) !== -1 ||
                         player.team.toLowerCase().indexOf(searchText.toLowerCase()) !== -1;
                 });
-            };
-
-            this.getFullPlayerName = function getFullPlayerName(player) {
-                if(!player.name || !player.team) {
-                    return '';
-                }
-
-                return $filter('ucfirst')(player.name + ', ' + player.team);
             };
         });
 })();

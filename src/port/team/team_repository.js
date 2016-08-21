@@ -1,7 +1,7 @@
 'use strict';
 
 var q = require('q'),
-    Team = require('../../application/domain//team/team'),
+    Team = require('../../application/domain/team/team'),
     TeamModel = require('./model/team_model');
 
 function TeamRepository() {

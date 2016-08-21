@@ -6,6 +6,7 @@
             var chartControlsService = {
                 onChangeCallbacks: [],
                 player: null,
+                team: null,
                 inputs: {},
                 allInputsSelected: false,
                 networkStrategy: 'perceptron',

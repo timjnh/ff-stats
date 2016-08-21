@@ -6,8 +6,8 @@ var q = require('q'),
 
 function PlayersResource() {}
 
-PlayersResource.prototype.getAll = function getAll() {
-    return playerRepository.findAll()
+PlayersResource.prototype.findByTeam = function findByTeam(team) {
+    return playerRepository.findAllByTeam(team)
         .then(function convertToPlayerModels(players) {
             return players.map(PlayerModel.create);
         });

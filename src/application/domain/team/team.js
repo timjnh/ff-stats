@@ -17,7 +17,7 @@ function Team(attributes) {
 
 Team.schema = {
     _id: [Joi.object(), Joi.string().length(24)],
-    name: Joi.string().min(1).required(),
+    name: Joi.string().valid(Team.TEAMS).required(),
     games: Joi.array().items(TeamGame.schema).required()
 };
 

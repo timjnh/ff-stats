@@ -1,14 +1,23 @@
 'use strict';
 
-var playersResource = require('./players_resource.js'),
-    Boom = require('Boom');
+var Joi = require('joi'),
+    playersResource = require('./players_resource.js'),
+    Boom = require('Boom'),
+    Team = require('../../../domain/team/team');
 
 module.exports = [
     {
         method: 'GET',
-        path: '/players',
+        path: '/teams/{team}/players',
+        config: {
+            validate: {
+                params: {
+                    team: Joi.string().valid(Team.TEAMS).required()
+                }
+            }
+        },
         handler: function (request, reply) {
-            playersResource.getAll()
+            playersResource.findByTeam(request.params.team)
                 .then(function afterRead(response) {
                     reply(response);
                 })

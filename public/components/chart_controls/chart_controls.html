@@ -1,5 +1,24 @@
 <div layout="column" class="chart-controls" layout-margin>
     <div flex="none" class="chart-controls_header">
+        <md-subheader>Team</md-subheader>
+        <md-divider></md-divider>
+    </div>
+    <div flex>
+        <md-autocomplete md-selected-item="chartControlsController.chartControlsService.team"
+                         md-search-text="chartControlsController.teamSearchText"
+                         md-items="team in chartControlsController.getMatchedTeams(chartControlsController.teamSearchText)"
+                         md-item-text="team.name | ucfirst"
+                         placeholder="Select a team..."
+                         md-selected-item-change="chartControlsController.findPlayersOnTeam(chartControlsController.chartControlsService.team)">
+            <md-item-template>
+                <span md-highlight-text="chartControlsController.teamSearchText" md-highlight-flags="gi">{{team.name | ucfirst}}</span>
+            </md-item-template>
+            <md-not-found>
+                No matches found.
+            </md-not-found>
+        </md-autocomplete>
+    </div>
+    <div flex="none" class="chart-controls_header">
         <md-subheader>Player</md-subheader>
         <md-divider></md-divider>
     </div>
@@ -7,11 +26,12 @@
         <md-autocomplete md-selected-item="chartControlsController.chartControlsService.player"
                          md-search-text="chartControlsController.playerSearchText"
                          md-items="player in chartControlsController.getMatchedPlayers(chartControlsController.playerSearchText)"
-                         md-item-text="chartControlsController.getFullPlayerName(player)"
+                         md-item-text="player.name | ucfirst"
                          placeholder="Select a player..."
-                         md-selected-item-change="chartControlsController.chartControlsService.onPlayerSelected()">
+                         md-selected-item-change="chartControlsController.chartControlsService.onPlayerSelected()",
+                         ng-disabled="!chartControlsController.chartControlsService.team">
             <md-item-template>
-                <span md-highlight-text="chartControlsController.playerSearchText" md-highlight-flags="gi">{{player.name | ucfirst}}, {{player.team | ucfirst}}</span>
+                <span md-highlight-text="chartControlsController.playerSearchText" md-highlight-flags="gi">{{player.name | ucfirst}}</span>
             </md-item-template>
             <md-not-found>
                 No matches found.

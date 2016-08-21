@@ -7,6 +7,7 @@ var _ = require('underscore'),
     routes = [
         require('./src/application/api/http/projections/projections_routes'),
         require('./src/application/api/http/players/players_routes'),
+        require('./src/application/api/http/teams/teams_routes'),
         require('./src/application/api/http/inputs/inputs_routes')
     ];
 

@@ -5,8 +5,8 @@
         .factory('playersService', function($http) {
             var playersService = {};
 
-            playersService.getAll = function getAll() {
-                return $http.get('/players').then(function (response) {
+            playersService.findByTeam = function findByTeam(team) {
+                return $http.get('/teams/' + team + '/players').then(function (response) {
                     return response.data;
                 });
             };
