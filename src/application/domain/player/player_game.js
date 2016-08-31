@@ -65,4 +65,8 @@ PlayerGame.prototype.hasAllInputs = function hasAllInputs(inputs) {
     return true;
 };
 
+PlayerGame.prototype.getGameDate = function getGameDate() {
+    return GameDate.create({ week: this.week, year: this.year });
+};
+
 module.exports = PlayerGame;

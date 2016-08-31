@@ -16,6 +16,7 @@
     "build-network-combos": "node ./src/build_network_combos.js",
     "extract-teams": "node ./src/extract_teams.js",
     "extract-teams-nm": "./node_modules/.bin/nodemon ./src/extract_teams.js",
+    "evolve-networks-nm": "nodemon ./src/evolve_networks.js",
     "postinstall": "bower install",
     "start-app-nm": "./node_modules/.bin/nodemon ./app.js"
   },
