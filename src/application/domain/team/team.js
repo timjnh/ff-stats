@@ -15,12 +15,6 @@ function Team(attributes) {
     Object.freeze(this);
 }
 
-Team.schema = {
-    _id: [Joi.object(), Joi.string().length(24)],
-    name: Joi.string().valid(Team.TEAMS).required(),
-    games: Joi.array().items(TeamGame.schema).required()
-};
-
 Team.create = function create(attributes) {
     if(attributes.games && attributes.games.length > 0) {
         attributes.games = attributes.games.map(function createTeamGame(game) {
@@ -261,6 +255,12 @@ Team.getId = function getId(teamName) {
 
 Team.getThreeLetterCityCode = function getThreeLetterCityCode(teamName) {
     return Team.codes[teamName].threeLetterCityCode;
+};
+
+Team.schema = {
+    _id: [Joi.object(), Joi.string().length(24)],
+    name: Joi.string().valid(Team.TEAMS).required(),
+    games: Joi.array().items(TeamGame.schema).required()
 };
 
 module.exports = Team;
