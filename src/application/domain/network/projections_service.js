@@ -50,8 +50,7 @@ function buildProjection(playerNetwork, player, inputs, game) {
     // if we don't have a network there's nothing we can do at this point
     if(playerNetwork) {
         var inputSet = game.inputs.getSubset(inputs),
-            network = synaptic.Network.fromJSON(playerNetwork.network),
-            projection = network.activate(inputSet.sortAndFlatten());
+            projection = playerNetwork.getNetworkInstance().activate(inputSet.sortAndFlatten());
 
         projected = projection * 100;
     }
@@ -60,12 +59,14 @@ function buildProjection(playerNetwork, player, inputs, game) {
         actual = game.points;
     }
 
-    return Projection.create({
+    var projection = Projection.create({
         projected: projected,
         actual: actual,
         game: game,
         player: player
     });
+
+    return projection;
 }
 
 ProjectionsService.prototype.buildProjectionsFromSingleNetwork = function buildProjectionsFromSingleNetwork(playerNetwork, player, inputs, startDate, endDate) {

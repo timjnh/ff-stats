@@ -2,6 +2,7 @@
 
 var _ = require('underscore'),
     Joi = require('joi'),
+    synaptic = require('synaptic'),
     networkStrategyFactory = require('./strategies/network_strategy_factory');
 
 function PlayerNetwork(attributes) {
@@ -11,6 +12,14 @@ function PlayerNetwork(attributes) {
     }
 
     _.extendOwn(this, validatedAttributes.value);
+
+    var networkInstance;
+    this.getNetworkInstance = function getNetworkInstance() {
+        if(!networkInstance) {
+            networkInstance = synaptic.Network.fromJSON(this.network);
+        }
+        return networkInstance;
+    };
 
     Object.freeze(this);
     Object.freeze(this.player);

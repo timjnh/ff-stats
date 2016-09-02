@@ -53,15 +53,19 @@ PlayerNetworkRepository.prototype._findWithCriteria = function _findWithCriteria
 };
 
 PlayerNetworkRepository.prototype.save = function save(playerNetwork) {
+    var playerNetworkCopy = _.clone(playerNetwork);
+
+    delete playerNetworkCopy.getNetworkInstance;
+
     return q.Promise(function(resolve, reject) {
         if(!playerNetwork._id) {
-            var model = new PlayerNetworkModel(playerNetwork);
+            var model = new PlayerNetworkModel(playerNetworkCopy);
 
             model.save(function(err) {
                 return err ? reject(err) : resolve();
             });
         } else {
-            PlayerNetworkModel.update({ _id: playerNetwork._id }, playerNetwork, function(err) {
+            PlayerNetworkModel.update({ _id: playerNetworkCopy._id }, playerNetworkCopy, function(err) {
                 return err ? reject(err) : resolve();
             });
         }

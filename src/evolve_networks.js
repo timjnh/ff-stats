@@ -1,18 +1,17 @@
 'use strict';
 
 var q = require('q'),
-    _ = require('underscore'),
     logger = require('./lib/logger'),
     bootstrap = require('./bootstrap'),
-    math = require('mathjs'),
     inputsService = require('./application/domain/inputs/inputs_service'),
     playerRepository = require('./port/player/player_repository'),
     playerNetworkService = require('./application/domain/network/player_network_service'),
     projectionsService = require('./application/domain/network/projections_service'),
-    genomeService = require('./application/domain/evolution/genome_service');
+    genomeService = require('./application/domain/evolution/genome_service'),
+    GenomeSet = require('./application/domain/evolution/genome_set');
 
-var playerName = 'L Blount',
-    teamName = 'patriots',
+var playerName = 'R Cobb',
+    teamName = 'packers',
     genomeCount = 32,
     strategy = require('./application/domain/network/strategies/perceptron_strategy').NAME;
 
@@ -69,15 +68,27 @@ bootstrap.start()
             startDate = middlePlayerGame.getGameDate(),
             endDate = playerGames[playerGames.length - 1].getGameDate();
 
+        console.log('Building projections...');
+
         playerNetworks.map(function calculateProjectionForNetwork(playerNetwork) {
             var projections = projectionsService.buildProjectionsFromSingleNetwork(playerNetwork, player, inputsList, startDate, endDate);
-            fitnessValues.push(calculateStandardDeviationFromProjections(projections));
+            fitnessValues.push(calculateFitnessFromProjections(projections));
         });
 
         return fitnessValues
     })
-    .then(function displayFitnesses(fitnessValues) {
-        console.log(fitnessValues);
+    .then(function assignFitnessValuesToGenomes(fitnessValues) {
+        var updatedGenomes = [];
+        for(var i = 0; i < fitnessValues.length; ++i) {
+            updatedGenomes.push(genomeSet.genomes[i].setFitness(fitnessValues[i]));
+        }
+        return GenomeSet.create({ inputsList: genomeSet.inputsList, genomes: updatedGenomes });
+    })
+    .then(function buildNextGeneration(previousGenerationGenomeSet) {
+        return genomeService.buildNextGeneration(previousGenerationGenomeSet);
+    })
+    .then(function showNextGeneration(nextGenerationGenomeSet) {
+        console.log(JSON.stringify(nextGenerationGenomeSet));
     })
     .catch(function handleError(err) {
         logger.error(err);
@@ -88,18 +99,13 @@ bootstrap.start()
     .done();
 
 
-function calculateStandardDeviationFromProjections(projections) {
-    var errors = projections.map(function calculateError(projection) {
-        return projection.actual - projection.projected;
-    });
+function calculateFitnessFromProjections(projections) {
+    var totalError = projections.reduce(function(total, projection) {
+        if(isNaN(projection.projected)) {
+            return total;
+        }
+        return total + (projection.actual - projection.projected);
+    }, 0);
 
-    // first value can be NaN if this was the player's first game.  if there are any after that, it's bad
-    if(isNaN(errors[0])) {
-        errors.shift();
-    }
-    if(_.filter(errors, isNaN).length > 0) {
-        throw 'Unexpected NaN value when calculating standard deviation for projections!';
-    }
-
-    return math.std(errors);
+    return Math.abs(1 / (totalError / projections.length));
 }
