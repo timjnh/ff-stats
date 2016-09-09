@@ -56,7 +56,7 @@ function selectParents(genomes) {
         secondParent = selectParent(genomes);
     } while(_.isEqual(secondParent.chromosomes, firstParent.chromosomes))
 
-    console.log('Selecting parents ' + genomes.indexOf(firstParent) + ' and ' + genomes.indexOf(secondParent));
+    console.log('Selecting parents ' + genomes.indexOf(firstParent) + ' (' + firstParent.fitness + ') and ' + genomes.indexOf(secondParent) + ' (' + secondParent.fitness + ')');
 
     return [firstParent, secondParent];
 }
@@ -110,7 +110,7 @@ function crossover(parentGenomes) {
 function mutate(genome) {
     var mutatedChromosomes = [];
     for(var i = 0; i < genome.chromosomes.length; ++i) {
-        mutatedChromosomes[i] = Math.random() < MUTATION_RATE ? !genome.chromosomes[i] : genome.chromosomes[i];
+        mutatedChromosomes.push(Math.random() < MUTATION_RATE ? genome.chromosomes[i] ^ 1 : genome.chromosomes[i]);
     }
     return genome.setChromosomes(mutatedChromosomes);
 }

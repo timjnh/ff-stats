@@ -16,7 +16,7 @@ function Genome(attributes) {
 Genome.schema = {
     chromosomes: Joi.array().items(
         Joi.number().valid(0, 1)
-    ).required(),
+    ).length(24).required(),
     fitness: Joi.number().min(0).optional()
 };
 
