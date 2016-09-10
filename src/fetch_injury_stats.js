@@ -40,7 +40,7 @@ function addInjuriesToPlayer(name, team, injuries) {
             return playerRepository.save(player);
         })
         .catch(function ignorePlayerNotFound(e) {
-            if(!e.indexOf || e.indexOf('not found') === -1) {
+            if(!e.message || e.message.indexOf('not found') === -1) {
                 return q.reject(e);
             } else {
                 logger.debug('No player found for "' + name + '" of the ' + team);
