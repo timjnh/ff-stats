@@ -10,7 +10,7 @@ var args,
     projectionsService = require('./application/domain/network/projections_service'),
     networkStrategyFactory = require('./application/domain/network/strategies/network_strategy_factory'),
     PerceptronStrategy = require('./application/domain/network/strategies/perceptron_strategy'),
-    playerNetworkWorkerService = require('./application/domain/network/player_network_worker_service'),
+    workerService = require('./lib/worker/worker_service'),
     GameDate = require('./application/domain/season/game_date');
 
 args = require('yargs')
@@ -107,8 +107,8 @@ function getPlayers() {
 }
 
 bootstrap.start()
-    .then(function startPlayerNetworkWorkerService() {
-        return playerNetworkWorkerService.start();
+    .then(function startWorkerService() {
+        return workerService.start();
     })
     .then(getPlayers)
     .then(function buildAndSavePlayerInputs(players) {
@@ -141,7 +141,7 @@ bootstrap.start()
         }
     })
     .finally(function stopEverything() {
-        return playerNetworkWorkerService.stop()
+        return workerService.stop()
             .then(bootstrap.stop.bind(bootstrap));
     })
     .done();
