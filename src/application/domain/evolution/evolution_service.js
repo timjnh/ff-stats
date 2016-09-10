@@ -3,7 +3,7 @@
 var q = require('q'),
     assert = require('assert'),
     genomeService = require('./genome_service'),
-    playerNetworkService = require('../network/player_network_service'),
+    playerNetworkWorkerService = require('../network/player_network_worker_service'),
     projectionsService = require('../network/projections_service'),
     GenomeSet = require('./genome_set');
 
@@ -48,7 +48,7 @@ function generateNetworks() {
             throw new Error('Not all inputs in ' + genomeInputsList.join(', ') + ' exist for player "' + _this.player.name + '" of "' + _this.player.team + '" for week ' + _this.lastTrainingGame.week + ' of ' + _this.lastTrainingGame.year);
         }
 
-        networkPromise = playerNetworkService.buildNetworkUpToGame(
+        networkPromise = playerNetworkWorkerService.buildNetworkUpToGame(
             _this.player,
             _this.lastTrainingGame,
             genomeInputsList,

@@ -13,6 +13,7 @@ var argv,
     PlayerStats = require('./application/domain/player/player_stats'),
     Player = require('./application/domain/player/player'),
     PlayerGame = require('./application/domain/player/player_game'),
+    workerService = require('./lib/worker/worker_service'),
     extractPlayerWorkerService = require('./application/domain/player/extract_player_worker_service'),
     logger = require('./lib/logger');
 
@@ -183,8 +184,8 @@ function getGamesAsStream() {
 }
 
 bootstrap.start()
-    .then(function startExtractPlayerWorkerService() {
-        return extractPlayerWorkerService.start();
+    .then(function startWorkerService() {
+        return workerService.start();
     })
     .then(getGamesAsStream)
     .then(function extractPlayers(gameStream) {
@@ -223,7 +224,7 @@ bootstrap.start()
         console.error(err);
     })
     .finally(function stopEverything() {
-        return extractPlayerWorkerService.stop()
+        return workerService.stop()
             .then(bootstrap.stop.bind(bootstrap));
     })
     .done();

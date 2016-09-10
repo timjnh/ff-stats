@@ -4,6 +4,7 @@ var q = require('q'),
     logger = require('./lib/logger'),
     bootstrap = require('./bootstrap'),
     inputsService = require('./application/domain/inputs/inputs_service'),
+    workerService = require('./lib/worker/worker_service'),
     playerRepository = require('./port/player/player_repository'),
     EvolutionService = require('./application/domain/evolution/evolution_service'),
     LSTMStrategy = require('./application/domain/network/strategies/lstm_strategy');
@@ -16,10 +17,12 @@ var playerName = 'R Cobb',
 // from the actual
 
 bootstrap.start()
+    .then(function startWorkerService() {
+        return workerService.start();
+    })
     .then(function findPlayer() {
         return playerRepository.findOneByNameAndTeam(playerName, teamName);
     })
-
     .then(function evolve(player) {
         var inputsList = inputsService.getInputsListForPosition(player.position),
             playerGames = player.getOrderedGames(),
@@ -52,7 +55,8 @@ bootstrap.start()
         logger.error(err);
     })
     .finally(function stopEverything() {
-        return bootstrap.stop();
+        return workerService.stop()
+            .then(bootstrap.stop.bind(bootstrap));
     })
     .done();
 

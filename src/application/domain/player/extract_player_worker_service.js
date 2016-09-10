@@ -1,27 +1,20 @@
-// TODO - find a better place for this to live
-module.exports = (function() {
-    'use strict';
+ 'use strict';
 
-    var _ = require('underscore'),
-        WorkerService = require('../../../lib/worker/worker_service');
+var _ = require('underscore'),
+    workerService = require('../../../lib/worker/worker_service'),
+    extractPlayerMessageHandler = require('./extract_player_message_handler');
 
-    function ExtractPlayerWorkerService() {
-        WorkerService.call(this, __dirname + '/../../../extract_player_worker.js');
-    }
-    ExtractPlayerWorkerService.prototype = _.create(WorkerService.prototype, { constructor: ExtractPlayerWorkerService });
+function ExtractPlayerWorkerService() {
+    workerService.registerMsgHandler(extractPlayerMessageHandler);
+}
 
-    ExtractPlayerWorkerService.prototype.onMsgReceived = function onMsgReceived(payload) {
-        return payload; // nothing to see here
+ExtractPlayerWorkerService.prototype.addGameToPlayer = function addGameToPlayer(playerName, teamName, playerGame) {
+    var payload = {
+        playerName: playerName,
+        teamName: teamName,
+        playerGame: playerGame
     };
+    return workerService.queueJob(extractPlayerMessageHandler.command, payload);
+};
 
-    ExtractPlayerWorkerService.prototype.addGameToPlayer = function addGameToPlayer(playerName, teamName, playerGame) {
-        var payload = {
-            playerName: playerName,
-            teamName: teamName,
-            playerGame: playerGame
-        };
-        return this.queueJob('addGameToPlayer', payload);
-    };
-
-    return new ExtractPlayerWorkerService();
-})();
+module.exports = new ExtractPlayerWorkerService();

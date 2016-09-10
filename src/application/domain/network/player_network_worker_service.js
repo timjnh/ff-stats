@@ -1,33 +1,20 @@
-// TODO - find a better place for this to live
-module.exports = (function() {
-    'use strict';
+'use strict';
 
-    var _ = require('underscore'),
-        WorkerService = require('../../../lib/worker/worker_service'),
-        PlayerNetwork = require('./player_network');
+var workerService = require('../../../lib/worker/worker_service'),
+    playerNetworkMessageHandler = require('./player_network_service_message_handler');
 
-    function PlayerNetworkWorkerService() {
-        WorkerService.call(this, __dirname + '/../../../player_network_worker.js');
-    }
-    PlayerNetworkWorkerService.prototype = _.create(WorkerService.prototype, { constructor: PlayerNetworkWorkerService });
+function PlayerNetworkWorkerService() {
+    workerService.registerMsgHandler(playerNetworkMessageHandler);
+}
 
-    PlayerNetworkWorkerService.prototype.onMsgReceived = function onMsgReceived(payload) {
-        var playerNetwork = payload;
-        if(playerNetwork) {
-            playerNetwork = PlayerNetwork.create(playerNetwork);
-        }
-        return playerNetwork;
+PlayerNetworkWorkerService.prototype.buildNetworkUpToGame = function buildNetworkUpToGame(player, game, inputs, strategy) {
+    var payload = {
+        player: player,
+        game: game,
+        inputs: inputs,
+        strategy: strategy
     };
+    return workerService.queueJob(playerNetworkMessageHandler.command, payload);
+};
 
-    PlayerNetworkWorkerService.prototype.buildNetworkUpToGame = function buildNetworkUpToGame(player, game, inputs, strategy) {
-        var payload = {
-            player: player,
-            game: game,
-            inputs: inputs,
-            strategy: strategy
-        };
-        return this.queueJob('buildNetworkUpToGame', payload);
-    };
-
-    return new PlayerNetworkWorkerService();
-})();
+module.exports = new PlayerNetworkWorkerService();

@@ -3,7 +3,7 @@
 var _ = require('underscore'),
     Hapi = require('hapi'),
     bootstrap = require('./src/bootstrap'),
-    playerNetworkWorkerService = require('./src/application/domain/network/player_network_worker_service'),
+    workerService = require('./src/worker/worker_service'),
     routes = [
         require('./src/application/api/http/projections/projections_routes'),
         require('./src/application/api/http/players/players_routes'),
@@ -37,7 +37,7 @@ server.register(require('inert'), function (err) {
     server.start(function () {
         bootstrap.start()
             .then(function startPlayerNetworkService() {
-                return playerNetworkWorkerService.start();
+                return workerService.start();
             }).then(function inform() {
                 console.log('Server running at:', server.info.uri);
             });
@@ -45,7 +45,7 @@ server.register(require('inert'), function (err) {
 });
 
 process.once('SIGUSR2', function() {
-    playerNetworkWorkerService.stop()
+    workerService.stop()
         .then(bootstrap.stop.bind(bootstrap))
         .then(function stopServerAndKill() {
             server.stop(function killProcess() {

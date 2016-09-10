@@ -2,20 +2,23 @@
 
 var q = require('q'),
     cluster = require('cluster'),
-    logger = require('../logger');
+    logger = require('../logger'),
+    bootstrap = require('../../bootstrap');
 
-function Worker() {}
+function Worker() {
+    this.messageHandlers = {};
+}
 
 Worker.prototype.start = function start() {
     var _this = this,
         deferred = q.defer();
 
-    logger.info('Started ' + this.constructor.name + ' worker ' + cluster.worker.id + '...');
+    logger.info('Started worker ' + cluster.worker.id + '...');
 
     process.on('message', function(msg) {
         logger.debug('Worker ' + cluster.worker.id + ' received a "' + msg.command + '" event');
 
-        _this.onMsgReceived(msg.payload)
+        _this.onMsgReceived(msg.command, msg.payload)
             .then(function respondToMaster(payload) {
                 _this.respondToMaster(msg, payload);
             })
@@ -28,20 +31,43 @@ Worker.prototype.start = function start() {
 
     return deferred.promise
         .then(function inform() {
-            logger.debug('Stopping ' + _this.constructor.name + ' worker #' + cluster.worker.id + '...');
+            logger.debug('Stopping worker #' + cluster.worker.id + '...');
         });
-};
-
-Worker.prototype.onMsgReceived = function onMsgReceived(payload) {
-    throw 'The Worker subclass "' + this.constructor.name + '" must implement onMsgReceived';
 };
 
 Worker.prototype.respondToMaster = function respondToMaster(msg, payload) {
     process.send({
         deferredId: msg.deferredId,
         workerId: cluster.worker.id,
-        payload: payload
+        payload: payload,
+        command: msg.command
     });
 };
 
-module.exports = Worker;
+Worker.prototype.onMsgReceived = function onMsgReceived(command, payload) {
+    if(!this.messageHandlers[command]) {
+        throw new Error('Worker does not know how to handle command "' + command + '"!');
+    }
+
+    return this.messageHandlers[command].onMsgReceived(payload);
+};
+
+Worker.prototype.registerMsgHandler = function registerMsgHandler(handler) {
+    if(!handler.command) {
+        throw new Error('Cannot register a handler if we don\t have a command!');
+    }
+
+    return this.messageHandlers[handler.command] = handler;
+};
+
+bootstrap.start()
+    .then(function waitForWork() {
+        var worker = new Worker();
+
+        worker.registerMsgHandler(require('../../application/domain/network/player_network_service_message_handler'));
+        worker.registerMsgHandler(require('../../application/domain/player/extract_player_message_handler'));
+
+        return worker.start();
+    })
+    .finally(bootstrap.stop.bind(bootstrap))
+    .done();
