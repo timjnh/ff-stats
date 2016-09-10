@@ -3,7 +3,7 @@
 var _ = require('underscore'),
     Hapi = require('hapi'),
     bootstrap = require('./src/bootstrap'),
-    workerService = require('./src/worker/worker_service'),
+    workerService = require('./src/lib/worker/worker_service'),
     routes = [
         require('./src/application/api/http/projections/projections_routes'),
         require('./src/application/api/http/players/players_routes'),
@@ -36,7 +36,7 @@ server.register(require('inert'), function (err) {
 
     server.start(function () {
         bootstrap.start()
-            .then(function startPlayerNetworkService() {
+            .then(function startWorkerService() {
                 return workerService.start();
             }).then(function inform() {
                 console.log('Server running at:', server.info.uri);
