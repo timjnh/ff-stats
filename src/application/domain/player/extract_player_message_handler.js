@@ -17,8 +17,6 @@ ExtractPlayerMessageHandler.prototype.onMsgReceived = function onMsgReceived(pay
         teamName = payload.teamName,
         playerGame = PlayerGame.create(payload.playerGame);
 
-    console.log('hi');
-
     return playerRepository.findOneByNameAndTeam(playerName, teamName, true)
         .then(function addGameToPlayer(player) {
             return player.addGame(playerGame);
