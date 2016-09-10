@@ -1,6 +1,7 @@
 'use strict';
 
 var q = require('q'),
+    _ = require('underscore'),
     logger = require('./lib/logger'),
     bootstrap = require('./bootstrap'),
     inputsService = require('./application/domain/inputs/inputs_service'),
@@ -32,22 +33,23 @@ bootstrap.start()
                 lastTrainingGame,
                 inputsList,
                 {
-                    genomeCount: 32,
+                    genomeCount: 10,
                     strategy: LSTMStrategy.NAME
                 }
             ),
             evolutionPromiseChain = q.when();
 
-        for(var i = 0; i < 1000; ++i) {
+        _.range(1, 1000).forEach(function buildEvolutionPromiseChain(generation) {
             evolutionPromiseChain = evolutionPromiseChain.then(function() {
+                logger.info('Starting generation ' + generation + '...');
                 return evolutionService.evolve()
                     .then(showLastGeneration.bind(evolutionService))
                     .then(function displayFittestGenome() {
-                        console.log("\n\n" + 'Witness the fitness:');
-                        console.log(evolutionService.getMaximumGenomeFitness() + ': ' + evolutionService.getFittestInputList().join(', '));
+                        logger.info("\n\n" + 'Witness the fitness:');
+                        logger.info(evolutionService.getMaximumGenomeFitness() + ': ' + evolutionService.getFittestInputList().join(', '));
                     });
             });
-        }
+        });
 
         return evolutionPromiseChain;
     })
@@ -82,6 +84,6 @@ function showLastGeneration() {
     });
 
     for(var j = 0; j < genomeRecords.length; ++j) {
-        console.log(genomeRecords[j].fitness + ': ', genomeRecords[j].inputsList.join(', '));
+        logger.info(genomeRecords[j].fitness + ': ', genomeRecords[j].inputsList.join(', '));
     }
 }
