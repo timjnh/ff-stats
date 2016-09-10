@@ -4,7 +4,7 @@ var q = require('q'),
     assert = require('assert'),
     genomeService = require('./genome_service'),
     playerNetworkWorkerService = require('../network/player_network_worker_service'),
-    projectionsService = require('../network/projections_service'),
+    projectionsWorkerService = require('../network/projections_worker_service'),
     GenomeSet = require('./genome_set');
 
 function EvolutionService(player, lastTrainingGame, inputsList, options) {
@@ -26,7 +26,7 @@ function EvolutionService(player, lastTrainingGame, inputsList, options) {
 EvolutionService.prototype.evolve = function evolve() {
     var _this = this;
     return generateNetworks.bind(this)()
-        .then(calculateNetworkProjections.bind(this))
+        .then(calculateFitnessValuesForNetworks.bind(this))
         .then(assignFitnessValuesToGenomes.bind(this))
         .then(function buildNextGeneration(previousGenerationGenomeSet) {
             _this.lastGenomeSet = previousGenerationGenomeSet;
@@ -61,20 +61,20 @@ function generateNetworks() {
     return q.all(networkPromises);
 }
 
-function calculateNetworkProjections(playerNetworks) {
+function calculateFitnessValuesForNetworks(playerNetworks) {
     var _this = this,
-        fitnessValues = [],
+        fitnessPromises,
         startDate = this.lastTrainingGame.getGameDate(),
         endDate = this.playerGames[this.playerGames.length - 1].getGameDate();
 
     console.log('Building projections...');
 
-    playerNetworks.map(function calculateProjectionForNetwork(playerNetwork) {
-        var projections = projectionsService.buildProjectionsFromSingleNetwork(playerNetwork, _this.player, _this.inputsList, startDate, endDate);
-        fitnessValues.push(calculateFitnessFromProjections(projections));
+    fitnessPromises = playerNetworks.map(function calculateProjectionForNetwork(playerNetwork) {
+        return projectionsWorkerService.buildProjectionsFromSingleNetwork(playerNetwork, _this.player, _this.inputsList, startDate, endDate)
+            .then(calculateFitnessFromProjections);
     });
 
-    return fitnessValues
+    return q.all(fitnessPromises);
 }
 
 function calculateFitnessFromProjections(projections) {

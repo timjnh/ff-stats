@@ -49,7 +49,7 @@ Worker.prototype.onMsgReceived = function onMsgReceived(command, payload) {
         throw new Error('Worker does not know how to handle command "' + command + '"!');
     }
 
-    return this.messageHandlers[command].onMsgReceived(payload);
+    return q.when(this.messageHandlers[command].onMsgReceived(payload));
 };
 
 Worker.prototype.registerMsgHandler = function registerMsgHandler(handler) {
@@ -66,6 +66,7 @@ bootstrap.start()
 
         worker.registerMsgHandler(require('../../application/domain/network/player_network_service_message_handler'));
         worker.registerMsgHandler(require('../../application/domain/player/extract_player_message_handler'));
+        worker.registerMsgHandler(require('../../application/domain/network/projections_service_message_handler'));
 
         return worker.start();
     })
