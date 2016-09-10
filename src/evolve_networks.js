@@ -33,7 +33,7 @@ bootstrap.start()
                 lastTrainingGame,
                 inputsList,
                 {
-                    genomeCount: 10,
+                    genomeCount: 500,
                     strategy: LSTMStrategy.NAME
                 }
             ),
