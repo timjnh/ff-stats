@@ -25,7 +25,8 @@ Worker.prototype.start = function start() {
             .done();
     });
 
-    cluster.on('disconnect', function resolveDeferred() {
+    cluster.worker.on('disconnect', function resolveDeferred() {
+        logger.debug('Worker ' + cluster.worker.id + ' was disconnected.  Terminating...');
         deferred.resolve();
     });
 

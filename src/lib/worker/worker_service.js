@@ -5,7 +5,8 @@ var q = require('q'),
     cluster = require('cluster'),
     logger = require('../logger');
 
-var workQueue = [],
+var MAX_MESSAGES_PER_WORKER = 1000,
+    workQueue = [],
     availableWorkers = [],
     workerDeferredId = 0,
     workerDeferreds = {},
@@ -31,7 +32,6 @@ WorkerService.prototype.start = function start() {
 
 function startWorkers() {
     var i,
-        worker,
         numWorkersToStart = os.cpus().length,
         onlineWorkers = 0,
         deferred = q.defer();
@@ -48,12 +48,28 @@ function startWorkers() {
     });
 
     for(i = 0; i < numWorkersToStart; i++) {
-        worker = cluster.fork();
-        worker.on('message', receivedMessage.bind(this));
-        availableWorkers.push(worker);
+        startWorker();
     }
 
     return deferred.promise;
+}
+
+function startWorker() {
+    var worker = cluster.fork();
+    worker.messagesHandled = 0;
+
+    worker.on('message', receivedMessage);
+    availableWorkers.push(worker);
+}
+
+function restartWorker(workerId) {
+    shutdownWorker(workerId);
+    startWorker();
+}
+
+function shutdownWorker(workerId) {
+    logger.debug('Stopping worker ' + workerId);
+    cluster.workers[workerId].kill();
 }
 
 WorkerService.prototype.registerMsgHandler = function registerMsgHandler(handler) {
@@ -74,7 +90,7 @@ WorkerService.prototype.stop = function stop() {
         queueCheckInterval = null;
     }
 
-    cluster.disconnect(function resolvePromise() {
+    cluster.disconnect(function resolveStopPromise() {
         deferred.resolve();
     });
     return deferred.promise;
@@ -97,7 +113,13 @@ function checkQueue() {
 function receivedMessage(msg) {
     var deferred = workerDeferreds[msg.deferredId];
 
-    availableWorkers.push(cluster.workers[msg.workerId]);
+    cluster.workers[msg.workerId].messagesHandled += 1;
+
+    if(cluster.workers[msg.workerId].messagesHandled >= MAX_MESSAGES_PER_WORKER) {
+        restartWorker(msg.workerId);
+    } else {
+        availableWorkers.push(cluster.workers[msg.workerId]);
+    }
 
     logger.debug('Job completed by worker ' + msg.workerId + '...');
 
