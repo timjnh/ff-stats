@@ -18,6 +18,7 @@ GenomeRepository.prototype.findOneByChromosomes = function findOneByChromosomes(
     return findWithCriteria.bind(this)({
             'player.name': this.player.name,
             'player.team': this.player.team,
+            strategy: this.strategy,
             chromosomes: chromosomes
         })
         .then(function first(genomes) {
