@@ -1,6 +1,7 @@
 'use strict';
 
-var q = require('q'),
+var _ = require('underscore'),
+    q = require('q'),
     assert = require('assert'),
     logger = require('../../../lib/logger'),
     genomeService = require('./genome_service'),
@@ -14,7 +15,7 @@ function EvolutionService(player, lastTrainingGame, inputsList, options) {
     assert(typeof options.strategy == 'string', 'options.strategy must be a string');
 
     this.player = player;
-    this.playerGames = player.getOrderedGames(),
+    this.playerGames = _.filter(player.getOrderedGames(), function onlyPlayedGames(game) { return game.hasBeenPlayed(); }),
     this.lastTrainingGame = lastTrainingGame;
     this.inputsList = inputsList;
     this.options = options;
