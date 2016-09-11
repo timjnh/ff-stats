@@ -39,7 +39,15 @@ GenomeService.prototype.buildNextGeneration = function buildNextGeneration(genom
     while(nextGenerationGenomes.length < genomeSet.genomes.length) {
         parentGenomes = selectParents(genomeSet.genomes);
         childGenomes = breed(parentGenomes);
-        nextGenerationGenomes = nextGenerationGenomes.concat(childGenomes);
+
+        nextGenerationGenomes = _.uniq(
+            nextGenerationGenomes.concat(childGenomes),
+            false,
+            function calculateComparator(genome) {
+                var chromosomesList = genomeSet.getInputListForGenome(genome);
+                chromosomesList.sort();
+                return chromosomesList.join();
+            });
     }
 
     return GenomeSet.create({ inputsList: genomeSet.inputsList, genomes: nextGenerationGenomes });
