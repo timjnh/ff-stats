@@ -2,9 +2,11 @@
 
 var q = require('q'),
     assert = require('assert'),
+    logger = require('../../../lib/logger'),
     genomeService = require('./genome_service'),
     playerNetworkWorkerService = require('../network/player_network_worker_service'),
     projectionsWorkerService = require('../network/projections_worker_service'),
+    GenomeRepository = require('../../../port/genome/genome_repository'),
     GenomeSet = require('./genome_set');
 
 function EvolutionService(player, lastTrainingGame, inputsList, options) {
@@ -21,14 +23,15 @@ function EvolutionService(player, lastTrainingGame, inputsList, options) {
     this.genomeSet = genomeService.generateGenomes(inputsList, options.genomeCount);
 
     this.fittestGenome = null;
+
+    this.genomeRepository = new GenomeRepository(player, inputsList, options.strategy);
 }
 
 EvolutionService.prototype.evolve = function evolve() {
     var _this = this;
-    return generateNetworks.bind(this)()
-        .then(calculateFitnessValuesForNetworks.bind(this))
-        .then(assignFitnessValuesToGenomes.bind(this))
-        .then(function buildNextGeneration(previousGenerationGenomeSet) {
+    return findOrGenerateFitnessValuesForGenomes.bind(this)()
+        .then(function buildNextGeneration(genomes) {
+            var previousGenerationGenomeSet = GenomeSet.create({ inputsList: _this.genomeSet.inputsList, genomes: genomes });
             _this.lastGenomeSet = previousGenerationGenomeSet;
 
             _this.genomeSet = genomeService.buildNextGeneration(previousGenerationGenomeSet);
@@ -36,45 +39,60 @@ EvolutionService.prototype.evolve = function evolve() {
         });
 };
 
-function generateNetworks() {
+function findOrGenerateFitnessValuesForGenomes() {
     var _this = this,
-        networkPromises = [];
+        genomePromises;
 
-    this.genomeSet.genomes.forEach(function generateNetworkForGenome(genome) {
-        var networkPromise,
-            genomeInputsList = _this.genomeSet.getInputListForGenome(genome);
+    genomePromises = this.genomeSet.genomes.map(function findOrGenerateFitnessValuesForGenome(genome) {
+        var genomeInputsList = _this.genomeSet.getInputListForGenome(genome);
 
-        if(!_this.lastTrainingGame.hasAllInputs(genomeInputsList)) {
-            throw new Error('Not all inputs in ' + genomeInputsList.join(', ') + ' exist for player "' + _this.player.name + '" of "' + _this.player.team + '" for week ' + _this.lastTrainingGame.week + ' of ' + _this.lastTrainingGame.year);
-        }
-
-        networkPromise = playerNetworkWorkerService.buildNetworkUpToGame(
-            _this.player,
-            _this.lastTrainingGame,
-            genomeInputsList,
-            _this.options.strategy
-        );
-
-        networkPromises.push(networkPromise);
+        return _this.genomeRepository.findOneByChromosomes(genomeInputsList)
+            .then(function generateGenomeIfNotExists(foundGenome) {
+                if(foundGenome && foundGenome.fitness) {
+                    return foundGenome;
+                } else {
+                    return calculateGenomeFitness.bind(_this)(genome)
+                        .then(function saveGenome(updatedGenome) {
+                            return _this.genomeRepository.save(updatedGenome);
+                        });
+                }
+            });
     });
 
-    return q.all(networkPromises);
+    return q.all(genomePromises);
 }
 
-function calculateFitnessValuesForNetworks(playerNetworks) {
+function calculateGenomeFitness(genome) {
     var _this = this,
-        fitnessPromises,
-        startDate = this.lastTrainingGame.getGameDate(),
+        genomeInputsList = this.genomeSet.getInputListForGenome(genome);
+
+    if(!this.lastTrainingGame.hasAllInputs(genomeInputsList)) {
+        throw new Error('Not all inputs in ' + genomeInputsList.join(', ') + ' exist for player "' + this.player.name + '" of "' + this.player.team + '" for week ' + this.lastTrainingGame.week + ' of ' + this.lastTrainingGame.year);
+    }
+
+    return playerNetworkWorkerService.buildNetworkUpToGame(
+            this.player,
+            this.lastTrainingGame,
+            genomeInputsList,
+            this.options.strategy)
+        .then(calculateFitnessValueForNetwork.bind(this))
+        .then(function assignFitnessValueToGenome(fitnessValue) {
+            var updatedGenome = genome.setFitness(fitnessValue);
+
+            if(!_this.fittestGenome || updatedGenome.fitness > _this.fittestGenome.fitness) {
+                _this.fittestGenome = updatedGenome;
+            }
+
+            return updatedGenome;
+        });
+}
+
+function calculateFitnessValueForNetwork(playerNetwork) {
+    var startDate = this.lastTrainingGame.getGameDate(),
         endDate = this.playerGames[this.playerGames.length - 1].getGameDate();
 
-    console.log('Building projections...');
-
-    fitnessPromises = playerNetworks.map(function calculateProjectionForNetwork(playerNetwork) {
-        return projectionsWorkerService.buildProjectionsFromSingleNetwork(playerNetwork, _this.player, _this.inputsList, startDate, endDate)
-            .then(calculateFitnessFromProjections);
-    });
-
-    return q.all(fitnessPromises);
+    return q.when(projectionsWorkerService.buildProjectionsFromSingleNetwork(playerNetwork, this.player, this.inputsList, startDate, endDate))
+        .then(calculateFitnessFromProjections);
 }
 
 function calculateFitnessFromProjections(projections) {
@@ -86,19 +104,6 @@ function calculateFitnessFromProjections(projections) {
     }, 0);
 
     return 1 / (totalError / projections.length);
-}
-
-function assignFitnessValuesToGenomes(fitnessValues) {
-    var updatedGenomes = [];
-    for(var i = 0; i < fitnessValues.length; ++i) {
-        updatedGenomes.push(this.genomeSet.genomes[i].setFitness(fitnessValues[i]));
-
-        if(this.fittestGenome == null || this.fittestGenome.fitness < fitnessValues[i]) {
-            this.fittestGenome = updatedGenomes[i];
-        }
-    }
-
-    return GenomeSet.create({ inputsList: this.genomeSet.inputsList, genomes: updatedGenomes });
 }
 
 EvolutionService.prototype.getFittestInputList = function getFittestInputList() {

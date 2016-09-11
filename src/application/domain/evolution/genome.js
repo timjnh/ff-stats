@@ -14,6 +14,7 @@ function Genome(attributes) {
 }
 
 Genome.schema = {
+    _id: [Joi.object(), Joi.string().length(24)],
     chromosomes: Joi.array().items(
         Joi.number().valid(0, 1)
     ).length(24).required(),
@@ -29,11 +30,17 @@ Genome.prototype.isChromosomeActive = function isChromosomeActive(index) {
 };
 
 Genome.prototype.setFitness = function setFitness(fitness) {
-    return Genome.create(_.extend(_.clone(this), { fitness: fitness }));
+    return Genome.create(_.extend(clone(this), { fitness: fitness }));
 };
 
 Genome.prototype.setChromosomes = function setChromosomes(chromosomes) {
-    return Genome.create(_.extend(_.clone(this), { chromosomes: chromosomes }));
+    return Genome.create(_.extend(clone(this), { chromosomes: chromosomes }));
 };
+
+function clone(genome) {
+    var genomeClone = _.clone(genome);
+    delete genomeClone._id;
+    return genomeClone;
+}
 
 module.exports = Genome;

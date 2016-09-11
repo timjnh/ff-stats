@@ -8,7 +8,8 @@ var q = require('q'),
     workerService = require('./lib/worker/worker_service'),
     playerRepository = require('./port/player/player_repository'),
     EvolutionService = require('./application/domain/evolution/evolution_service'),
-    LSTMStrategy = require('./application/domain/network/strategies/lstm_strategy');
+    LSTMStrategy = require('./application/domain/network/strategies/lstm_strategy'),
+    PerceptronStrategy = require('./application/domain/network/strategies/perceptron_strategy');
 
 var playerName = 'R Cobb',
     teamName = 'packers';
@@ -45,8 +46,7 @@ bootstrap.start()
                 return evolutionService.evolve()
                     .then(showLastGeneration.bind(evolutionService))
                     .then(function displayFittestGenome() {
-                        logger.info("\n\n" + 'Witness the fitness:');
-                        logger.info(evolutionService.getMaximumGenomeFitness() + ': ' + evolutionService.getFittestInputList().join(', '));
+                        logger.info('Witness the fitness:' + evolutionService.getMaximumGenomeFitness() + ': ' + evolutionService.getFittestInputList().join(', '));
                     });
             });
         });
