@@ -28,7 +28,15 @@ module.exports = (function() {
         page(rows).each(function extractInjuriesFromRow(index, row) {
             var playerInjuries = [],
                 injuryColumns = page(row).find('th,td'),
-                playerName = normalizePlayerName(injuryColumns.first().attr('csk'));
+                playerName,
+                rawPlayerName = injuryColumns.first().attr('csk');
+
+            if(rawPlayerName === undefined) {
+                logger.warn('Skipping injury row ' + index + ' of ' + _this.team + ' for ' + _this.year);
+                return;
+            }
+
+            playerName = normalizePlayerName(injuryColumns.first().attr('csk'));
 
             // first column is the player name
             injuryColumns = injuryColumns.slice(1);
