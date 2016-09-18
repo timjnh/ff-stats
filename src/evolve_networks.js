@@ -1,6 +1,7 @@
 'use strict';
 
-var q = require('q'),
+var args,
+    q = require('q'),
     _ = require('underscore'),
     logger = require('./lib/logger'),
     bootstrap = require('./bootstrap'),
@@ -8,11 +9,31 @@ var q = require('q'),
     workerService = require('./lib/worker/worker_service'),
     playerRepository = require('./port/player/player_repository'),
     EvolutionService = require('./application/domain/evolution/evolution_service'),
-    LSTMStrategy = require('./application/domain/network/strategies/lstm_strategy'),
-    PerceptronStrategy = require('./application/domain/network/strategies/perceptron_strategy');
+    networkStrategyFactory = require('./application/domain/network/strategies/network_strategy_factory'),
+    LSTMStrategy = require('./application/domain/network/strategies/lstm_strategy');
 
-var playerName = 'R Cobb',
-    teamName = 'packers';
+args = require('yargs')
+    .usage('Usage: npm run evolve-networks[-nm] -- -p player -t team [options]')
+    .strict()
+    .help('h')
+    .alias('h', 'help')
+    .describe('player', 'Name of player or players to evolve networks for')
+    .alias('p', 'player')
+    .demand('player')
+    .describe('team', 'Name of team for whom we\'re evolving networks')
+    .alias('t', 'team')
+    .demand('team')
+    .describe('strategy', 'Network strategy to use')
+    .choices('strategy', networkStrategyFactory.getStrategyNames())
+    .default('strategy', LSTMStrategy.NAME)
+    .alias('s', 'strategy')
+    .describe('genome-count', 'Number of genomes to generate')
+    .default('genome-count', 500)
+    .alias('c', 'genome-count')
+    .describe('generations', 'Number of generations to run')
+    .default('generations', 100)
+    .alias('g', 'generations')
+    .argv;
 
 // the strategy here is to generate/train a network based on data from half our games and then run
 // projections against the second half of our games.  we then gauge fitness based on standard deviation
@@ -23,7 +44,7 @@ bootstrap.start()
         return workerService.start();
     })
     .then(function findPlayer() {
-        return playerRepository.findOneByNameAndTeam(playerName, teamName);
+        return playerRepository.findOneByNameAndTeam(args.player, args.team);
     })
     .then(function evolve(player) {
         var inputsList = inputsService.getInputsListForPosition(player.position),
@@ -34,13 +55,13 @@ bootstrap.start()
                 lastTrainingGame,
                 inputsList,
                 {
-                    genomeCount: 500,
-                    strategy: LSTMStrategy.NAME
+                    genomeCount: args.genomeCount,
+                    strategy: args.strategy
                 }
             ),
             evolutionPromiseChain = q.when();
 
-        _.range(1, 1000).forEach(function buildEvolutionPromiseChain(generation) {
+        _.range(1, args.generations).forEach(function buildEvolutionPromiseChain(generation) {
             evolutionPromiseChain = evolutionPromiseChain.then(function() {
                 logger.info('Starting generation ' + generation + '...');
                 return evolutionService.evolve()
