@@ -15,9 +15,10 @@ ProjectionsResource.prototype.get = function get(player, inputs, networkStrategy
 
     return teamRepository.findOneByName(player.team)
         .then(function setDateRange(team) {
-            var endWeek = team.findLastPlayedGameInYear(endYear);
-            if(!endWeek) {
-                endWeek = 1;
+            var endWeek = 1,
+                lastGame = team.findLastPlayedGameInYear(endYear);
+            if(lastGame) {
+                endWeek = lastGame.week;
             }
 
             startDate = new GameDate({ week: 1, year: startYear });
