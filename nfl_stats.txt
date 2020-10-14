@@ -1,0 +1,82 @@
+Ideas
+  More defenseive stuff
+    How much are players splitting work?
+
+R Cobb
+0.183 RecentTargetsTrend4, TopOfDepthChartTargetsTrend4, RecentPointsTrend4, Opponent, AveragePointsAgainstOpponent, DaysOff, OutDueToInjury
+0.19302499087479025: RecentPassingTouchdownsAllowedByOpponent3, TopOfDepthChartInjured, RecentReceivingTouchdownsTrend4, RecentReceivingYards3, QbInjured, HomeVsAway, RecentPoints3, RecentPointsTrend4, AveragePointsAgainstOpponent, RecentPointsAgainstOpponent3, DaysOff, PlayingInjured
+
+D Baldwin
+0.19851285888557893: RecentPassingYardsAllowedByOpponent3, RecentRushingYardsAllowedByOpponent3, RecentRushingTouchdownsAllowedByOpponent3, TopOfDepthChartInjured, RecentReceivingTouchdowns3, RecentReceivingTouchdownsTrend4, RecentReceivingYardsTrend4, AveragePointsAgainstOpponent, PlayingInjured
+
+L Fitzgerald
+0.19463519233075258: RecentRushingYardsAllowedByOpponent3, RecentRushingTouchdownsAllowedByOpponent3, TopOfDepthChartInjured, RecentReceivingYards3, TopOfDepthChartTargetsTrend4, RecentPoints3, RecentPointsTrend4, DaysOff, OutDueToInjury, PlayingInjured
+0.19722696764459036: RecentPassingTouchdownsAllowedByOpponent3, RecentReceivingTouchdownsTrend4, RecentReceivingYards3, TopOfDepthChartTargetsTrend4, RecentPoints3, RecentPointsAgainstOpponent3, DaysOff, OutDueToInjury, PlayingInjured
+
+D Freeman
+0.13597584997341114: RecentRushingYardsTrend4, RecentRushingTouchdowns3, RecentReceivingYardsTrend4, RecentRushingYardsAllowedByOpponent3, RecentRushingTouchdownsAllowedByOpponent3, TopOfDepthChartInjured, RecentTouches3, RecentTouchesTrend4, QbInjured, RecentPoints3, RecentPointsAgainstOpponent3, OutDueToInjury, PlayingInjured, WeekOfYear
+
+M Forte
+0.18667196439821993: RecentRushingYards3, RecentRushingYardsTrend4, RecentPassingYardsAllowedByOpponent3, TopOfDepthChartTouchesTrend4, HomeVsAway, RecentPoints3, Opponent, AveragePointsAgainstOpponent, PlayingInjured
+
+D Williams
+0.1565148192092193: RecentRushingTouchdowns3, RecentReceivingYardsTrend4, RecentPassingTouchdownsAllowedByOpponent3, RecentRushingTouchdownsAllowedByOpponent3, RecentTouches3, RecentTouchesTrend4, RecentPoints3, RecentPointsTrend4, DaysOff, OutDueToInjury, PlayingInjured
+
+E Decker
+0.372272443904396: RecentPassingYardsAllowedByOpponent3, RecentPassingTouchdownsAllowedByOpponent3, RecentInterceptionsByOpponent3, RecentTargets3, RecentReceivingYards3, TopOfDepthChartTargetsTrend4, RecentPointsAgainstOpponent3
+
+NFL 2016, Week 1
+
+Brees 18.54
+Forte 15.6
+Freeman 20.9
+Decker 12.9
+Baldwin 12.5
+McDonald 8.9
+William 13.9
+Stafford 18.66
+Ivory 6.2
+Fitzgerald 12.5
+Hurns 5.9
+Gronkowski 0
+Hauschka 12
+Packers 9
+Chiefs 4
+
+
+NFL 2016, Week 2
+
+Brees 16.84
+Forte 9.1
+Freeman 9.8
+Decker 6.6, 12.7, 18.6
+Baldwin 12.6, 11.6, 2
+McDonald 2.7
+William 20.0
+Stafford 18.78
+Ivory 12.6
+Fitzgerald 6.4
+Hurns 5.8
+Gronkowski 6.1
+Hauschka 9
+Packers 6
+Chiefs 6
+
+
+Week 3
+
+Brees 13.62
+Forte 22.7
+Freeman  16.1
+Decker 6.5, 11
+Baldwin 12.2, 11
+McDonald 2.9
+Williams 15.9 
+Stafford 17.02
+Ivory 0
+Fitzgerald 6.7
+Hurns 5.7
+Gronkowski 4.2
+Hauschka 15
+Packers 7
+Chiefs 3

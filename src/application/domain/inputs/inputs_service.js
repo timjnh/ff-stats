@@ -125,11 +125,15 @@ InputsService.prototype.getInputsForPlayerAndGame = function getInputsForPlayerA
             }
         });
 
-    return q.all(inputPromises)
+    return q.allSettled(inputPromises)
         .then(function mapInputs(inputs) {
             var mappedInputs = {};
             for(var i in playerInputTypes) {
-                mappedInputs[playerInputTypes[i].getName()] = inputs[i];
+                if(inputs[i].state === 'fulfilled') {
+                    mappedInputs[playerInputTypes[i].getName()] = inputs[i].value;
+                } else {
+                    throw new Error('Failed generating input "' + playerInputTypes[i].getName() + '" with error "' + inputs[i].reason + '"' + "\n" + inputs[i].reason.stack);
+                }
             }
             return InputSet.create(mappedInputs);
         });

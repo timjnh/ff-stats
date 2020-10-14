@@ -28,10 +28,15 @@ QbInjured.prototype.evaluate = function evaluate(player, game) {
             topQbName = teamGame.depthChart.getTopPlayerAtPosition(PlayerPosition.QB);
 
             if(topQbName === undefined) {
-                // first week of our first year shouldn't have any info
                 if(game.week == 1 && game.year == GameDate.getMinYear()) {
-                    return 0; // assume they're not injured
+                    // first week of our first year shouldn't have any info.  assume they're not injured
+                    return 0;
+                } else if(!game.hasBeenPlayed()) {
+                    // if the game hasn't been played yet, assume they're not injured too
+                    return 0;
                 }
+
+                throw new Error('No QB found for "' + player.team + '" week ' + game.week + ', ' + game.year);
             }
 
             return playerRepository.findOneByNameAndTeam(topQbName, player.team)

@@ -17,7 +17,7 @@ Genome.schema = {
     _id: [Joi.object(), Joi.string().length(24)],
     chromosomes: Joi.array().items(
         Joi.number().valid(0, 1)
-    ).length(24).required(),
+    ).min(1).required(),
     fitness: Joi.number().min(0).optional()
 };
 

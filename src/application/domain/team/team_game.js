@@ -2,6 +2,7 @@
 
 var _ = require('underscore'),
     assert = require('assert'),
+    logger = require('../../../lib/logger'),
     Joi = require('joi'),
     TeamPlayer = require('./team_player'),
     DepthChart = require('./depth_chart');
@@ -44,7 +45,9 @@ TeamGame.prototype.addPlayer = function addPlayer(teamPlayer) {
         existingPlayer = this.findPlayerByName(teamPlayer.name);
 
     if(existingPlayer) {
-        assert(existingPlayer.equals(teamPlayer));
+        if(!existingPlayer.equals(teamPlayer)) {
+            logger.warn('Player "' + teamPlayer.name + '" does not match definition for a player already on the team with the same name');
+        }
         return this;
     } else {
         players = _.clone(this.players);
